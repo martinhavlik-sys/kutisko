@@ -1,21 +1,21 @@
 # KUTISKO
 
-Mobil-first aplikácia pre rodičov na objavovanie detských kútikov, vnútorných herní a vonkajších ihrísk. Pilot: Bratislava a okolie.
+Mobil-first aplikácia pre rodičov na objavovanie detských kútikov, vnútorných herní a vonkajších ihrísk. Pilot Bratislava a okolie.
 
 ## Stav
-**Príprava dizajnového prototypu.** Zatiaľ bez produkčného backendu, účtov a reálnych používateľských dát.
+Príprava interaktívneho dizajnového prototypu. Zatiaľ bez produkčného backendu a reálnych používateľských dát.
 
-## Produktové dokumenty
-- `PRODUCT_MANIFESTO.md` — produktová špecifikácia v1.7
-- `PROTOTYPE_BRIEF.md` — rozsah klikateľného prototypu
-- `DESIGN_SYSTEM_PROPOSAL.md` — vizuálny smer
-- `MVP_ROADMAP.md` — fázy realizácie
-- `CLAUDE.md` — pravidlá pre Claude Code
+## Dokumentácia
+- `PRODUCT_MANIFESTO.md` — produktová špecifikácia (pripravuje sa nahratie v1.7)
+- `PROTOTYPE_BRIEF.md` — rozsah prototypu (pripravuje sa)
+- `DESIGN_SYSTEM_PROPOSAL.md` — vizuálny smer (pripravuje sa)
+- `MVP_ROADMAP.md` — fázy realizácie (pripravuje sa)
+- `CLAUDE.md` — agilný vývoj, kvalita UX/UI a pravidlá Git
+- `CHANGELOG.md` — prehľad dokončených zmien
+- `DECISIONS.md` — rozhodnutia a dôvody
 
-## Prvá úloha
-Navrhnúť a predložiť na schválenie **obrazovku Domov**: prémiové, vzdušné UI pre rodičov, kvalitná typografia, jasné vyhľadávanie a fotografie miest. Farebný charakter B používať striedmo. Ilustrácie dodá vlastník projektu osobitne.
-
-**Neimplementovať backend ani ďalšie obrazovky pred schválením vizuálneho smeru.**
+## Vývojový režim
+Claude Code postupuje v krátkych cykloch **implementácia → test → zlepšenie**. Začína spustiteľným konceptom obrazovky Domov a vyžiada si skorú spätnú väzbu; pri bežných detailoch pokračuje samostatne. Backend až po schválení.
 
 ## Bezpečnosť
-Repozitár je verejný. Necommitovať heslá, API kľúče, súkromné dokumenty, osobné údaje, detské fotografie ani originálne ilustrácie bez výslovného súhlasu.
+Repozitár je verejný. Necommitovať heslá, API kľúče, osobné údaje, fotografie detí ani originálne ilustrácie bez výslovného súhlasu.
