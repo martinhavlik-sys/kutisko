@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-22 — Rozšírené vyhľadávanie s mapou, Obľúbené a Profil (prototyp)
+**Zmenené**
+- `/hladat`: vyhľadávanie s rýchlymi filtrami (kategória, vnútri/vonku, zadarmo), panel Filtre (kategória, vek, prostredie, vybavenie, iba overené, iba zadarmo) s počtom výsledkov pred potvrdením, zoradenie, prepínač Zoznam / Mapa. Filtre sú v URL (dajú sa zdieľať, prežijú obnovenie).
+- Interaktívna mapa na **MapLibre GL** s podkladmi OpenFreeMap (bez kľúča a poplatkov); piny sú synchronizované s filtrami, ťuk na pin ukáže náhľad miesta s odkazom na detail. Ak sa podklady nenačítajú, mapa zostane použiteľná na neutrálnom pozadí s upozornením.
+- Tlačidlo „Celá mapa“ na Domove otvorí mapu s rovnakými filtrami.
+- `/ulozene`: obľúbené miesta (localStorage), prázdny stav so Simonkinou ilustráciou a cestou „Objaviť miesta“.
+- `/profil`: simulovaný účet, voliteľné preferencie (vek dieťaťa, ručný výber lokality, maximálna vzdialenosť) s možnosťou zmeniť alebo vymazať; vyhľadávanie ponúkne „Použiť vek z profilu“.
+- Spodná navigácia je spoločná pre všetky obrazovky a zvýrazňuje aktuálnu stránku.
+- Miesta majú údaj vnútri/vonku v základných dátach; nový skript kopíruje web worker MapLibre do `public/vendor/` (spúšťa sa pred `dev` a `build`).
+
+**Otestované**
+- `npm test` (11 testov vrátane nových filtrov), `typecheck`, `lint`, `build` prešli.
+- Playwright (iPhone 13, desktop): Domov → Ihriská → Celá mapa (4 piny), ťuk na pin → náhľad, prepnutie na zoznam (4 karty), panel Filtre s vybavením „kaviareň“ (4 miesta), vyhľadávanie „ruzinov“ (1), uloženie a odstránenie v Obľúbených, uloženie a vymazanie preferencií v localStorage, bez horizontálneho scrollu na 390 px.
+
+**Známe obmedzenia**
+- V testovacom prostredí boli mapové podklady blokované sieťou, preto screenshoty ukazujú mapu bez podkladov (overený záložný stav). Vzhľad s podkladmi OpenFreeMap treba skontrolovať lokálne alebo na iPhone.
+- Preferencia lokality a vzdialenosti sa zatiaľ len ukladá, výsledky ešte neovplyvňuje.
+- Hodnotenie, návrh miesta a zmena hesla ukážu iba „pripravujeme“.
+
 ## 2026-11-22 — Vekové skupiny podľa schválenia
 - Filter veku používa schválené skupiny 0–2, 3–5, 6–10, 10+ (predtým pracovné 0–3, 3–6, 6–10, 10+); hranice sa započítavajú vrátane.
 - Otestované: `npm test` (rozšírený test hraničného veku), `typecheck`, `lint`, `build`.

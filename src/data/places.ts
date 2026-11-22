@@ -51,6 +51,8 @@ export interface Place {
   lng: number;
   ageMin: number;
   ageMax: number;
+  /** Vnútorný priestor (true) alebo vonku (false). */
+  indoor: boolean;
   /** Celkové skóre 1–10 (priemer rodičovských hodnotení) alebo null, ak hodnotenia chýbajú. */
   score: number | null;
   reviewCount: number;
@@ -73,6 +75,7 @@ export const PLACES: Place[] = [
     lng: 17.1125,
     ageMin: 1,
     ageMax: 6,
+    indoor: true,
     score: 8.9,
     reviewCount: 42,
     price: { kind: "from", amount: 5 },
@@ -90,6 +93,7 @@ export const PLACES: Place[] = [
     lng: 17.1612,
     ageMin: 3,
     ageMax: 12,
+    indoor: true,
     score: 9.2,
     reviewCount: 118,
     price: { kind: "from", amount: 9 },
@@ -107,6 +111,7 @@ export const PLACES: Place[] = [
     lng: 17.0598,
     ageMin: 2,
     ageMax: 10,
+    indoor: false,
     score: 8.1,
     reviewCount: 27,
     price: { kind: "free" },
@@ -124,6 +129,7 @@ export const PLACES: Place[] = [
     lng: 17.1093,
     ageMin: 0,
     ageMax: 5,
+    indoor: true,
     score: 7.6,
     reviewCount: 15,
     price: { kind: "from", amount: 4 },
@@ -141,6 +147,7 @@ export const PLACES: Place[] = [
     lng: 17.1264,
     ageMin: 5,
     ageMax: 15,
+    indoor: true,
     score: 8.7,
     reviewCount: 63,
     price: { kind: "from", amount: 12 },
@@ -158,6 +165,7 @@ export const PLACES: Place[] = [
     lng: 17.0412,
     ageMin: 3,
     ageMax: 12,
+    indoor: false,
     score: 9.0,
     reviewCount: 38,
     price: { kind: "free" },
@@ -175,6 +183,7 @@ export const PLACES: Place[] = [
     lng: 17.1531,
     ageMin: 1,
     ageMax: 7,
+    indoor: true,
     score: null,
     reviewCount: 0,
     price: { kind: "unknown" },
@@ -192,6 +201,7 @@ export const PLACES: Place[] = [
     lng: 17.4006,
     ageMin: 2,
     ageMax: 12,
+    indoor: true,
     score: 7.9,
     reviewCount: 51,
     price: { kind: "from", amount: 8 },
@@ -209,6 +219,7 @@ export const PLACES: Place[] = [
     lng: 17.3088,
     ageMin: 1,
     ageMax: 10,
+    indoor: false,
     score: 8.4,
     reviewCount: 12,
     price: { kind: "free" },
@@ -226,6 +237,7 @@ export const PLACES: Place[] = [
     lng: 17.0318,
     ageMin: 0,
     ageMax: 4,
+    indoor: true,
     score: 9.4,
     reviewCount: 9,
     price: { kind: "from", amount: 3 },
@@ -243,6 +255,7 @@ export const PLACES: Place[] = [
     lng: 17.1987,
     ageMin: 2,
     ageMax: 8,
+    indoor: false,
     score: 7.2,
     reviewCount: 21,
     price: { kind: "free" },

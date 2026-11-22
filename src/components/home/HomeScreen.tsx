@@ -7,7 +7,9 @@ import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId } from "@/data/plac
 import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
 import { Toast, useToast } from "@/components/ui/Toast";
-import { BottomNav } from "./BottomNav";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BottomNav } from "@/components/ui/BottomNav";
 import { AgeChips, CategoryTabs } from "./Filters";
 import { ChevronDownIcon, CloseIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
 import { MapPreview } from "./MapPreview";
@@ -75,12 +77,14 @@ export function HomeScreen() {
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  const onNav = (id: "home" | "search" | "saved" | "profile") => {
-    if (id === "home") window.scrollTo({ top: 0, behavior: "smooth" });
-    else if (id === "search") {
-      searchRef.current?.focus();
-      searchRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else showToast(id === "saved" ? "Obľúbené pripravujeme v ďalšej iterácii" : "Profil pripravujeme v ďalšej iterácii");
+  const router = useRouter();
+  const openFullMap = () => {
+    const sp = new URLSearchParams({ zobrazenie: "mapa" });
+    if (query.trim()) sp.set("q", query);
+    if (category) sp.set("kat", category);
+    if (ageId) sp.set("vek", ageId);
+    if (sort !== "recommended") sp.set("zoradit", sort);
+    router.push(`/hladat?${sp.toString()}`);
   };
 
   return (
@@ -102,14 +106,13 @@ export function HomeScreen() {
               DEMO
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => onNav("profile")}
+          <Link
+            href="/profil"
             aria-label="Profil"
             className="flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             <UserIcon size={20} />
-          </button>
+          </Link>
         </header>
 
         <main>
@@ -183,7 +186,7 @@ export function HomeScreen() {
               places={state === "ready" ? results : []}
               activeId={activeId}
               onSelect={selectFromMap}
-              onOpenMap={() => showToast("Celú mapu pripravujeme v ďalšej iterácii")}
+              onOpenMap={openFullMap}
               loading={state === "loading"}
             />
           </div>
@@ -267,7 +270,7 @@ export function HomeScreen() {
 
       <Toast message={toast} />
 
-      <BottomNav savedCount={saved.ids.length} onSelect={onNav} />
+      <BottomNav />
     </>
   );
 }

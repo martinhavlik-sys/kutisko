@@ -13,3 +13,4 @@ coverage/
 *.pem
 *.key
 *.tsbuildinfo
+public/vendor/

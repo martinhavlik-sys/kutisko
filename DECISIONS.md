@@ -47,3 +47,14 @@
 ## 2026-11-22 — Vek, mapa a KUTISKO skóre (schválené Martinom)
 **Rozhodnutie (Martin):** Vekové skupiny 0–2, 3–5, 6–10, 10+; mapa cez MapLibre GL (poskytovateľ dlaždíc otvorený); KUTISKO skóre 1–5 nie je súčasťou MVP. Podrobne v `DECISIONS.md` z PR #1.
 **Dopad na prototyp:** Filter veku upravený; plná mapa sa bude stavať na MapLibre GL; skóre 1–5 sa nikde nezobrazuje.
+
+## 2026-11-22 — Mapové podklady pre prototyp: OpenFreeMap
+**Rozhodnutie:** Prototyp používa MapLibre GL so štýlom OpenFreeMap „positron“ (bezplatné, bez API kľúča, dáta OpenStreetMap s atribúciou). URL štýlu je na jednom mieste (`src/components/map/PlacesMap.tsx`).
+**Dôvod:** MapLibre GL schválil Martin; poskytovateľ dlaždíc ostáva otvorený a nemá vzniknúť platená služba bez schválenia.
+**Alternatívy:** MapTiler, Stadia, vlastný hosting (rozhodnutie pred produkčným MVP).
+**Dopad:** Žiadne náklady ani kľúče v repozitári; pri výbere produkčného poskytovateľa sa mení iba URL štýlu.
+
+## 2026-11-22 — Stav filtrov v URL, obľúbené a preferencie v localStorage
+**Rozhodnutie:** Filtre rozšíreného vyhľadávania sa ukladajú do URL; obľúbené a preferencie iba lokálne v prehliadači s označením DEMO.
+**Dôvod:** Zdieľateľné výsledky, návrat späť bez straty filtrov; bez backendu (manifest bod 15, 17).
+**Dopad:** Po prechode na backend sa obľúbené a preferencie presunú k účtu.

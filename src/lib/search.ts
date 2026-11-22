@@ -8,11 +8,17 @@ export const SORT_OPTIONS: { id: SortId; label: string }[] = [
   { id: "rating", label: "Najlepšie hodnotené" },
 ];
 
+export type Environment = "all" | "indoor" | "outdoor";
+
 export interface Filters {
   query: string;
   category: CategoryId | null;
   ageBand: { min: number; max: number } | null;
   sort: SortId;
+  environment?: Environment;
+  amenities?: string[];
+  onlyVerified?: boolean;
+  onlyFree?: boolean;
 }
 
 const CATEGORY_KEYWORDS: Record<CategoryId, string> = {
@@ -76,7 +82,11 @@ export function filterAndSort(
     (p) =>
       (filters.category === null || p.category === filters.category) &&
       matchesAge(p, filters.ageBand) &&
-      matchesQuery(p, filters.query),
+      matchesQuery(p, filters.query) &&
+      (!filters.environment || filters.environment === "all" || p.indoor === (filters.environment === "indoor")) &&
+      (filters.amenities ?? []).every((a) => p.amenities.includes(a)) &&
+      (!filters.onlyVerified || p.verified) &&
+      (!filters.onlyFree || p.price.kind === "free"),
   );
 
   const byDistance = (a: Place, b: Place) => distanceKm(origin, a) - distanceKm(origin, b);
@@ -142,4 +152,14 @@ export function scoreLabel(score: number): string {
   if (score >= 7) return "Dobré";
   if (score >= 5) return "Priemerné";
   return "Slabšie";
+}
+
+/** Vybavenie zoradené podľa početnosti — ponuka pre filter. */
+export function amenityOptions(places: Place[], limit = 10): string[] {
+  const counts = new Map<string, number>();
+  for (const p of places) for (const a of p.amenities) counts.set(a, (counts.get(a) ?? 0) + 1);
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "sk"))
+    .slice(0, limit)
+    .map(([a]) => a);
 }

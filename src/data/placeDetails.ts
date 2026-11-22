@@ -21,7 +21,6 @@ export interface DemoReview {
 }
 
 export interface PlaceDetail {
-  indoor: boolean;
   description: string;
   /** Týždenné hodiny, null = neoverené. */
   hoursWeek: { days: string; hours: string }[] | null;
@@ -36,7 +35,6 @@ const weekdays = (wk: string, we: string) => [
 
 export const PLACE_DETAILS: Record<string, PlaceDetail> = {
   "demo-01": {
-    indoor: true,
     description:
       "Malý kútik pri kaviarni v centre. Rodičia sedia pri stoloch s výhľadom na hraciu plochu, deti majú mäkké kocky, kuchynku a kútik na kreslenie.",
     hoursWeek: weekdays("9:00 – 19:00", "10:00 – 18:00"),
@@ -47,7 +45,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-02": {
-    indoor: true,
     description:
       "Veľká vnútorná herňa s trampolínami, prekážkovou dráhou a oddelenou zónou pre menšie deti. Vhodná aj na narodeninové oslavy.",
     hoursWeek: weekdays("10:00 – 20:00", "9:00 – 20:00"),
@@ -58,7 +55,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-03": {
-    indoor: false,
     description:
       "Tiché sídliskové ihrisko v tieni líp s pieskoviskom, hojdačkami a nízkou šmykľavkou. Okolo sú lavičky pre rodičov.",
     hoursWeek: null,
@@ -68,7 +64,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-04": {
-    indoor: true,
     description:
       "Kútik pre najmenších s Montessori hračkami a tichým priestorom na kojenie. Údaje zatiaľ neoveril kurátor.",
     hoursWeek: weekdays("8:30 – 18:00", "zatvorené"),
@@ -78,7 +73,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-05": {
-    indoor: true,
     description:
       "Lezecká herňa s nízkymi boulderingovými stenami a inštruktorom. Pre deti od 5 rokov, menšie deti len so sprievodom.",
     hoursWeek: weekdays("13:00 – 21:00", "9:00 – 21:00"),
@@ -88,7 +82,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-06": {
-    indoor: false,
     description:
       "Lesné ihrisko na okraji Dúbravky s lanovou dráhou, drevenými prvkami a pitnou vodou. Údaje zatiaľ neoverené.",
     hoursWeek: null,
@@ -98,14 +91,12 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-07": {
-    indoor: true,
     description: "Nový kútik v kaviarni. Zatiaľ bez hodnotení a bez overených údajov o cene a hodinách.",
     hoursWeek: null,
     criteria: null,
     reviews: [],
   },
   "demo-08": {
-    indoor: true,
     description:
       "Rodinná herňa pri jazere s tobogánom, bazénom s loptičkami a bistrom. Vhodná ako cieľ víkendového výletu.",
     hoursWeek: weekdays("9:00 – 20:00", "9:00 – 20:00"),
@@ -115,7 +106,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-09": {
-    indoor: false,
     description: "Ihrisko pri cyklotrase s pieskoviskom a hojdačkami. Dobrá zastávka počas výletu na bicykli.",
     hoursWeek: null,
     criteria: { cleanliness: 8.2, creativity: 7.8, overall: 8.4 },
@@ -124,7 +114,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-10": {
-    indoor: true,
     description:
       "Útulný kútik pre batoľatá so záhradou. Menšia kapacita, preto býva pokojnejší ako herne v meste.",
     hoursWeek: weekdays("9:00 – 17:00", "9:00 – 13:00"),
@@ -134,7 +123,6 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
   "demo-11": {
-    indoor: false,
     description: "Mestské ihrisko s vodnými prvkami, ktoré fungujú v letnej sezóne. Toalety sú v blízkej budove.",
     hoursWeek: weekdays("9:00 – 20:00", "9:00 – 20:00"),
     criteria: { cleanliness: 6.9, creativity: 7.6, overall: 7.2 },

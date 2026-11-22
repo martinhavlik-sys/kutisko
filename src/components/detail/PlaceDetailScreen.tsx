@@ -125,7 +125,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
           {/* Hlavička */}
           <div className="flex flex-wrap items-center gap-2 text-[13px] font-medium">
             <span className="rounded-full bg-white px-2.5 py-1 text-ink ring-1 ring-line">{category.shortLabel}</span>
-            <span className="rounded-full bg-white px-2.5 py-1 text-ink ring-1 ring-line">{detail.indoor ? "Vnútri" : "Vonku"}</span>
+            <span className="rounded-full bg-white px-2.5 py-1 text-ink ring-1 ring-line">{place.indoor ? "Vnútri" : "Vonku"}</span>
           </div>
           <h1 className="mt-3 font-display text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-ink sm:text-[34px]">
             {place.name}
@@ -180,7 +180,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             <Fact label="Vhodný vek" value={formatAge(place.ageMin, place.ageMax)} />
             <Fact label="Cena" value={formatPrice(place.price)} muted={place.price.kind === "unknown"} />
             <Fact label="Dnes" value={place.hoursToday ?? "Hodiny neoverené"} muted={!place.hoursToday} />
-            <Fact label="Prostredie" value={detail.indoor ? "Vnútorný priestor" : "Vonkajší priestor"} />
+            <Fact label="Prostredie" value={place.indoor ? "Vnútorný priestor" : "Vonkajší priestor"} />
           </dl>
 
           <div className="mt-6">
@@ -259,7 +259,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               ) : (
                 <p className="flex items-start gap-2 text-[15px] leading-relaxed text-ink-muted">
                   <ClockIcon size={18} className="mt-0.5 shrink-0" />
-                  Otváracie hodiny zatiaľ nemáme overené. {detail.indoor ? "Pred návštevou si ich overte u prevádzky." : "Verejné ihriská bývajú zvyčajne prístupné celý deň."}
+                  Otváracie hodiny zatiaľ nemáme overené. {place.indoor ? "Pred návštevou si ich overte u prevádzky." : "Verejné ihriská bývajú zvyčajne prístupné celý deň."}
                 </p>
               )}
             </Section>

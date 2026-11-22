@@ -78,3 +78,43 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Piny na interaktívnej mape (MapLibre) */
+.kut-pin {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.kut-pin-dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-coral-500);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgb(31 26 22 / 0.3);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.kut-pin:hover .kut-pin-dot {
+  transform: scale(1.12);
+}
+.kut-pin.is-active .kut-pin-dot {
+  width: 26px;
+  height: 26px;
+  background: var(--color-ink);
+}
+.kut-pin:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 0;
+}
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
