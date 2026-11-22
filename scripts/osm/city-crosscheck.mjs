@@ -53,7 +53,7 @@ async function crawlArcgis(root, maxServices = 3000) {
           if (RELATED.test(s.name) || RELATED.test(l.name)) related.push(`${s.name} / ${l.id}: ${l.name} (${l.geometryType})`);
           // Register všetkých športovísk mesta: ihriská sa z neho vyberú podľa atribútov (filter nižšie).
           if (/športovisk|sport_body/i.test(`${s.name} ${l.name}`) && l.geometryType === "esriGeometryPoint") {
-            found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}`, attrFilter: "detsk|ihrisk" });
+            found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}`, attrFilter: "detsk[éy]+ ihrisk" });
           }
           if (MATCH.test(l.name)) {
             found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}` });
