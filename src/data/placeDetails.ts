@@ -4,6 +4,8 @@
  * skutočným osobám a nie sú skutočnými skúsenosťami.
  */
 
+import type { Place } from "./places";
+
 export interface Criteria {
   /** Čistota priestoru 1–10 */
   cleanliness: number;
@@ -131,3 +133,16 @@ export const PLACE_DETAILS: Record<string, PlaceDetail> = {
     ],
   },
 };
+
+/**
+ * Detail miesta: DEMO miesta majú ručne napísaný detail, skutočné ihriská z OSM
+ * dostanú vecný opis odvodený z dostupných údajov (bez vymyslených recenzií či hodnotení).
+ */
+export function getPlaceDetail(place: Place): PlaceDetail | null {
+  if (place.source === "demo") return PLACE_DETAILS[place.id] ?? null;
+  const parts = [`Verejné detské ihrisko v lokalite ${place.area}.`];
+  if (place.amenities.length > 0) parts.push(`Podľa OpenStreetMap tu nájdete: ${place.amenities.join(", ")}.`);
+  else parts.push("Vybavenie ihriska zatiaľ v OpenStreetMap nie je zapísané.");
+  parts.push("Údaje zatiaľ neoveril kurátor KUTISKO ani rodičia.");
+  return { description: parts.join(" "), hoursWeek: null, criteria: null, reviews: [] };
+}

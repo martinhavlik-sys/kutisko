@@ -118,3 +118,40 @@ body {
   font-family: var(--font-sans);
   font-size: 11px;
 }
+
+/* Farba pinu podľa kategórie (ihriská tyrkysové, herne jantárové, kútiky koralové). */
+.kut-pin[data-cat="ihrisko"] .kut-pin-dot {
+  background: var(--color-turquoise-700);
+}
+.kut-pin[data-cat="herna"] .kut-pin-dot {
+  background: var(--color-amber-700);
+}
+.kut-pin.is-active .kut-pin-dot {
+  background: var(--color-ink);
+}
+/* Zhluk pinov s počtom miest. */
+.kut-cluster {
+  display: flex;
+  width: var(--size, 34px);
+  height: var(--size, 34px);
+  min-width: 34px;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--color-ink);
+  font: 700 13px/1 var(--font-sans);
+  border: 3px solid var(--color-turquoise-700);
+  box-shadow: 0 3px 10px rgb(31 26 22 / 0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+.kut-cluster:hover {
+  transform: scale(1.06);
+}
+.kut-cluster:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}

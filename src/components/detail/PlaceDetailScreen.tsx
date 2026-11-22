@@ -124,7 +124,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             </button>
           </div>
           <span className="absolute bottom-9 left-4 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink backdrop-blur sm:bottom-4">
-            DEMO · ilustračný obrázok
+            {place.isDemo ? "DEMO · ilustračný obrázok" : "Ilustračný obrázok"}
           </span>
         </div>
 
@@ -171,7 +171,11 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               place.verified ? "text-turquoise-700" : "text-ink-muted"
             }`}
           >
-            {place.verified ? (
+            {place.source === "osm" ? (
+              <>
+                <PinIcon size={16} /> Skutočné verejné ihrisko · údaje z OpenStreetMap, kurátor ich zatiaľ neoveril
+              </>
+            ) : place.verified ? (
               <>
                 <CheckBadgeIcon size={17} /> Údaje overené kurátorom (simulované)
               </>
@@ -184,10 +188,15 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
 
           {/* Rýchle fakty */}
           <dl className="mt-5 grid grid-cols-2 gap-2.5">
-            <Fact label="Vhodný vek" value={formatAge(place.ageMin, place.ageMax)} />
+            <Fact
+              label="Vhodný vek"
+              value={formatAge(place.ageMin, place.ageMax)}
+              muted={place.ageMin === null && place.ageMax === null}
+            />
             <Fact label="Cena" value={formatPrice(place.price)} muted={place.price.kind === "unknown"} />
             <Fact label="Dnes" value={place.hoursToday ?? "Hodiny neoverené"} muted={!place.hoursToday} />
             <Fact label="Prostredie" value={place.indoor ? "Vnútorný priestor" : "Vonkajší priestor"} />
+            {place.surface && <Fact label="Povrch" value={place.surface} />}
           </dl>
 
           <div className="mt-6">
@@ -277,7 +286,9 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                   ))}
                 </ul>
               )}
-              <p className="mt-3 text-[12.5px] text-ink-muted">Hodnotenia aj recenzie sú vymyslené ukážky (DEMO).</p>
+              {place.isDemo && (
+                <p className="mt-3 text-[12.5px] text-ink-muted">Hodnotenia aj recenzie sú vymyslené ukážky (DEMO).</p>
+              )}
             </Section>
 
             <Section title="Otváracie hodiny">
@@ -293,7 +304,10 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               ) : (
                 <p className="flex items-start gap-2 text-[15px] leading-relaxed text-ink-muted">
                   <ClockIcon size={18} className="mt-0.5 shrink-0" />
-                  Otváracie hodiny zatiaľ nemáme overené. {place.indoor ? "Pred návštevou si ich overte u prevádzky." : "Verejné ihriská bývajú zvyčajne prístupné celý deň."}
+                  {place.openingHours
+                    ? `Podľa OpenStreetMap: ${place.openingHours}. Kurátor ich zatiaľ neoveril.`
+                    : "Otváracie hodiny zatiaľ nemáme overené."}{" "}
+                  {place.openingHours ? "" : place.indoor ? "Pred návštevou si ich overte u prevádzky." : "Verejné ihriská bývajú zvyčajne prístupné celý deň."}
                 </p>
               )}
             </Section>
@@ -301,17 +315,47 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             <Section title="Poloha">
               <MapPreview places={[place]} activeId={place.id} onSelect={() => setNavOpen(true)} label="Poloha na mape" />
               <p className="mt-3 text-[15px] text-ink">
-                {place.area}, Bratislava a okolie
+                {place.area === "Bratislava a okolie" ? place.area : `${place.area}, Bratislava a okolie`}
               </p>
-              <p className="mt-0.5 text-[13px] text-ink-muted">
-                Presná adresa zatiaľ neoverená · GPS {place.lat.toFixed(4)}, {place.lng.toFixed(4)} (ilustračné)
-              </p>
+              {place.osm ? (
+                <p className="mt-0.5 text-[13px] text-ink-muted">
+                  GPS {place.lat.toFixed(5)}, {place.lng.toFixed(5)} ·{" "}
+                  <a
+                    href={`https://www.openstreetmap.org/${place.osm.type}/${place.osm.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-turquoise-700 underline underline-offset-2"
+                  >
+                    zobraziť v OpenStreetMap
+                  </a>
+                </p>
+              ) : (
+                <p className="mt-0.5 text-[13px] text-ink-muted">
+                  Presná adresa zatiaľ neoverená · GPS {place.lat.toFixed(4)}, {place.lng.toFixed(4)} (ilustračné)
+                </p>
+              )}
             </Section>
 
             <Section title="Pôvod údajov">
-              <p className="text-[14px] leading-relaxed text-ink-muted">
-                Zdroj: syntetické ukážkové dáta prototypu KUTISKO. Miesto, hodnotenia, ceny ani hodiny neexistujú.
-              </p>
+              {place.source === "osm" ? (
+                <p className="text-[14px] leading-relaxed text-ink-muted">
+                  Poloha, názov a vybavenie pochádzajú z{" "}
+                  <a
+                    href="https://www.openstreetmap.org/copyright"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-turquoise-700 underline underline-offset-2"
+                  >
+                    © prispievatelia OpenStreetMap
+                  </a>{" "}
+                  (licencia ODbL). Údaje dopĺňajú dobrovoľníci, preto môžu byť neúplné; chýbajúci údaj neznamená, že na
+                  ihrisku niečo chýba. Názov bez vlastného mena je odvodený od parku alebo ulice.
+                </p>
+              ) : (
+                <p className="text-[14px] leading-relaxed text-ink-muted">
+                  Zdroj: syntetické ukážkové dáta prototypu KUTISKO. Miesto, hodnotenia, ceny ani hodiny neexistujú.
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => setReportOpen(true)}

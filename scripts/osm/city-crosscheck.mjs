@@ -51,6 +51,10 @@ async function crawlArcgis(root, maxServices = 3000) {
         const info = await getJson(`${base}/layers?f=json`);
         for (const l of info.layers ?? []) {
           if (RELATED.test(s.name) || RELATED.test(l.name)) related.push(`${s.name} / ${l.id}: ${l.name} (${l.geometryType})`);
+          // Register všetkých športovísk mesta: ihriská sa z neho vyberú podľa atribútov (filter nižšie).
+          if (/športovisk|sport_body/i.test(`${s.name} ${l.name}`) && l.geometryType === "esriGeometryPoint") {
+            found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}`, attrFilter: "detsk|ihrisk" });
+          }
           if (MATCH.test(l.name)) {
             found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}` });
           }
@@ -119,7 +123,17 @@ const datasets = [];
 for (const layer of layers) {
   try {
     const feats = await fetchLayer(layer);
-    const points = feats.map((f) => ({ c: centroid(f.geometry), props: f.properties })).filter((x) => x.c);
+    let points = feats.map((f) => ({ c: centroid(f.geometry), props: f.properties })).filter((x) => x.c);
+    if (layer.attrFilter) {
+      const re = new RegExp(layer.attrFilter, "i");
+      const values = {};
+      for (const p of points) for (const [k, v] of Object.entries(p.props ?? {})) if (typeof v === "string" && v.length < 60) (values[k] ??= new Set()).add(v);
+      layer.attributeValues = Object.fromEntries(
+        Object.entries(values).filter(([, set]) => set.size <= 40).map(([k, set]) => [k, [...set].sort()]),
+      );
+      note(`Vrstva ${layer.name}: ${points.length} objektov spolu, filter /${layer.attrFilter}/ v atribútoch`);
+      points = points.filter((p) => Object.values(p.props ?? {}).some((v) => typeof v === "string" && re.test(v)));
+    }
     let matched = 0;
     const missing = [];
     for (const p of points) {
@@ -128,7 +142,7 @@ for (const layer of layers) {
       else missing.push({ lat: +p.c.lat.toFixed(6), lng: +p.c.lon.toFixed(6), props: p.props });
     }
     note(`Vrstva ${layer.name}: ${points.length} objektov, zhoda s OSM ${matched}, chýba v OSM ${missing.length}`);
-    datasets.push({ ...layer, count: points.length, matchedInOsm: matched, missingInOsm: missing.slice(0, 300), sampleProps: points[0]?.props ?? null });
+    datasets.push({ ...layer, count: points.length, totalFeatures: feats.length, matchedInOsm: matched, missingInOsm: missing.slice(0, 300), sampleProps: points[0]?.props ?? null });
   } catch (e) {
     note(`Vrstva ${layer.name}: ${e.message}`);
     datasets.push({ ...layer, error: e.message });

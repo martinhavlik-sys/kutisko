@@ -5,7 +5,7 @@ import { forwardRef } from "react";
 import { CATEGORIES, type Place } from "@/data/places";
 import { useOrigin } from "@/lib/preferences";
 import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel } from "@/lib/search";
-import { CheckBadgeIcon, ClockIcon, HeartIcon, StarIcon } from "./icons";
+import { CheckBadgeIcon, ClockIcon, HeartIcon, PinIcon, StarIcon } from "./icons";
 import { PlaceArt } from "./PlaceArt";
 
 interface Props {
@@ -32,9 +32,11 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
     >
       <div className="relative aspect-[16/9] overflow-hidden rounded-[20px]">
         <PlaceArt id={place.id} category={place.category} />
-        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink backdrop-blur">
-          DEMO
-        </span>
+        {place.isDemo && (
+          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink backdrop-blur">
+            DEMO
+          </span>
+        )}
         <span className="absolute bottom-3 left-3 rounded-full bg-ink/70 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
           {category.shortLabel}
         </span>
@@ -82,14 +84,33 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
         </p>
 
         <ul className="mt-3 flex flex-wrap gap-1.5 text-[13px]" aria-label="Základné údaje">
-          <li className="rounded-full bg-cream-100 px-2.5 py-1 text-ink">Vek {formatAge(place.ageMin, place.ageMax)}</li>
+          <li
+            className={`rounded-full bg-cream-100 px-2.5 py-1 ${
+              place.ageMin === null && place.ageMax === null ? "text-ink-muted" : "text-ink"
+            }`}
+          >
+            Vek {formatAge(place.ageMin, place.ageMax)}
+          </li>
           <li className={`rounded-full bg-cream-100 px-2.5 py-1 ${place.price.kind === "unknown" ? "text-ink-muted" : "text-ink"}`}>
             {formatPrice(place.price)}
           </li>
-          <li className="inline-flex items-center gap-1 rounded-full bg-cream-100 px-2.5 py-1 text-ink-muted">
-            <ClockIcon size={14} />
-            {place.hoursToday ? <span className="text-ink">Dnes {place.hoursToday}</span> : "Hodiny neoverené"}
-          </li>
+          {place.source === "osm" ? (
+            <>
+              {place.amenities.slice(0, 2).map((a) => (
+                <li key={a} className="rounded-full bg-cream-100 px-2.5 py-1 text-ink">
+                  {a}
+                </li>
+              ))}
+              {place.amenities.length > 2 && (
+                <li className="rounded-full bg-cream-100 px-2.5 py-1 text-ink-muted">+{place.amenities.length - 2}</li>
+              )}
+            </>
+          ) : (
+            <li className="inline-flex items-center gap-1 rounded-full bg-cream-100 px-2.5 py-1 text-ink-muted">
+              <ClockIcon size={14} />
+              {place.hoursToday ? <span className="text-ink">Dnes {place.hoursToday}</span> : "Hodiny neoverené"}
+            </li>
+          )}
         </ul>
 
         <p
@@ -97,7 +118,11 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
             place.verified ? "text-turquoise-700" : "text-ink-muted"
           }`}
         >
-          {place.verified ? (
+          {place.source === "osm" ? (
+            <>
+              <PinIcon size={15} /> Skutočné miesto · údaje z OpenStreetMap
+            </>
+          ) : place.verified ? (
             <>
               <CheckBadgeIcon size={16} /> Údaje overené kurátorom (simulované)
             </>
