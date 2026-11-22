@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-22 — Skutočné ihriská prvé v „Odporúčané“, mestské ihriská čakajú na licenciu
+**Zmenené**
+- Zoradenie „Odporúčané“ dáva skutočné ihriská pred DEMO kútiky a herne.
+- Porovnanie s mestom ukladá licenčné metadáta vrstvy, kandidátov `src/data/osm/city-playgrounds.json` a zoznam `docs/MESTSKE_IHRISKA.md` (113 verejných v prevádzke chýbajúcich v OSM, 158 vyradených).
+- Aplikácia vie zobraziť mestské ihriská (štítok „register mesta, neoverené“, zdroj v detaile), ale sú vypnuté, kým sa neoverí licencia (`src/data/sources.ts`).
+
+**Otestované**
+- `npm test` (29), `lint`, `typecheck`, `build`; GitHub Action prebehla úspešne.
+
+**Známe obmedzenia**
+- Vrstva mesta nemá v metadátach licenciu, preto sa 113 ihrísk zatiaľ nezobrazuje.
+
 ## 2026-11-22 — Skutočné ihriská z OpenStreetMap
 **Zmenené**
 - Do aplikácie pribudlo **975 skutočných verejných ihrísk** Bratislavy a okolia z OpenStreetMap (z 1 197 objektov `leisure=playground` po vyradení súkromných, nepoužívaných a duplicít bod/plocha). Mestská časť alebo obec sa priraďuje z hraníc OSM (Petržalka 135, Ružinov 126, Nové Mesto 81, Karlova Ves 66, …; 80 obcí okolia).

@@ -40,7 +40,7 @@ export function matchesQuery(place: Place, query: string): boolean {
   const tokens = normalize(query).split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return true;
   const haystack = normalize(
-    [place.name, place.area, place.amenities.join(" "), CATEGORY_KEYWORDS[place.category], place.source === "osm" ? "skutocne overene osm" : "demo"].join(" "),
+    [place.name, place.area, place.amenities.join(" "), CATEGORY_KEYWORDS[place.category], place.source === "demo" ? "demo" : "skutocne"].join(" "),
   );
   return tokens.every((t) => haystack.includes(t));
 }
@@ -108,7 +108,10 @@ export function filterAndSort(
         return b.score - a.score || b.reviewCount - a.reviewCount;
       }
       default:
-        return recommendedScore(b) - recommendedScore(a) || byDistance(a, b);
+        // Skutočné miesta majú prednosť pred vymyslenými DEMO miestami (rozhodnutie Martina 2026-11-22).
+        return (
+          Number(a.isDemo) - Number(b.isDemo) || recommendedScore(b) - recommendedScore(a) || byDistance(a, b)
+        );
     }
   });
 }

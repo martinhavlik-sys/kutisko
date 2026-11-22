@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T19:05:05.296Z",
+  "generatedAt": "2026-11-22T19:42:47.025Z",
   "osmCount": 975,
   "layers": [
     {
@@ -698,6 +698,22 @@
           "Športovisko je momentálne v rekonštrikcii",
           "Štadión FCP viď zámery"
         ]
+      },
+      "metadata": {
+        "checkedAt": "2026-11-22T19:42:41.035Z",
+        "sources": {
+          "service": {
+            "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer?f=json"
+          },
+          "layer": {
+            "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/1?f=json"
+          },
+          "item": {
+            "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/info/iteminfo?f=json",
+            "title": "Športoviská v Bratislave",
+            "snippet": "Bodová vrstva športovísk v Bratislave. OŠ šport."
+          }
+        }
       },
       "count": 710,
       "totalFeatures": 2366,
@@ -19522,6 +19538,7 @@
     "Vrstva sport_body_08_26_vsetky_sportoviska: GeoJSON zlyhal (HTTP 500), skúšam formát Esri JSON",
     "Vrstva sport_body_08_26_vsetky_sportoviska: 2366 objektov spolu, filter /detsk[éy]+ ihrisk/ v atribútoch",
     "Vrstva sport_body_08_26_vsetky_sportoviska: 710 objektov, zhoda s OSM 439, chýba v OSM 271",
+    "Metadáta sport_body_08_26_vsetky_sportoviska: {\"service\":{\"url\":\"https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer?f=json\"},\"layer\":{\"url\":\"https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/1?f=json\"},\"item\":{\"url\":\"https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/info/iteminfo?f=json\",\"title\":\"Športoviská v Bratislave\",\"snippet\":\"Bodová vrstva športovísk v Bratislave. OŠ šport.\"}}",
     "Vrstva Ihriská a fitness prvky: 12 objektov, zhoda s OSM 6, chýba v OSM 6"
   ]
 }

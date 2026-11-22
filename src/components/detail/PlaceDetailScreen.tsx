@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES, PLACES, type Place } from "@/data/places";
+import { CITY_REGISTER } from "@/data/sources";
 import { useOrigin } from "@/lib/preferences";
 import type { PlaceDetail } from "@/data/placeDetails";
 import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel, scoreLabel } from "@/lib/search";
@@ -174,6 +175,10 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             {place.source === "osm" ? (
               <>
                 <PinIcon size={16} /> Skutočné verejné ihrisko · údaje z OpenStreetMap, kurátor ich zatiaľ neoveril
+              </>
+            ) : place.source === "city" ? (
+              <>
+                <PinIcon size={16} /> Ihrisko z registra športovísk mesta · údaje zatiaľ neoverené, pred návštevou si ich overte
               </>
             ) : place.verified ? (
               <>
@@ -350,6 +355,12 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                   </a>{" "}
                   (licencia ODbL). Údaje dopĺňajú dobrovoľníci, preto môžu byť neúplné; chýbajúci údaj neznamená, že na
                   ihrisku niečo chýba. Názov bez vlastného mena je odvodený od parku alebo ulice.
+                </p>
+              ) : place.source === "city" ? (
+                <p className="text-[14px] leading-relaxed text-ink-muted">
+                  Poloha a názov pochádzajú z registra športovísk, zdroj: {CITY_REGISTER.attribution}
+                  {CITY_REGISTER.license ? ` (licencia ${CITY_REGISTER.license})` : ""}. Ihrisko zatiaľ nie je v OpenStreetMap a
+                  kurátor KUTISKO ho neoveril; chýbajúci údaj neznamená, že na ihrisku niečo chýba.
                 </p>
               ) : (
                 <p className="text-[14px] leading-relaxed text-ink-muted">

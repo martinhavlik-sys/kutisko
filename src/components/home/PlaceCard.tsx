@@ -94,7 +94,7 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
           <li className={`rounded-full bg-cream-100 px-2.5 py-1 ${place.price.kind === "unknown" ? "text-ink-muted" : "text-ink"}`}>
             {formatPrice(place.price)}
           </li>
-          {place.source === "osm" ? (
+          {place.source !== "demo" ? (
             <>
               {place.amenities.slice(0, 2).map((a) => (
                 <li key={a} className="rounded-full bg-cream-100 px-2.5 py-1 text-ink">
@@ -121,6 +121,10 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
           {place.source === "osm" ? (
             <>
               <PinIcon size={15} /> Skutočné miesto · údaje z OpenStreetMap
+            </>
+          ) : place.source === "city" ? (
+            <>
+              <PinIcon size={15} /> Skutočné miesto · register mesta, neoverené
             </>
           ) : place.verified ? (
             <>
