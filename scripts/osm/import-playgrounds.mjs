@@ -26,10 +26,10 @@ const bb = `${BBOX.south},${BBOX.west},${BBOX.north},${BBOX.east}`;
 const SK = `area["ISO3166-1"="SK"]["admin_level"="2"]->.sk;`;
 
 const QUERIES = {
-  playgrounds: `[out:json][timeout:240];${SK}nwr["leisure"="playground"](${bb})(area.sk);out geom tags;`,
-  features: `[out:json][timeout:240];${SK}(nwr["playground"](${bb})(area.sk);node["amenity"~"^(bench|drinking_water|toilets|shelter)$"](${bb})(area.sk););out center tags;`,
-  parks: `[out:json][timeout:240];${SK}nwr["leisure"="park"]["name"](${bb})(area.sk);out geom tags;`,
-  admin: `[out:json][timeout:240];rel["boundary"="administrative"]["admin_level"~"^(8|9|10)$"](${bb});out geom tags;`,
+  playgrounds: `[out:json][timeout:240];${SK}nwr["leisure"="playground"](${bb})(area.sk);out geom;`,
+  features: `[out:json][timeout:240];${SK}(nwr["playground"](${bb})(area.sk);node["amenity"~"^(bench|drinking_water|toilets|shelter)$"](${bb})(area.sk););out center;`,
+  parks: `[out:json][timeout:240];${SK}nwr["leisure"="park"]["name"](${bb})(area.sk);out geom;`,
+  admin: `[out:json][timeout:240];rel["boundary"="administrative"]["admin_level"~"^(8|9|10)$"](${bb});out geom;`,
 };
 
 async function overpass(name, query) {

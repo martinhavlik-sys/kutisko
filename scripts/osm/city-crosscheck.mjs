@@ -15,7 +15,9 @@ import { readFile, writeFile } from "node:fs/promises";
 import { metersBetween } from "./transform.mjs";
 
 const UA = { "user-agent": "kutisko-prototype-import/0.1 (+https://github.com/martinhavlik-sys/kutisko)" };
-const MATCH = /ihrisk|ihrísk|playground|detsk[éa] ihr/i;
+const MATCH = /ihrisk|ihrísk|playground|detsk|hrisk/i;
+const RELATED = /šport|sport|ihr|park|zeleň|zelen|voľn|rekre/i;
+const related = [];
 const log = [];
 const note = (m) => { console.log(m); log.push(m); };
 
@@ -27,7 +29,7 @@ async function getJson(url, timeoutMs = 30000) {
 }
 
 /** Prejde ArcGIS REST adresár (priečinky → služby → vrstvy) a vráti vrstvy s ihriskami. */
-async function crawlArcgis(root, maxServices = 400) {
+async function crawlArcgis(root, maxServices = 3000) {
   const found = [];
   const queue = [""];
   let services = 0;
@@ -48,7 +50,8 @@ async function crawlArcgis(root, maxServices = 400) {
       try {
         const info = await getJson(`${base}/layers?f=json`);
         for (const l of info.layers ?? []) {
-          if (MATCH.test(l.name) || MATCH.test(s.name)) {
+          if (RELATED.test(s.name) || RELATED.test(l.name)) related.push(`${s.name} / ${l.id}: ${l.name} (${l.geometryType})`);
+          if (MATCH.test(l.name)) {
             found.push({ service: s.name, type: s.type, layerId: l.id, name: l.name, geometryType: l.geometryType, url: `${base}/${l.id}` });
           }
         }
@@ -134,6 +137,6 @@ for (const layer of layers) {
 
 await writeFile(
   "src/data/osm/city-crosscheck.json",
-  JSON.stringify({ generatedAt: new Date().toISOString(), osmCount: osm.places.length, layers: datasets, openData, log }, null, 2) + "\n",
+  JSON.stringify({ generatedAt: new Date().toISOString(), osmCount: osm.places.length, layers: datasets, relatedLayers: related, openData, log }, null, 2) + "\n",
 );
 console.log("Zapísané src/data/osm/city-crosscheck.json");
