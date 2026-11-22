@@ -18,15 +18,16 @@
 
   --color-coral-50: #fff0f2;
   --color-coral-500: #ff526e; /* dekor: piny, srdiečko, akcent */
-  --color-coral-600: #c8243f; /* text a CTA s bielym textom, 5.6 : 1 */
+  --color-coral-600: #d6264a; /* text a CTA s bielym textom, 4.96 : 1 (token z DESIGN_SYSTEM_PROPOSAL, PR #1) */
+  --color-coral-700: #b81e3e;
 
   --color-amber-50: #fff3d6;
   --color-amber-400: #f5ad1d; /* dekor: hviezdy, highlight */
-  --color-amber-700: #7a5500; /* text na amber-50, 6.1 : 1 */
+  --color-amber-700: #8a5a00; /* text na amber-50, 5.4 : 1 */
 
   --color-turquoise-50: #e7f6f9;
   --color-turquoise-400: #5dc2d6; /* dekor: voda na mape, ihriská */
-  --color-turquoise-700: #17707f; /* text, 5.7 : 1 na bielej */
+  --color-turquoise-700: #0e6b7d; /* text, 6.1 : 1 na bielej */
 
   --color-leaf-100: #e3efd9;
   --color-leaf-300: #b9d9a4;

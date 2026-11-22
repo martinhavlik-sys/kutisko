@@ -6,7 +6,7 @@
 - Obrazovka Domov: hlavička s dočasným wordmarkom, pozdrav „Kam ideme dnes?“, vyhľadávanie, filtre kategórií (Všetko / Kútiky / Herne / Ihriská) a veku (0–3, 3–6, 6–10, 10+), ilustračný náhľad mapy s pinmi synchronizovanými s filtrami, zoradenie (Odporúčané / Najbližšie / Najlepšie hodnotené), karty miest, spodná navigácia Domov · Hľadať · Obľúbené · Profil.
 - 11 syntetických miest označených DEMO (Bratislava a okolie), skóre 1–10, rozlíšenie overených a neoverených údajov, neznáme ceny a hodiny sa zobrazujú ako „neoverené“, nie ako negatívne.
 - Stavy: načítanie (skeleton), prázdny výsledok (so Simonkinou ilustráciou), chyba s „Skúsiť znova“. Na testovanie `?stav=nacitanie` a `?stav=chyba`.
-- Pracovné dizajnové tokeny (farebný smer B s tmavšími variantmi pre text) v `src/app/globals.css`, písmo Plus Jakarta Sans.
+- Pracovné dizajnové tokeny (farebný smer B s tmavšími variantmi pre text, zjednotené s DESIGN_SYSTEM_PROPOSAL v PR #1) v `src/app/globals.css`, písmo Plus Jakarta Sans.
 - Simonkine ilustrácie `public/illustrations/` (so súhlasom vlastníka).
 
 **Otestované**
