@@ -95,3 +95,10 @@ test("rozšírené filtre: prostredie, vybavenie, overené, zadarmo", () => {
   assert.equal(amenityOptions(DEMO_PLACES)[0], "kaviareň");
   assert.ok(run({ query: "piesk" }).some((p) => p.id === "t1"));
 });
+
+test("Odporúčané: skutočné miesta pred DEMO, potom podľa vzdialenosti", () => {
+  const sorted = run({ sort: "recommended" });
+  const firstDemo = sorted.findIndex((p) => p.isDemo);
+  assert.ok(firstDemo > 0);
+  assert.ok(sorted.slice(firstDemo).every((p) => p.isDemo));
+});

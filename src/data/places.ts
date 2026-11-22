@@ -13,6 +13,8 @@
  */
 
 import osmData from "./osm/playgrounds.json" with { type: "json" };
+import cityData from "./osm/city-playgrounds.json" with { type: "json" };
+import { CITY_REGISTER } from "./sources.ts";
 
 export type CategoryId = "kutik" | "herna" | "ihrisko";
 
@@ -72,7 +74,7 @@ export interface Place {
   verified: boolean;
   /** true = vymyslené DEMO miesto. */
   isDemo: boolean;
-  source: "demo" | "osm";
+  source: "demo" | "osm" | "city";
   /** Pôvodný objekt v OpenStreetMap (len source „osm“). */
   osm?: { type: "node" | "way" | "relation"; id: number };
   /** Surový tag opening_hours z OSM, ak existuje. */
@@ -223,7 +225,12 @@ export const DEMO_PLACES: Place[] = [
  * Všetky miesta: DEMO kútiky a herne + skutočné ihriská z OSM.
  * DEMO ihriská boli odstránené, aby sa vymyslené ihrisko nemiešalo so skutočnými (DECISIONS.md, 2026-11-22).
  */
-export const PLACES: Place[] = [...DEMO_PLACES, ...(osmData.places as unknown as Place[])];
+export const PLACES: Place[] = [
+  ...DEMO_PLACES,
+  ...(osmData.places as unknown as Place[]),
+  // Mestské ihriská chýbajúce v OSM — len ak je licencia mestskej vrstvy overená (src/data/sources.ts).
+  ...(CITY_REGISTER.approved ? (cityData.places as unknown as Place[]) : []),
+];
 
 export const OSM_META = {
   attribution: osmData.attribution,
