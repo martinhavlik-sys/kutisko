@@ -86,3 +86,9 @@
 ## 2026-11-22 — PWA a dočasná ikona
 **Rozhodnutie (Claude):** Prototyp má manifest a dočasnú ikonu „k“ (koralová na krémovej, žltá bodka), aby sa dal na iPhone pridať na plochu a testovať ako aplikácia. Ikona nie je logo; nahradí sa finálnym logom.
 **Dopad:** Žiadny service worker ani offline režim (mimo MVP).
+
+## 2026-11-22 — Nasadenie prototypu na Vercel (Hobby)
+**Rozhodnutie (Martin):** Prototyp sa na iPhone testuje cez Vercel, bezplatný plán Hobby, prepojený s GitHub repozitárom v Martinovom účte.
+**Dôvod:** Next.js bez úprav, automatické nasadenie po každom commite, jeden odkaz pre rodičov.
+**Alternatívy:** GitHub Pages (statický export, pomalšie), iba lokálne.
+**Dopad:** Žiadne kľúče ani premenné prostredia; produkčná adresa sleduje vetvu `main`. Náhľady PR sú predvolene chránené prihlásením do Vercelu, preto pre rodičov použiť produkčnú adresu. `robots: noindex` ostáva.

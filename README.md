@@ -28,3 +28,6 @@ Claude Code postupuje v krátkych cykloch **implementácia → test → zlepšen
 
 ## Bezpečnosť
 Repozitár je verejný. Necommitovať heslá, API kľúče, osobné údaje, fotografie detí ani originálne ilustrácie bez výslovného súhlasu.
+
+## Nasadenie (Vercel)
+Vercel → Add New → Project → import `martinhavlik-sys/kutisko` → Framework Next.js (predvolené nastavenia, bez premenných prostredia) → Deploy. Build spúšťa `npm run build` (vrátane `prebuild`, ktorý kopíruje worker MapLibre). Produkčná adresa sleduje vetvu `main`; náhľady PR vyžadujú prihlásenie do Vercelu.
