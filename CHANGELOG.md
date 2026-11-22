@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-22 — Skutočné ihriská z OpenStreetMap
+**Zmenené**
+- Do aplikácie pribudlo **975 skutočných verejných ihrísk** Bratislavy a okolia z OpenStreetMap (z 1 197 objektov `leisure=playground` po vyradení súkromných, nepoužívaných a duplicít bod/plocha). Mestská časť alebo obec sa priraďuje z hraníc OSM (Petržalka 135, Ružinov 126, Nové Mesto 81, Karlova Ves 66, …; 80 obcí okolia).
+- Vymyslené DEMO ihriská (4) odstránené; DEMO kútiky a herne (7) ostávajú so štítkom DEMO.
+- Karta ihriska: bez štítku DEMO, „Vek neuvedený“ sivo, hlavné vybavenie ako štítky, riadok „Skutočné miesto · údaje z OpenStreetMap“. Detail: vecný opis z dostupných údajov, povrch, otváracie hodiny z OSM (ak sú), odkaz na objekt v OSM, pôvod údajov s licenciou ODbL. Žiadne vymyslené hodnotenia pre skutočné miesta.
+- Filter veku miesta s neuvedeným vekom nevylučuje; vyhľadávanie hľadá aj vo vybavení (napr. „pieskovisko“).
+- Mapa: piny sa zhlukujú do kruhov s počtom (ťuk priblíži), farba pinu podľa kategórie; zoznamy na Domove a v Hľadaní sa načítavajú po 20 („Zobraziť ďalšie“).
+- Import: `scripts/osm/import-playgrounds.mjs` + GitHub Action „Import ihrísk (OSM)“; porovnanie s dátami mesta `scripts/osm/city-crosscheck.mjs`.
+
+**Otestované**
+- `npm test` (28 vrátane 6 testov transformácie OSM a 3 testov zhlukovania), `lint`, `typecheck`, `build` prešli.
+- GitHub Action prebehla 4× úspešne (Overpass občas vráti 502/504, skript opakuje).
+- Playwright (iPhone 13, podstrčený štýl mapy): Domov, filter Ihriská (975 miest), „Zobraziť ďalšie“, Celá mapa so zhlukmi a priblížením, ťuk na pin, detail OSM ihriska; bez chýb v konzole.
+
+**Známe obmedzenia**
+- Iba 113 z 975 ihrísk má v OSM vlastný názov; ostatné sú „Ihrisko v parku …“ alebo „Detské ihrisko“ (rozlíši ich mestská časť a vzdialenosť).
+- Vybavenie je zapísané pri 413 ihriskách, vek pri 71, otváracie hodiny pri 60, povrch pri 76. Fotky ani adresy z OSM nie sú.
+- Zoradenie „Odporúčané“ dáva DEMO kútiky a herne s vymysleným hodnotením pred skutočné ihriská (ihriská bez hodnotení majú neutrálnu hodnotu).
+- Porovnanie s registrom športovísk mesta: 710 detských ihrísk, 439 sa zhoduje s OSM, 121 verejných chýba v OSM. Mestské dáta sa v aplikácii zatiaľ nezobrazujú (pozri DECISIONS.md).
+
 ## 2026-11-22 — Skutočná mapa aj v náhľade na Domove
 **Zmenené**
 - Náhľad mapy na Domove je skutočná mapa MapLibre s rovnakými podkladmi ako Celá mapa (spätná väzba Martina z iPhonu: na Domove bola len ilustrácia).
