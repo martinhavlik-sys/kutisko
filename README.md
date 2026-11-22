@@ -3,6 +3,8 @@
 Mobil-first aplikácia pre rodičov na objavovanie detských kútikov, vnútorných herní a vonkajších ihrísk. Pilot Bratislava a okolie.
 
 ## Stav
+Živý prototyp (DEMO dáta): **https://kutisko.vercel.app/**
+
 Príprava interaktívneho dizajnového prototypu. Zatiaľ bez produkčného backendu a reálnych používateľských dát.
 
 ## Spustenie

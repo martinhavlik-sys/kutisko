@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-22 — Prototyp nasadený na Vercel
+**Zmenené**
+- Verejná adresa prototypu https://kutisko.vercel.app/ doplnená do README a `docs/TEST_IPHONE.md`.
+
+**Otestované**
+- Domov, `/hladat?zobrazenie=mapa` a manifest odpovedajú HTTP 200, bez prihlasovacej brány, `noindex` ostáva.
+
+**Známe obmedzenia**
+- Vzhľad a mapové podklady na nasadenej verzii zatiaľ neoverené (zo zostavovacieho prostredia nedostupné); overí sa na iPhone.
+
 ## 2026-11-22 — Príprava testu na iPhone (Fáza 3)
 **Zmenené**
 - Ručný výber mesta (scenár S5): na Domove je lokalita „Bratislava a okolie ▾“ tlačidlom, ktoré otvorí výber mesta (Bratislava, Senec, Stupava, Šamorín, Pezinok, Malacky). Vzdialenosti na kartách a v detaile aj zoradenie „Najbližšie“ sa počítajú od vybraného mesta; výber sa zdieľa s Profilom. Polohu prototyp nezisťuje.
