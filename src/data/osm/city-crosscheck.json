@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T18:45:36.599Z",
+  "generatedAt": "2026-11-22T18:52:43.856Z",
   "osmCount": 975,
   "layers": [
     {
@@ -10,6 +10,7 @@
       "geometryType": "esriGeometryPolygon",
       "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0port_dostupnosti/FeatureServer/3",
       "count": 2,
+      "totalFeatures": 2,
       "matchedInOsm": 1,
       "missingInOsm": [
         {
@@ -154,6 +155,7 @@
       "geometryType": "esriGeometryPolygon",
       "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0port_dostupnosti/FeatureServer/4",
       "count": 2,
+      "totalFeatures": 2,
       "matchedInOsm": 0,
       "missingInOsm": [
         {
@@ -383,6 +385,16 @@
       }
     },
     {
+      "service": "Hosted/Športoviská_v_Bratislave",
+      "type": "FeatureServer",
+      "layerId": 1,
+      "name": "sport_body_08_26_vsetky_sportoviska",
+      "geometryType": "esriGeometryPoint",
+      "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/1",
+      "attrFilter": "detsk|ihrisk",
+      "error": "HTTP 500"
+    },
+    {
       "service": "zp/Mobiliár",
       "type": "MapServer",
       "layerId": 1,
@@ -390,6 +402,7 @@
       "geometryType": "esriGeometryPoint",
       "url": "https://geoportal.bratislava.sk/hsite/rest/services/zp/Mobili%C3%A1r/MapServer/1",
       "count": 12,
+      "totalFeatures": 12,
       "matchedInOsm": 6,
       "missingInOsm": [
         {
@@ -695,7 +708,7 @@
   ],
   "openData": [],
   "log": [
-    "ArcGIS https://geoportal.bratislava.sk/hsite/rest/services: prehľadaných služieb 627, vrstiev s ihriskami 3",
+    "ArcGIS https://geoportal.bratislava.sk/hsite/rest/services: prehľadaných služieb 627, vrstiev s ihriskami 4",
     "ArcGIS https://geoportal.bratislava.sk/arcgis/rest/services/: HTTP 404",
     "ArcGIS https://geoportal.bratislava.sk/arcgis/rest/services: prehľadaných služieb 0, vrstiev s ihriskami 0",
     "opendata https://opendata.bratislava.sk/api/dataset?search=ihrisk: HTTP 404",
@@ -703,6 +716,7 @@
     "opendata https://opendata.bratislava.sk/api/3/action/package_search?q=ihrisk: HTTP 404",
     "Vrstva Pešia dostupnosť 200 m a 400 m pre detské ihriská: 2 objektov, zhoda s OSM 1, chýba v OSM 1",
     "Vrstva Pešia dostupnosť 400 m a 700 m pre ihriská pre dospelých: 2 objektov, zhoda s OSM 0, chýba v OSM 2",
+    "Vrstva sport_body_08_26_vsetky_sportoviska: HTTP 500",
     "Vrstva Ihriská a fitness prvky: 12 objektov, zhoda s OSM 6, chýba v OSM 6"
   ]
 }
