@@ -1,4 +1,9 @@
 /**
+ * Miesta v prototype pochádzajú z dvoch zdrojov:
+ *  - `source: "osm"` — SKUTOČNÉ verejné ihriská z OpenStreetMap (src/data/osm/playgrounds.json,
+ *    generuje scripts/osm/import-playgrounds.mjs; © prispievatelia OpenStreetMap, ODbL).
+ *  - `source: "demo"` — SYNTETICKÉ DEMO kútiky a herne nižšie (vymyslené, označené „DEMO“).
+ *
  * SYNTETICKÉ DEMO DÁTA — nie sú to skutočné prevádzky.
  *
  * Názvy, hodnotenia, ceny, hodiny aj vybavenie sú vymyslené pre účely
@@ -6,6 +11,8 @@
  * v uvedených mestských častiach / obciach Bratislavy a okolia, aby mapa
  * a vzdialenosti pôsobili realisticky. Nepoužívať ako zdroj informácií.
  */
+
+import osmData from "./osm/playgrounds.json" with { type: "json" };
 
 export type CategoryId = "kutik" | "herna" | "ihrisko";
 
@@ -49,8 +56,9 @@ export interface Place {
   area: string;
   lat: number;
   lng: number;
-  ageMin: number;
-  ageMax: number;
+  /** Vekový rozsah; null = neuvedený (OSM ho takmer nikdy neobsahuje — nesmie pôsobiť negatívne). */
+  ageMin: number | null;
+  ageMax: number | null;
   /** Vnútorný priestor (true) alebo vonku (false). */
   indoor: boolean;
   /** Celkové skóre 1–10 (priemer rodičovských hodnotení) alebo null, ak hodnotenia chýbajú. */
@@ -62,10 +70,20 @@ export interface Place {
   amenities: string[];
   /** Údaje overil kurátor KUTISKO (simulované). */
   verified: boolean;
-  isDemo: true;
+  /** true = vymyslené DEMO miesto. */
+  isDemo: boolean;
+  source: "demo" | "osm";
+  /** Pôvodný objekt v OpenStreetMap (len source „osm“). */
+  osm?: { type: "node" | "way" | "relation"; id: number };
+  /** Surový tag opening_hours z OSM, ak existuje. */
+  openingHours?: string | null;
+  /** Povrch dopadovej plochy (OSM surface), ak je známy. */
+  surface?: string | null;
+  /** Ihrisko má vlastný názov v OSM (inak je názov odvodený z parku/ulice). */
+  named?: boolean;
 }
 
-export const PLACES: Place[] = [
+export const DEMO_PLACES: Place[] = [
   {
     id: "demo-01",
     name: "Kútik Mravenisko",
@@ -83,6 +101,7 @@ export const PLACES: Place[] = [
     amenities: ["kaviareň", "prebaľovací pult", "detské menu"],
     verified: true,
     isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-02",
@@ -101,24 +120,7 @@ export const PLACES: Place[] = [
     amenities: ["trampolíny", "oslavy", "kaviareň", "parkovanie"],
     verified: true,
     isDemo: true,
-  },
-  {
-    id: "demo-03",
-    name: "Ihrisko Pod Lipami",
-    category: "ihrisko",
-    area: "Karlova Ves",
-    lat: 48.1561,
-    lng: 17.0598,
-    ageMin: 2,
-    ageMax: 10,
-    indoor: false,
-    score: 8.1,
-    reviewCount: 27,
-    price: { kind: "free" },
-    hoursToday: null,
-    amenities: ["pieskovisko", "tieň", "lavičky"],
-    verified: true,
-    isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-04",
@@ -137,6 +139,7 @@ export const PLACES: Place[] = [
     amenities: ["prebaľovací pult", "Montessori hračky"],
     verified: false,
     isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-05",
@@ -155,24 +158,7 @@ export const PLACES: Place[] = [
     amenities: ["lezecká stena", "inštruktor", "oslavy"],
     verified: true,
     isDemo: true,
-  },
-  {
-    id: "demo-06",
-    name: "Ihrisko Lesná čistinka",
-    category: "ihrisko",
-    area: "Dúbravka",
-    lat: 48.1862,
-    lng: 17.0412,
-    ageMin: 3,
-    ageMax: 12,
-    indoor: false,
-    score: 9.0,
-    reviewCount: 38,
-    price: { kind: "free" },
-    hoursToday: null,
-    amenities: ["lanová dráha", "tieň", "pitná voda"],
-    verified: false,
-    isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-07",
@@ -191,6 +177,7 @@ export const PLACES: Place[] = [
     amenities: ["kaviareň"],
     verified: false,
     isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-08",
@@ -209,24 +196,7 @@ export const PLACES: Place[] = [
     amenities: ["tobogán", "bistro", "parkovanie"],
     verified: true,
     isDemo: true,
-  },
-  {
-    id: "demo-09",
-    name: "Ihrisko Na hrádzi",
-    category: "ihrisko",
-    area: "Šamorín",
-    lat: 48.0297,
-    lng: 17.3088,
-    ageMin: 1,
-    ageMax: 10,
-    indoor: false,
-    score: 8.4,
-    reviewCount: 12,
-    price: { kind: "free" },
-    hoursToday: null,
-    amenities: ["pieskovisko", "hojdačky", "cyklotrasa"],
-    verified: false,
-    isDemo: true,
+    source: "demo",
   },
   {
     id: "demo-10",
@@ -245,26 +215,22 @@ export const PLACES: Place[] = [
     amenities: ["prebaľovací pult", "záhrada", "kaviareň"],
     verified: true,
     isDemo: true,
-  },
-  {
-    id: "demo-11",
-    name: "Ihrisko Vodný svet",
-    category: "ihrisko",
-    area: "Vrakuňa",
-    lat: 48.1312,
-    lng: 17.1987,
-    ageMin: 2,
-    ageMax: 8,
-    indoor: false,
-    score: 7.2,
-    reviewCount: 21,
-    price: { kind: "free" },
-    hoursToday: "9:00 – 20:00",
-    amenities: ["vodné prvky", "lavičky", "toalety"],
-    verified: true,
-    isDemo: true,
+    source: "demo",
   },
 ];
+
+/**
+ * Všetky miesta: DEMO kútiky a herne + skutočné ihriská z OSM.
+ * DEMO ihriská boli odstránené, aby sa vymyslené ihrisko nemiešalo so skutočnými (DECISIONS.md, 2026-11-22).
+ */
+export const PLACES: Place[] = [...DEMO_PLACES, ...(osmData.places as unknown as Place[])];
+
+export const OSM_META = {
+  attribution: osmData.attribution,
+  license: osmData.license,
+  osmTimestamp: osmData.osmTimestamp,
+  count: osmData.places.length,
+};
 
 /** Referenčný bod pre vzdialenosť v prototype (centrum Bratislavy). Poloha používateľa sa nezisťuje. */
 export const REFERENCE_POINT = { lat: 48.1435, lng: 17.1088, label: "centra" } as const;

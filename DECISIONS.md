@@ -142,3 +142,18 @@
 **Rozhodnutie (Martin, spätná väzba z iPhonu):** Aj náhľad na Domove má ukazovať skutočnú mapu, nie ilustráciu.
 **Riešenie (Claude):** Malá mapa MapLibre bez posúvania a zoomu (nezachytáva posúvanie stránky), piny klikateľné, ťuk inde otvorí Celú mapu; ilustrácia ostáva ako záloha pri chybe podkladov.
 **Dopad:** Viac požiadaviek na podklady OpenFreeMap pri otvorení Domova; mapa sa načíta až pri zobrazení.
+
+## 2026-11-22 — Skutočné ihriská z OpenStreetMap
+**Rozhodnutie (Martin):** „podme do bodu 1 a 2“ — do aplikácie načítať skutočné verejné ihriská Bratislavy a okolia z OpenStreetMap (1) a porovnať ich s otvorenými dátami mesta (2). Vnútorné kútiky/herne a Google Places teraz nie.
+**Riešenie (Claude, technické):**
+- Reprodukovateľný import `scripts/osm/import-playgrounds.mjs` (Overpass API, bez kľúča a bez platenej služby). Výsledok je statický súbor `src/data/osm/playgrounds.json` v repozitári — žiadny backend ani databáza.
+- Import beží v GitHub Action „Import ihrísk (OSM)“ (spúšťa sa pri zmene skriptu alebo ručne), lebo vývojové prostredie Claude nemá prístup na Overpass. Akcia výsledok commitne späť do vetvy.
+- Územie: obdĺžnik 47,98–48,47 s. š., 16,83–17,48 v. d., len časť na Slovensku. Neimportujú sa ihriská s `access=private/customers/…`, nepoužívané a vnútorné.
+- Vybavenie: prvky `playground=*` a lavičky/pitná voda/toalety/prístrešok vnútri plochy ihriska (pri bodovom ihrisku do 25 m). Mestská časť/obec z administratívnych hraníc OSM. Ihrisko bez mena dostane názov podľa parku alebo ulice, inak „Detské ihrisko“.
+- Cena: verejné ihrisko = „Zadarmo“, okrem `fee=yes` (vtedy „Cena neoverená“).
+**Pravidlo neznámych údajov (manifest bod 5):** chýbajúci vek, hodiny či vybavenie sa zobrazia ako „neuvedené“ (sivo), nie ako nedostatok. Filter veku miesta s neuvedeným vekom nevylučuje. Ihriská z OSM nemajú žiadne vymyslené hodnotenia ani recenzie a nie sú označené ako „overené kurátorom“.
+**DEMO miesta:** Vymyslené DEMO ihriská (4) sú odstránené, aby sa nemiešali so skutočnými. DEMO kútiky a herne (7) ostávajú s viditeľným štítkom DEMO, kým nebude ručne kurátorovaný katalóg (mimo tohto kroku).
+**Atribúcia:** „© prispievatelia OpenStreetMap“ s odkazom na licenciu ODbL na karte, v detaile (s odkazom na objekt v OSM) aj v pätičke Domova; mapa ju má aj v podkladoch.
+**Mestské otvorené dáta:** Skript `scripts/osm/city-crosscheck.mjs` prehľadá ArcGIS katalóg geoportal.bratislava.sk a páruje nájdené ihriská s OSM do 60 m. Najlepší zdroj je register športovísk mesta (vrstva `sport_body_08_26_vsetky_sportoviska`, 2 366 objektov, z toho 710 s poddruhom „detské ihriská“): 439 (62 %) má zodpovedajúce ihrisko v OSM, 271 nie — z nich 121 je podľa mesta verejne prístupných, 150 neverejných (najmä školské a škôlkarske areály). Portál opendata.bratislava.sk nemá verejné vyhľadávacie API v tvare, ktorý skript skúša. Mestské údaje sa v aplikácii zatiaľ nezobrazujú — len kontrola úplnosti, kým vlastník nerozhodne o ich použití a neoverí sa licencia vrstvy.
+**Alternatívy:** Načítavať Overpass priamo z prehliadača (pomalé, nespoľahlivé, záťaž na verejný server); Supabase/backend (mimo fázy, vyžaduje schválenie); Google Places (platené, licencia neumožňuje ukladanie).
+**Dopad:** Na mape sú stovky miest → piny sa zhlukujú do kruhov s počtom; zoznamy sa načítavajú po 20. Detail OSM ihrísk sa generuje na požiadanie (nie pri zostavení).

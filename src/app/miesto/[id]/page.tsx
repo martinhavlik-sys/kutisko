@@ -2,24 +2,26 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { PLACES } from "@/data/places";
-import { PLACE_DETAILS } from "@/data/placeDetails";
+import { getPlaceDetail } from "@/data/placeDetails";
 import { PlaceDetailScreen, PlaceDetailSkeleton } from "@/components/detail/PlaceDetailScreen";
 
+/** Vopred sa generujú len DEMO miesta; stovky ihrísk z OSM sa vykreslia na požiadanie. */
 export function generateStaticParams() {
-  return PLACES.map((p) => ({ id: p.id }));
+  return PLACES.filter((p) => p.isDemo).map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/miesto/[id]">): Promise<Metadata> {
   const { id } = await params;
   const place = PLACES.find((p) => p.id === id);
-  return { title: place ? `${place.name} (DEMO) — KUTISKO` : "Miesto nenájdené — KUTISKO" };
+  return { title: place ? `${place.name}${place.isDemo ? " (DEMO)" : ""} — KUTISKO` : "Miesto nenájdené — KUTISKO" };
 }
 
 async function Detail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const place = PLACES.find((p) => p.id === id);
-  const detail = PLACE_DETAILS[id];
-  if (!place || !detail) notFound();
+  if (!place) notFound();
+  const detail = getPlaceDetail(place);
+  if (!detail) notFound();
   return <PlaceDetailScreen place={place} detail={detail} />;
 }
 

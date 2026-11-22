@@ -1,0 +1,49 @@
+name: Import ihrísk (OSM)
+
+# Stiahne verejné ihriská z OpenStreetMap a porovná ich s otvorenými dátami mesta.
+# Výsledok (src/data/osm/*.json) commitne späť do vetvy, z ktorej beží.
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths:
+      - "scripts/osm/**"
+      - ".github/workflows/import-osm.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-osm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Testy transformácie
+        run: node --test scripts/osm/transform.test.mjs
+      - name: Import z OpenStreetMap
+        run: node scripts/osm/import-playgrounds.mjs --raw raw
+      - name: Porovnanie s dátami mesta (best-effort)
+        run: node scripts/osm/city-crosscheck.mjs
+        continue-on-error: true
+      - name: Surové odpovede (na ladenie)
+        uses: actions/upload-artifact@v4
+        with:
+          name: overpass-raw
+          path: raw/
+          retention-days: 7
+      - name: Commit dát
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add src/data/osm/
+          if git diff --cached --quiet; then echo "Bez zmien v dátach."; exit 0; fi
+          git commit -m "Dáta: import ihrísk z OpenStreetMap ($(date -u +%Y-%m-%d))"
+          git push

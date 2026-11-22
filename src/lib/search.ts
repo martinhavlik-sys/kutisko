@@ -40,14 +40,20 @@ export function matchesQuery(place: Place, query: string): boolean {
   const tokens = normalize(query).split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return true;
   const haystack = normalize(
-    [place.name, place.area, place.amenities.join(" "), CATEGORY_KEYWORDS[place.category]].join(" "),
+    [place.name, place.area, place.amenities.join(" "), CATEGORY_KEYWORDS[place.category], place.source === "osm" ? "skutocne overene osm" : "demo"].join(" "),
   );
   return tokens.every((t) => haystack.includes(t));
 }
 
+/**
+ * Prekrytie vekového rozsahu so zvolenou skupinou. Miesto s neuvedeným vekom sa nevylučuje
+ * (neznámy údaj nesmie pôsobiť negatívne) — verejné ihriská sú spravidla pre všetky vekové skupiny.
+ */
 export function matchesAge(place: Place, band: Filters["ageBand"]): boolean {
   if (!band) return true;
-  return place.ageMin <= band.max && place.ageMax >= band.min;
+  const min = place.ageMin ?? 0;
+  const max = place.ageMax ?? 99;
+  return min <= band.max && max >= band.min;
 }
 
 /** Vzdušná vzdialenosť v km (haversine). */
@@ -129,7 +135,10 @@ export function formatPrice(price: Price): string {
   }
 }
 
-export function formatAge(min: number, max: number): string {
+export function formatAge(min: number | null, max: number | null): string {
+  if (min === null && max === null) return "neuvedený";
+  if (max === null) return `od ${min} r.`;
+  if (min === null) return `do ${max} r.`;
   return `${min}–${max} r.`;
 }
 

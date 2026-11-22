@@ -9,7 +9,8 @@ import { useUrlFilters, type UrlFilters } from "@/lib/useUrlFilters";
 import { useSaved } from "@/lib/saved";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { Toast, useToast } from "@/components/ui/Toast";
-import { PlaceCard, PlaceCardSkeleton } from "@/components/home/PlaceCard";
+import { PlaceCardSkeleton } from "@/components/home/PlaceCard";
+import { PlaceList } from "@/components/home/PlaceList";
 import { PlaceArt } from "@/components/home/PlaceArt";
 import { EmptyState } from "@/components/home/States";
 import { ChevronDownIcon, CloseIcon, HeartIcon, MapIcon, SearchIcon, SlidersIcon, StarIcon } from "@/components/home/icons";
@@ -264,7 +265,9 @@ export function SearchScreen() {
                         <span className="font-normal text-ink-muted">· DEMO</span>
                       </>
                     ) : (
-                      <span className="font-medium text-turquoise-700">Nové · DEMO</span>
+                      <span className="font-medium text-turquoise-700">
+                        {active.isDemo ? "Nové · DEMO" : "Zatiaľ bez hodnotení"}
+                      </span>
                     )}
                   </p>
                 </div>
@@ -290,11 +293,7 @@ export function SearchScreen() {
           {results.length === 0 ? (
             <EmptyState query={state.query.trim()} onReset={clearAll} />
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {results.map((p) => (
-                <PlaceCard key={p.id} place={p} saved={saved.has(p.id)} active={false} onToggleSave={toggleSave} />
-              ))}
-            </div>
+            <PlaceList places={results} savedHas={saved.has} onToggleSave={toggleSave} />
           )}
         </main>
       )}

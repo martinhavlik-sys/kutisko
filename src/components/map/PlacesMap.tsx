@@ -4,6 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState } from "react";
 import type { Map as MlMap, Marker } from "maplibre-gl";
 import { CATEGORIES, REFERENCE_POINT, type Place } from "@/data/places";
+import { clusterPoints } from "@/lib/cluster";
 
 /**
  * Interaktívna mapa na MapLibre GL (schválené 2026-11-22).
@@ -44,11 +45,13 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
   const [tilesFailed, setTilesFailed] = useState(false);
   const [inView, setInView] = useState(!preview);
   const onFailRef = useRef(onTilesFailed);
+  const onBgRef = useRef(onBackgroundTap);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
     onFailRef.current = onTilesFailed;
-  }, [onSelect, onTilesFailed]);
+    onBgRef.current = onBackgroundTap;
+  }, [onSelect, onTilesFailed, onBackgroundTap]);
 
   // Náhľad: knižnicu a podklady načítať až keď je mapa blízko obrazovky.
   useEffect(() => {
@@ -130,7 +133,14 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
     };
   }, [inView, preview]);
 
-  // Synchronizácia pinov s výsledkami.
+  /**
+   * Vykreslenie pinov so zhlukovaním: pri stovkách ihrísk sa body blízko seba na obrazovke
+   * spoja do kruhu s počtom (ťuk priblíži). Prekresľuje sa po každom posune/zoome mapy.
+   */
+  const placesRef = useRef(places);
+  const activeRef = useRef(activeId);
+  const renderRef = useRef<() => void>(() => {});
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
@@ -138,19 +148,13 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
     import("maplibre-gl").then((ml) => {
       if (!alive) return;
       const markers = markersRef.current;
-      const ids = new Set(places.map((p) => p.id));
-      markers.forEach((m, id) => {
-        if (!ids.has(id)) {
-          m.marker.remove();
-          markers.delete(id);
-        }
-      });
-      for (const p of places) {
-        if (markers.has(p.id)) continue;
+
+      const makePin = (p: Place) => {
         const cat = CATEGORIES.find((c) => c.id === p.category)!;
         const el = document.createElement("button");
         el.type = "button";
         el.dataset.pin = p.id;
+        el.dataset.cat = p.category;
         el.className = "kut-pin";
         el.setAttribute("aria-label", `${p.name}, ${cat.shortLabel.toLowerCase()}, ${p.area}`);
         el.innerHTML = `<span class="kut-pin-dot"></span>`;
@@ -158,29 +162,95 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
           ev.stopPropagation();
           onSelectRef.current(p.id);
         });
-        const marker = new ml.Marker({ element: el, anchor: "center" }).setLngLat([p.lng, p.lat]).addTo(map);
-        markers.set(p.id, { marker, el });
-      }
+        return { marker: new ml.Marker({ element: el, anchor: "center" }).setLngLat([p.lng, p.lat]).addTo(map), el };
+      };
+
+      const makeCluster = (members: Place[], at: [number, number]) => {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.dataset.pin = "cluster";
+        el.className = "kut-cluster";
+        const n = members.length;
+        el.setAttribute("aria-label", `${n} miest v tejto oblasti, priblížiť`);
+        el.textContent = n > 99 ? "99+" : String(n);
+        el.style.setProperty("--size", `${Math.min(46, 30 + Math.log2(n) * 3)}px`);
+        const b = new ml.LngLatBounds();
+        members.forEach((m) => b.extend([m.lng, m.lat]));
+        el.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          if (preview) {
+            onBgRef.current?.();
+            return;
+          }
+          map.fitBounds(b, { padding: 80, maxZoom: Math.max(map.getZoom() + 2, 15), duration: 400 });
+        });
+        return { marker: new ml.Marker({ element: el, anchor: "center" }).setLngLat(at).addTo(map), el };
+      };
+
+      const render = () => {
+        const list = placesRef.current;
+        const byId = new Map(list.map((p) => [p.id, p]));
+        const zoom = map.getZoom();
+        const bounds = map.getBounds();
+        const visible = list.filter(
+          (p) => p.id === activeRef.current || bounds.contains([p.lng, p.lat]),
+        );
+        const points = visible.map((p) => {
+          const pt = map.project([p.lng, p.lat]);
+          return { id: p.id, x: pt.x, y: pt.y };
+        });
+        const items = zoom >= 15.5 ? points.map((p) => ({ kind: "pin" as const, id: p.id })) : clusterPoints(points, 58, activeRef.current);
+        const wanted = new Map<string, { members: Place[]; at?: [number, number] }>();
+        for (const it of items) {
+          if (it.kind === "pin") wanted.set(`p:${it.id}`, { members: [byId.get(it.id)!] });
+          else {
+            const ll = map.unproject([it.x, it.y]);
+            wanted.set(`c:${it.key}`, { members: it.ids.map((id) => byId.get(id)!), at: [ll.lng, ll.lat] });
+          }
+        }
+        markers.forEach((m, key) => {
+          if (!wanted.has(key)) {
+            m.marker.remove();
+            markers.delete(key);
+          }
+        });
+        wanted.forEach(({ members, at }, key) => {
+          const existing = markers.get(key);
+          if (existing) {
+            if (at) existing.marker.setLngLat(at);
+            return;
+          }
+          markers.set(key, at ? makeCluster(members, at) : makePin(members[0]));
+        });
+        markers.forEach(({ el }, key) => {
+          const active = key === `p:${activeRef.current}`;
+          el.classList.toggle("is-active", active);
+          if (key.startsWith("p:")) el.setAttribute("aria-pressed", String(active));
+          el.style.zIndex = active ? "3" : key.startsWith("c:") ? "2" : "1";
+        });
+      };
+      renderRef.current = render;
+      map.on("moveend", render);
+
+      placesRef.current = places;
       if (places.length > 0) {
         const b = new ml.LngLatBounds();
         places.forEach((p) => b.extend([p.lng, p.lat]));
         const padding = preview ? { top: 64, bottom: 36, left: 32, right: 32 } : { top: 70, bottom: 170, left: 50, right: 50 };
         map.fitBounds(b, { padding, maxZoom: preview ? 12.5 : 13.5, duration: preview ? 0 : 450 });
       }
+      render();
     });
     return () => {
       alive = false;
+      map.off("moveend", renderRef.current);
     };
   }, [places, ready, preview]);
 
-  // Zvýraznenie aktívneho pinu.
+  // Zvýraznenie aktívneho pinu (vybrané miesto sa nikdy nezhlukuje).
   useEffect(() => {
-    markersRef.current.forEach(({ el }, id) => {
-      const active = id === activeId;
-      el.classList.toggle("is-active", active);
-      el.setAttribute("aria-pressed", String(active));
-      el.style.zIndex = active ? "2" : "1";
-    });
+    activeRef.current = activeId;
+    renderRef.current();
     const map = mapRef.current;
     const p = places.find((x) => x.id === activeId);
     if (map && p && ready && !preview) map.easeTo({ center: [p.lng, p.lat], duration: 350, offset: [0, -60] });

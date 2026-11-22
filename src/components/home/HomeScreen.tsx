@@ -18,7 +18,8 @@ import { BottomNav } from "@/components/ui/BottomNav";
 import { AgeChips, CategoryTabs } from "./Filters";
 import { ChevronDownIcon, CloseIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
 import { MapPreview } from "./MapPreview";
-import { PlaceCard, PlaceCardSkeleton } from "./PlaceCard";
+import { PlaceCardSkeleton } from "./PlaceCard";
+import { PlaceList } from "./PlaceList";
 import { EmptyState, ErrorState } from "./States";
 
 type LoadState = "loading" | "ready" | "error";
@@ -266,26 +267,30 @@ export function HomeScreen() {
               {state === "error" && <ErrorState onRetry={retry} />}
               {state === "ready" && results.length === 0 && <EmptyState query={query.trim()} onReset={resetFilters} />}
               {state === "ready" && results.length > 0 && (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {results.map((p) => (
-                    <PlaceCard
-                      key={p.id}
-                      ref={(el) => {
-                        if (el) cardRefs.current.set(p.id, el);
-                        else cardRefs.current.delete(p.id);
-                      }}
-                      place={p}
-                      saved={saved.has(p.id)}
-                      active={activeId === p.id}
-                      onToggleSave={toggleSave}
-                    />
-                  ))}
-                </div>
+                <PlaceList
+                  places={results}
+                  savedHas={saved.has}
+                  onToggleSave={toggleSave}
+                  activeId={activeId}
+                  cardRef={(id, el) => {
+                    if (el) cardRefs.current.set(id, el);
+                    else cardRefs.current.delete(id);
+                  }}
+                />
               )}
             </div>
 
             <p className="mt-8 text-center text-[12.5px] leading-relaxed text-ink-muted">
-              Prototyp KUTISKO · všetky miesta, hodnotenia, ceny a hodiny sú vymyslené (DEMO).
+              Prototyp KUTISKO · ihriská sú skutočné z{" "}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2"
+              >
+                © prispievatelia OpenStreetMap
+              </a>
+              ; kútiky a herne označené DEMO, hodnotenia aj recenzie sú vymyslené.
               <br />
               Vzdialenosť sa počíta od centra {origin.of}, poloha sa nezisťuje.
             </p>
