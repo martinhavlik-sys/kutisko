@@ -15,10 +15,10 @@ npm run lint && npm run typecheck && npm run build
 Stavy na testovanie: `/?stav=nacitanie`, `/?stav=chyba`. Obrazovky: `/`, `/hladat` (aj `?zobrazenie=mapa`), `/miesto/demo-01`, `/ulozene`, `/profil`, `/registracia`, `/prihlasenie`, `/vitaj`. Všetky miesta sú syntetické (DEMO).
 
 ## Dokumentácia
-- `PRODUCT_MANIFESTO.md` — produktová špecifikácia (pripravuje sa nahratie v1.7)
-- `PROTOTYPE_BRIEF.md` — rozsah prototypu (pripravuje sa)
-- `DESIGN_SYSTEM_PROPOSAL.md` — vizuálny smer (pripravuje sa)
-- `MVP_ROADMAP.md` — fázy realizácie (pripravuje sa)
+- `PRODUCT_MANIFESTO.md` — produktová špecifikácia v1.7
+- `PROTOTYPE_BRIEF.md` — rozsah prototypu (návrh)
+- `DESIGN_SYSTEM_PROPOSAL.md` — dizajnový systém a tokeny (návrh)
+- `MVP_ROADMAP.md` — fázy realizácie (návrh)
 - `CLAUDE.md` — agilný vývoj, kvalita UX/UI a pravidlá Git
 - `CHANGELOG.md` — prehľad dokončených zmien
 - `DECISIONS.md` — rozhodnutia a dôvody
