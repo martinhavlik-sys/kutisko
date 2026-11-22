@@ -58,3 +58,7 @@
 **Rozhodnutie:** Filtre rozšíreného vyhľadávania sa ukladajú do URL; obľúbené a preferencie iba lokálne v prehliadači s označením DEMO.
 **Dôvod:** Zdieľateľné výsledky, návrat späť bez straty filtrov; bez backendu (manifest bod 15, 17).
 **Dopad:** Po prechode na backend sa obľúbené a preferencie presunú k účtu.
+
+## 2026-11-22 — Schválenie obrazoviek Hľadať, mapa, Obľúbené, Profil a detail
+**Rozhodnutie (Martin):** Po prezretí náhľadov v PR #2 schválil aktuálne obrazovky („je to v poriadku“).
+**Dopad:** Pokračuje sa simulovaným hodnotením, návrhom miesta a náhľadom admin fronty (MVP_ROADMAP, Fáza 2, rezy 5–7).

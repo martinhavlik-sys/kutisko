@@ -3,10 +3,11 @@
 import { AGE_BANDS } from "@/data/places";
 import { CITIES, DISTANCES, usePreferences } from "@/lib/preferences";
 import { useSaved } from "@/lib/saved";
+import { useMyReviews } from "@/lib/community";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Toast, useToast } from "@/components/ui/Toast";
-import { ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
+import { CheckBadgeIcon, ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
 import Link from "next/link";
 
 function ChevronRight() {
@@ -35,12 +36,20 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
 export function ProfileScreen() {
   const { prefs, set, clear, isEmpty } = usePreferences();
   const saved = useSaved();
+  const [myReviews] = useMyReviews();
   const { message, show } = useToast();
 
   const rows: { label: string; hint?: string; icon: React.ReactNode; href?: string; onClick?: () => void }[] = [
     { label: "Obľúbené miesta", hint: saved.ids.length ? String(saved.ids.length) : undefined, icon: <HeartIcon size={20} />, href: "/ulozene" },
-    { label: "Moje hodnotenia", hint: "0", icon: <StarIcon size={18} />, onClick: () => show("Hodnotenia pripravujeme v ďalšej iterácii") },
-    { label: "Navrhnúť nové miesto", icon: <PinIcon size={20} />, onClick: () => show("Návrh miesta pripravujeme v ďalšej iterácii") },
+    {
+      label: "Moje hodnotenia",
+      hint: String(myReviews.length),
+      icon: <StarIcon size={18} />,
+      onClick: () =>
+        show(myReviews.length ? "Vaše hodnotenia nájdete v detaile hodnotených miest (DEMO)" : "Zatiaľ ste nič nehodnotili. Ohodnotiť môžete v detaile miesta."),
+    },
+    { label: "Navrhnúť nové miesto", icon: <PinIcon size={20} />, href: "/navrhnut" },
+    { label: "Admin fronta (náhľad)", hint: "DEMO", icon: <CheckBadgeIcon size={20} />, href: "/admin" },
     { label: "Zmena hesla", icon: <UserIcon size={20} />, onClick: () => show("V prototype sa heslo nemení (DEMO)") },
   ];
 

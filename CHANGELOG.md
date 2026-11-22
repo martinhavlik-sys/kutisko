@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-22 — Simulované hodnotenie, návrh miesta, nahlásenie a náhľad admin fronty
+**Zmenené**
+- Martin schválil náhľady obrazoviek z PR #2 (zapísané v DECISIONS).
+- `/miesto/[id]/hodnotit`: celkový dojem 1–10 (povinný), voliteľné kritériá čistota a kreativita priestoru, text do 1000 znakov, voliteľná fotka. Jedno hodnotenie na miesto, dá sa upraviť; v detaile sa zobrazí „Vaše hodnotenie (DEMO)“.
+- `/navrhnut`: návrh nového miesta (názov, typ, adresa/časť, vek, popis, fotka) s konkrétnymi chybovými hláškami a fokusom na prvé chybné pole.
+- Fotky: náhľad sa zmenší a znovu zakóduje v prehliadači (odstráni EXIF/GPS), vyžaduje potvrdenie, že na fotke nie sú rozpoznateľné deti, a čaká na schválenie.
+- Detail: „Nahlásiť nesprávny údaj“ (dôvod + poznámka).
+- `/admin` (náhľad, DEMO, bez oprávnení): záložky Návrhy, Fotky, Nahlásenia, Recenzie; schváliť / zamietnuť / vrátiť, skryť recenziu bez zmeny hodnotenia, záznam zásahov, vymazanie DEMO zápisov. Obsahuje 2 ukážkové návrhy a 1 ukážkové nahlásenie.
+- Profil: počet mojich hodnotení, odkazy na návrh miesta a admin frontu.
+
+**Otestované**
+- `npm test` (13 testov vrátane validácie formulárov), `typecheck`, `lint`, `build` prešli.
+- Playwright (iPhone 13): odoslanie prázdneho hodnotenia → chybová hláška a fokus na stupnicu; fotka bez potvrdenia → chyba; úspešné odoslanie → potvrdenie a moje hodnotenie v detaile; nahlásenie bez dôvodu → chyba, s dôvodom → uložené; návrh s chybami (4 polia) → konkrétne hlášky, opravený návrh → potvrdenie; admin: 3 návrhy, schválenie návrhu a fotky, 2 nahlásenia, skrytie recenzie, záznam 3 zásahov; stav fotky sa prejaví v detaile; bez chýb v konzole.
+
+**Známe obmedzenia**
+- Všetko je iba v localStorage tohto prehliadača; žiadne skutočné zverejnenie ani oprávnenia.
+- Ukážkové recenzie z dát sa v admin fronte nemoderujú, iba vlastné DEMO hodnotenia.
+- Moje DEMO hodnotenie zatiaľ nemení zobrazené priemerné skóre miesta.
+
 ## 2026-11-22 — Rozšírené vyhľadávanie s mapou, Obľúbené a Profil (prototyp)
 **Zmenené**
 - `/hladat`: vyhľadávanie s rýchlymi filtrami (kategória, vnútri/vonku, zadarmo), panel Filtre (kategória, vek, prostredie, vybavenie, iba overené, iba zadarmo) s počtom výsledkov pred potvrdením, zoradenie, prepínač Zoznam / Mapa. Filtre sú v URL (dajú sa zdieľať, prežijú obnovenie).

@@ -12,6 +12,8 @@ import { MapPreview } from "@/components/home/MapPreview";
 import { PlaceArt } from "@/components/home/PlaceArt";
 import { CheckBadgeIcon, ClockIcon, HeartIcon, PinIcon, StarIcon } from "@/components/home/icons";
 import { NavigationSheet } from "./NavigationSheet";
+import { ReportDialog } from "./ReportDialog";
+import { useMyReviews } from "@/lib/community";
 
 function BackIcon() {
   return (
@@ -75,6 +77,9 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
   const saved = useSaved();
   const isSaved = saved.has(place.id);
   const [navOpen, setNavOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [myReviews] = useMyReviews();
+  const mine = myReviews.find((r) => r.placeId === place.id);
   const { message, show } = useToast();
   const category = CATEGORIES.find((c) => c.id === place.category)!;
   const km = distanceKm(REFERENCE_POINT, place);
@@ -206,13 +211,12 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             <Section
               title="Hodnotenie rodičov"
               aside={
-                <button
-                  type="button"
-                  onClick={() => show("Hodnotenie pripravujeme v ďalšej iterácii")}
-                  className="min-h-10 rounded-full bg-white px-4 text-[14px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                <Link
+                  href={`/miesto/${place.id}/hodnotit`}
+                  className="inline-flex min-h-10 items-center rounded-full bg-white px-4 text-[14px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
                 >
-                  Ohodnotiť
-                </button>
+                  {mine ? "Upraviť" : "Ohodnotiť"}
+                </Link>
               }
             >
               {detail.criteria ? (
@@ -223,6 +227,34 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                 </div>
               ) : (
                 <p className="text-[15px] text-ink-muted">Podrobné hodnotenie zatiaľ nie je k dispozícii.</p>
+              )}
+
+              {mine && (
+                <div className="mt-4 rounded-[22px] bg-turquoise-50 p-4 ring-1 ring-turquoise-400/40">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[14px] font-semibold text-turquoise-700">
+                      Vaše hodnotenie (DEMO, iba v tomto prehliadači){mine.hidden ? " · recenziu skryl administrátor" : ""}
+                    </p>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[13px] font-semibold text-amber-700">
+                      <StarIcon size={12} className="text-amber-400" />
+                      {mine.overall}
+                      <span className="sr-only"> z 10</span>
+                    </span>
+                  </div>
+                  {(mine.cleanliness || mine.creativity) && (
+                    <p className="mt-1 text-[13px] text-ink-muted">
+                      {mine.cleanliness ? `Čistota ${mine.cleanliness}` : ""}
+                      {mine.cleanliness && mine.creativity ? " · " : ""}
+                      {mine.creativity ? `Kreativita ${mine.creativity}` : ""}
+                    </p>
+                  )}
+                  {mine.text && <p className="mt-1.5 text-[15px] leading-relaxed text-ink">{mine.text}</p>}
+                  {mine.photo && (
+                    <p className="mt-1.5 text-[13px] text-ink-muted">
+                      Fotka: {mine.photo.status === "approved" ? "schválená" : mine.photo.status === "rejected" ? "zamietnutá" : "čaká na schválenie"}
+                    </p>
+                  )}
+                </div>
               )}
 
               {detail.reviews.length > 0 && (
@@ -280,7 +312,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               </p>
               <button
                 type="button"
-                onClick={() => show("Nahlásenie chyby pripravujeme v ďalšej iterácii")}
+                onClick={() => setReportOpen(true)}
                 className="mt-3 min-h-10 text-[14px] font-semibold text-coral-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ink"
               >
                 Nahlásiť nesprávny údaj
@@ -343,6 +375,15 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
 
       <Toast message={message} offset={88} />
       <NavigationSheet place={place} open={navOpen} onClose={() => setNavOpen(false)} />
+      <ReportDialog
+        placeId={place.id}
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        onDone={() => {
+          setReportOpen(false);
+          show("Ďakujeme, nahlásenie sme prijali (DEMO)");
+        }}
+      />
     </>
   );
 }
