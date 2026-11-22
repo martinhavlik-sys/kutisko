@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-22 — Skutočná mapa aj v náhľade na Domove
+**Zmenené**
+- Náhľad mapy na Domove je skutočná mapa MapLibre s rovnakými podkladmi ako Celá mapa (spätná väzba Martina z iPhonu: na Domove bola len ilustrácia).
+- Náhľad sa nedá posúvať ani zoomovať, aby nezachytával posúvanie stránky; ťuk na pin zvýrazní kartu miesta, ťuk inde alebo „Celá mapa“ otvorí plnú mapu.
+- Mapa sa načíta až keď je blízko obrazovky. Ak sa podklady nenačítajú (chyba alebo 8 s), zobrazí sa pôvodná ilustračná mapa s označením „podklady nedostupné“.
+
+**Otestované**
+- `npm test` (18), `lint`, `typecheck`, `build` prešli.
+- Playwright (iPhone 13) s podstrčeným štýlom mapy: 11 pinov, posúvanie stránky cez mapu funguje, ťuk na pin zvýrazní kartu, ťuk na pozadie otvorí `/hladat?zobrazenie=mapa`; pri blokovaných podkladoch sa ukáže ilustračná záloha. Bez chýb v konzole.
+
+**Známe obmedzenia**
+- Skutočné podklady OpenFreeMap sa v zostavovacom prostredí nedajú načítať; overiť na iPhone.
+
 ## 2026-11-22 — Prototyp nasadený na Vercel
 **Zmenené**
 - Verejná adresa prototypu https://kutisko.vercel.app/ doplnená do README a `docs/TEST_IPHONE.md`.
