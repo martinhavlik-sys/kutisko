@@ -12,3 +12,5 @@ coverage/
 .vercel/
 *.pem
 *.key
+*.tsbuildinfo
+public/vendor/
