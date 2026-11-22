@@ -1,6 +1,6 @@
 # KUTISKO — Design System Proposal
 
-Status: **návrh v0.1** (2026-11-22). Celý dokument je **[NÁVRH]**, pokiaľ nie je uvedené inak. Finálne tokeny, typografia a logo sú v manifeste otvorené a schvaľujú sa až po vizuálnom teste konceptu Domov.
+Status: **návrh v0.2** (2026-11-22). Celý dokument je **[NÁVRH]**, pokiaľ nie je uvedené inak. Finálne tokeny a logo sú v manifeste otvorené a schvaľujú sa až po vizuálnom teste konceptu Domov. Typografia je rozhodnutá (sekcia 3).
 
 Schválené vstupy z `PRODUCT_MANIFESTO.md` v1.7:
 - aplikácia pre rodičov: funkčná, elegantná, vzdušná, dôveryhodná [19]
@@ -84,17 +84,19 @@ Chyba sa vždy oznamuje aj textom a ikonou, nie iba farbou.
 
 Overenie: hodnoty vypočítané skriptom podľa WCAG 2.1 (relatívna luminancia). Pred schválením overiť aj vizuálne na iPhone v dennom svetle.
 
-## 3. Typografia [NÁVRH — otvorené rozhodnutie]
+## 3. Typografia [ROZHODNUTÉ 2026-11-22]
 
-Požiadavky: plná podpora slovenskej diakritiky (ľ, ĺ, ŕ, ô, ä, ť, ď, ň), dobrá čitateľnosť v malých veľkostiach, otvorená licencia, variabilný font kvôli veľkosti.
+Vlastník produktu zveril výber písma realizátorovi (pozri `DECISIONS.md`). Zvolené písmo: **Plus Jakarta Sans** pre nadpisy aj text.
 
-| Variant | Nadpisy | Text | Charakter |
-|---------|---------|------|-----------|
-| **A (odporúčaný)** | Plus Jakarta Sans | Plus Jakarta Sans | moderný, priateľský, mierne zaoblený; jedna rodina = menej KB |
-| B | Fraunces (soft) | Inter | elegantnejší kontrast serif/sans, viac „prémiový“ |
-| C | Nunito | Inter | najhravejší, riziko „detského“ dojmu |
+Dôvody:
+- moderný geometrický grotesk s mierne zaobleným, priateľským charakterom: pôsobí vľúdne pre rodinnú tému, ale dospelo a dôveryhodne (nie „detsky“),
+- vysoká výška malých písmen a otvorené tvary → dobrá čitateľnosť na mobile v malých veľkostiach,
+- plná podpora slovenskej diakritiky (latin-ext), variabilný font s váhami 200–800 → jedna rodina, jemná hierarchia, menej KB,
+- SIL Open Font License, self-hosting cez `next/font` (bez externej požiadavky za behu).
 
-Všetky varianty sú pod SIL Open Font License a podporujú latin-ext. Načítanie cez `next/font` (self-hosting, bez externej požiadavky za behu). Systémový fallback: `-apple-system, "Segoe UI", Roboto, sans-serif`.
+Zvažované alternatívy: Fraunces + Inter (elegantnejšie, ale dve rodiny a serif pôsobí menej ľahko v hustom UI), Nunito + Inter (najhravejšie, riziko detského dojmu, čo manifest bod 19 vylučuje).
+
+Čísla v hodnoteniach a vzdialenostiach používajú `font-variant-numeric: tabular-nums`. Systémový fallback: `-apple-system, "Segoe UI", Roboto, sans-serif`.
 
 **Typografická škála** (mobil, rem pri 16 px)
 
@@ -143,7 +145,8 @@ Stavy pre každý interaktívny prvok: default, hover (desktop), pressed, focus-
 ## 6. Ikony a ilustrácie
 - **Ikony:** jedna knižnica s konzistentnou hrúbkou čiary, napr. Lucide (MIT) [NÁVRH]. Veľkosť 20/24 px.
 - **Ilustrácie (Simonka):** len úvod, prázdne stavy, úspech po akcii a výnimočné mikrodetaily. Nie v zozname výsledkov ani v detaile nad fotografiami. Neupravovať štýl bez súhlasu autorky. [SCHVÁLENÉ 21]
-- Ilustrácie sa do verejného repozitára necommitujú, kým to vlastník výslovne nepovolí. V prototype dovtedy neutrálny placeholder.
+- Ilustrácia dievčatka (`assets/illustrations/dievcatko-kocky.png`, `dievcatko-lopta.png`) je s výslovným súhlasom vlastníka v repozitári (2026-11-22). Odporúčané použitie: prázdny stav Uložených, nulové výsledky vyhľadávania, uvítanie. Ilustrácia nesie význam len dekoratívne → `alt=""` alebo `aria-hidden`, text stavu musí byť zrozumiteľný aj bez nej.
+- Ďalšie ilustrácie sa do verejného repozitára necommitujú bez výslovného súhlasu vlastníka.
 
 ## 7. Pohyb
 - Krátke prechody 150–250 ms, `ease-out`; bottom sheet s jemnou pružinou.
@@ -154,10 +157,10 @@ Stavy pre každý interaktívny prvok: default, hover (desktop), pressed, focus-
 - Názvy tokenov sémantické (`text.secondary`), nie podľa odtieňa, aby zmena palety nevyžadovala zmenu komponentov.
 
 ## 9. Otvorené rozhodnutia (na schválenie po koncepte Domov)
-1. Typografia — variant A / B / C.
+1. ~~Typografia~~ — rozhodnuté: Plus Jakarta Sans.
 2. Finálne UI tokeny — potvrdiť tmavšie odtiene (`coral.600`, `turquoise.700`, `yellow.700`) po teste na zariadení.
 3. Mapový provider a vizuál mapy — pozri `MVP_ROADMAP.md`.
 4. Vekové kategórie a ich zobrazenie na karte (napr. „1–6 r.“).
 5. KUTISKO skóre 1–5 — vizuál sa nenavrhuje, kým nie je metodika (manifest: nezobrazovať ako rating bez metodiky).
-6. Logo — dočasný textový wordmark v `title.l`, 700.
+6. Logo — zatiaľ bez zmeny (rozhodnutie vlastníka 2026-11-22); v prototype dočasný textový wordmark v `title.l`, 700.
 7. Rozsah a umiestnenie ilustrácií.

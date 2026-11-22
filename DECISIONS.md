@@ -24,3 +24,18 @@
 **Rozhodnutie (procesné):** V `PROTOTYPE_BRIEF.md`, `DESIGN_SYSTEM_PROPOSAL.md` a `MVP_ROADMAP.md` sú typografia, farebné tokeny, mapový provider, vekové filtre, KUTISKO skóre a ďalšie otvorené body z manifestu výslovne označené ako návrhy; schválené body odkazujú na číslo rozhodnutia v manifeste.
 **Dôvod:** `CLAUDE.md` zakazuje vymýšľať rozhodnutia používateľa.
 **Dopad:** Vlastník produktu rozhoduje o návrhoch; po schválení sa zapíšu sem ako samostatné rozhodnutia.
+
+## 2026-11-22 — Typografia: Plus Jakarta Sans
+**Rozhodnutie:** Vlastník produktu zveril výber písma realizátorovi („vyber to najlepšie pre takýto typ aplikácie“). Zvolené Plus Jakarta Sans pre nadpisy aj text.
+**Dôvod:** Priateľský, ale dospelý a dôveryhodný charakter pre rodičov; čitateľnosť na mobile; plná slovenská diakritika; variabilný font, jedna rodina; OFL licencia.
+**Alternatívy:** Fraunces + Inter (dve rodiny, serif menej vhodný do hustého UI), Nunito + Inter (príliš detský dojem).
+**Dopad:** Uzatvára otvorenú otázku typografie z manifestu; použije sa v koncepte Domov. Ak by vizuálny test ukázal problém, zmena je lacná (jeden token).
+
+## 2026-11-22 — Logo zatiaľ bez zmeny
+**Rozhodnutie:** Vlastník: logo zatiaľ ponechať. Prototyp používa dočasný textový wordmark KUTISKO (manifest bod 23).
+**Dopad:** Návrh loga ostáva samostatnou neskoršou úlohou.
+
+## 2026-11-22 — Ilustrácia dievčatka v repozitári
+**Rozhodnutie:** Vlastník výslovne povolil nahrať ilustráciu dievčatka do verejného repozitára. Uložené ako `assets/illustrations/dievcatko-kocky.png` a `dievcatko-lopta.png` (zo súborov `dieta01.png`, `dieta02.png`; obe zobrazujú tú istú postavu), s odstránenými metadátami.
+**Dôvod:** Použitie v prázdnych stavoch a uvítaní prototypu (manifest bod 21).
+**Dopad:** Súhlas sa týka len tejto ilustrácie; ďalšie autorské podklady stále vyžadujú samostatný súhlas.

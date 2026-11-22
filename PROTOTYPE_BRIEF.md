@@ -38,7 +38,7 @@ Jedna spustiteľná mobilná obrazovka Domov s DEMO dátami a funkčným základ
 Vychádza z mockupu (`kutisko mockup.pptx`, snímka „Dashboard“) a manifestu (bod 6, 25). Rozloženie nie je záväzné. [SCHVÁLENÉ 22]
 
 Poradie prvkov zhora:
-1. Hlavička: dočasný wordmark KUTISKO [SCHVÁLENÉ 23], lokalita („Bratislava“, zmeniteľná ručne).
+1. Hlavička: dočasný wordmark KUTISKO [SCHVÁLENÉ 23; logo zatiaľ bez zmeny], lokalita („Bratislava“, zmeniteľná ručne).
 2. Vyhľadávanie: jedno pole „Hľadať kútik, herňu, ihrisko…“ (názov, mestská časť, typ).
 3. Rýchle filtre (chips): kategória (Kútik / Herňa / Ihrisko), Vonku / Vnútri, Vek [NÁVRH], Otvorené teraz [NÁVRH — len ak sú hodiny známe].
 4. Náhľad mapy s piny výsledkov; tlačidlo „Celá mapa“. Pred výberom providera statický/ilustračný náhľad. [NÁVRH]
@@ -127,11 +127,11 @@ K 2026-11-22 sú v projektových súboroch (mimo verejného repozitára) dostupn
 - `kutisko mockup.pptx`: štruktúra obrazoviek (úvod, dashboard, rozšírené vyhľadávanie, detail ako Booking, spodné menu, profil). Použitá ako obsahová referencia.
 - `vzor 1.png`, `vzor 2.png`: náladové referencie cudzích dizajnov; nekopírovať.
 - `hodnotenie.png`: koncept hodnotenia (rodičia 1–10 s kritériami; „appka“ 1–5). Pozri otvorenú otázku KUTISKO skóre.
-- `dieta01.png`, `dieta02.png`: kresby postáv detí (pravdepodobne autorské ilustrácie). **Necommitovať** do verejného repozitára bez výslovného súhlasu. [CLAUDE.md]
+- `dieta01.png`, `dieta02.png`: autorská ilustrácia dievčatka (s kockami a s loptou). Vlastník 2026-11-22 povolil nahratie do repozitára → `assets/illustrations/` (metadáta odstránené). Použitie výberovo, pozri `DESIGN_SYSTEM_PROPOSAL.md` sekcia 6.
 
 ## 12. Otvorené otázky pre vlastníka
 1. Vekové kategórie filtra (napr. 0–2, 3–5, 6–10?) — [NÁVRH v DESIGN_SYSTEM_PROPOSAL / MVP_ROADMAP]
 2. Kritériá podrobného hodnotenia (mockup uvádza čistotu, kreativitu priestoru, celkový dojem).
 3. KUTISKO skóre 1–5: zobrazovať v prototype? Návrh: nie, kým nie je metodika.
 4. Je uvítacia obrazovka „Ahoj [meno]“ žiadaná pri každom otvorení?
-5. Smú sa `dieta01.png` / `dieta02.png` použiť v prototype (napr. v prázdnych stavoch) a v akej forme?
+5. ~~Ilustrácia dievčatka~~ — povolená do repozitára (2026-11-22); návrh použitia: prázdne stavy a uvítanie.
