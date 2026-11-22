@@ -102,3 +102,17 @@ test("Odporúčané: skutočné miesta pred DEMO, potom podľa vzdialenosti", ()
   assert.ok(firstDemo > 0);
   assert.ok(sorted.slice(firstDemo).every((p) => p.isDemo));
 });
+
+test("mestské ihriská: zobrazia sa len po overení licencie, kandidáti majú platný tvar", async () => {
+  const { CITY_REGISTER } = await import("../data/sources.ts");
+  const city = (await import("../data/osm/city-playgrounds.json", { with: { type: "json" } })).default as { places: Place[] };
+  assert.equal(PLACES.some((p) => p.source === "city"), CITY_REGISTER.approved);
+  const ids = new Set(city.places.map((p) => p.id));
+  assert.equal(ids.size, city.places.length);
+  for (const p of city.places) {
+    assert.equal(p.source, "city");
+    assert.equal(p.verified, false);
+    assert.equal(p.score, null);
+    assert.ok(p.lat > 47.9 && p.lat < 48.5 && p.lng > 16.8 && p.lng < 17.5);
+  }
+});
