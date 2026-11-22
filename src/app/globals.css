@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/*
+ * KUTISKO — pracovné dizajnové tokeny (návrh, nie finálne).
+ * Základ: farebný smer B (PRODUCT_MANIFESTO.md, bod 20) a PSD paleta.
+ * „Dekoračné“ odtiene (500/400) nie sú vhodné na text; na text a tlačidlá
+ * používame tmavšie varianty s overeným kontrastom (WCAG AA ≥ 4.5 : 1).
+ */
+@theme {
+  --color-cream-50: #fbf7ee; /* pozadie stránky */
+  --color-cream-100: #f7f1e1; /* PSD krémová, plochy sekcií */
+  --color-cream-200: #efe6d0;
+  --color-line: #eae3d3;
+
+  --color-ink: #1f1a16; /* 16.1 : 1 na cream-50 */
+  --color-ink-muted: #6b6157; /* 5.7 : 1 na cream-50 */
+  --color-ink-subtle: #8c8378; /* iba ikonky / dekor */
+
+  --color-coral-50: #fff0f2;
+  --color-coral-500: #ff526e; /* dekor: piny, srdiečko, akcent */
+  --color-coral-600: #c8243f; /* text a CTA s bielym textom, 5.6 : 1 */
+
+  --color-amber-50: #fff3d6;
+  --color-amber-400: #f5ad1d; /* dekor: hviezdy, highlight */
+  --color-amber-700: #7a5500; /* text na amber-50, 6.1 : 1 */
+
+  --color-turquoise-50: #e7f6f9;
+  --color-turquoise-400: #5dc2d6; /* dekor: voda na mape, ihriská */
+  --color-turquoise-700: #17707f; /* text, 5.7 : 1 na bielej */
+
+  --color-leaf-100: #e3efd9;
+  --color-leaf-300: #b9d9a4;
+
+  --font-sans: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --shadow-card: 0 1px 2px rgb(31 26 22 / 0.04), 0 6px 20px -8px rgb(31 26 22 / 0.12);
+  --shadow-float: 0 2px 6px rgb(31 26 22 / 0.06), 0 12px 32px -10px rgb(31 26 22 / 0.22);
+
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-cream-50);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-cream-100) 0%, var(--color-cream-200) 50%, var(--color-cream-100) 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,32 @@
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import "./globals.css";
+
+// Pracovné písmo (návrh): Plus Jakarta Sans — priateľské, moderné, dobre čitateľné, plná podpora slovenčiny.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "KUTISKO — detské kútiky, herne a ihriská",
+  description:
+    "Prototyp: objavujte detské kútiky, vnútorné herne a ihriská v Bratislave a okolí. Obsahuje iba ukážkové (DEMO) dáta.",
+  robots: { index: false, follow: false },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#fbf7ee",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="sk" className={`${jakarta.variable} h-full antialiased`}>
+      <body className="min-h-full">{children}</body>
+    </html>
+  );
+}

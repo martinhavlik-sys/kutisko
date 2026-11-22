@@ -1,0 +1,300 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId, type Place } from "@/data/places";
+import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
+import { BottomNav } from "./BottomNav";
+import { AgeChips, CategoryTabs } from "./Filters";
+import { ChevronDownIcon, CloseIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
+import { MapPreview } from "./MapPreview";
+import { PlaceCard, PlaceCardSkeleton } from "./PlaceCard";
+import { EmptyState, ErrorState } from "./States";
+
+type LoadState = "loading" | "ready" | "error";
+
+/** Simulované načítanie DEMO dát. `?stav=chyba` / `?stav=nacitanie` zobrazí príslušný stav na testovanie. */
+function useDemoPlaces(forced: string | null) {
+  const [state, setState] = useState<LoadState>("loading");
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    if (forced === "nacitanie") return;
+    const failFirst = forced === "chyba" && attempt === 0;
+    const t = window.setTimeout(() => setState(failFirst ? "error" : "ready"), 650);
+    return () => window.clearTimeout(t);
+  }, [forced, attempt]);
+
+  const retry = useCallback(() => {
+    setState("loading");
+    setAttempt((a) => a + 1);
+  }, []);
+
+  return { state, retry };
+}
+
+export function HomeScreen() {
+  const params = useSearchParams();
+  const { state, retry } = useDemoPlaces(params.get("stav"));
+
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<CategoryId | null>(null);
+  const [ageId, setAgeId] = useState<string | null>(null);
+  const [sort, setSort] = useState<SortId>("recommended");
+  const [saved, setSaved] = useState<Set<string>>(() => new Set());
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const cardRefs = useRef(new Map<string, HTMLElement>());
+  const toastTimer = useRef<number | undefined>(undefined);
+
+  const results = useMemo(() => {
+    const band = AGE_BANDS.find((b) => b.id === ageId) ?? null;
+    return filterAndSort(PLACES, { query, category, ageBand: band, sort }, REFERENCE_POINT);
+  }, [query, category, ageId, sort]);
+
+  const hasFilters = query.trim() !== "" || category !== null || ageId !== null;
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    window.clearTimeout(toastTimer.current);
+    toastTimer.current = window.setTimeout(() => setToast(null), 2600);
+  }, []);
+
+  const resetFilters = () => {
+    setQuery("");
+    setCategory(null);
+    setAgeId(null);
+  };
+
+  const toggleSave = (id: string) =>
+    setSaved((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      showToast(next.has(id) ? "Uložené do obľúbených (iba v tomto prehliadači, DEMO)" : "Odstránené z obľúbených");
+      return next;
+    });
+
+  const selectFromMap = (id: string) => {
+    setActiveId(id);
+    const el = cardRefs.current.get(id);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  const openPlace = (p: Place) => {
+    setActiveId(p.id);
+    showToast(`Detail „${p.name}“ pripravujeme v ďalšej iterácii`);
+  };
+
+  const onNav = (id: "home" | "search" | "saved" | "profile") => {
+    if (id === "home") window.scrollTo({ top: 0, behavior: "smooth" });
+    else if (id === "search") {
+      searchRef.current?.focus();
+      searchRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else showToast(id === "saved" ? "Obľúbené pripravujeme v ďalšej iterácii" : "Profil pripravujeme v ďalšej iterácii");
+  };
+
+  return (
+    <>
+      <a
+        href="#vysledky"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+      >
+        Preskočiť na výsledky
+      </a>
+
+      <div className="mx-auto max-w-3xl px-5 pb-32 pt-[max(env(safe-area-inset-top),14px)] sm:px-8">
+        {/* Hlavička */}
+        <header className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-2">
+            {/* Dočasný wordmark — logo nie je finálne (manifest, bod 23). */}
+            <span className="font-display text-[22px] font-bold tracking-[-0.03em] text-coral-600">kutisko</span>
+            <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-amber-700">
+              DEMO
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNav("profile")}
+            aria-label="Profil"
+            className="flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          >
+            <UserIcon size={20} />
+          </button>
+        </header>
+
+        <main>
+          <section aria-labelledby="hero-title" className="relative pt-2">
+            {/* Simonkina ilustrácia — striedmy prvok identity (manifest, bod 21). */}
+            <Image
+              src="/illustrations/dieta-kocky.png"
+              alt=""
+              width={681}
+              height={674}
+              priority
+              className="pointer-events-none absolute -top-1 right-0 h-auto w-[78px] select-none sm:w-[112px]"
+            />
+            <p className="text-[15px] font-medium text-ink-muted">Ahoj!</p>
+            <h1 id="hero-title" className="mt-0.5 pr-20 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-ink min-[400px]:text-[30px] sm:pr-28 sm:text-[40px]">
+              Kam ideme dnes?
+            </h1>
+            <p className="mt-2 inline-flex items-center gap-1 text-[14px] text-ink-muted">
+              <PinIcon size={16} className="text-turquoise-700" />
+              Bratislava a okolie
+            </p>
+
+            <form
+              role="search"
+              className="relative mt-5"
+              onSubmit={(e) => {
+                e.preventDefault();
+                searchRef.current?.blur();
+                document.getElementById("vysledky")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <label htmlFor="search" className="sr-only">
+                Hľadať miesto, mestskú časť alebo vybavenie
+              </label>
+              <SearchIcon size={20} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-ink" />
+              <input
+                ref={searchRef}
+                id="search"
+                type="search"
+                inputMode="search"
+                enterKeyHint="search"
+                autoComplete="off"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Kútik, herňa, ihrisko, štvrť…"
+                className="h-14 w-full appearance-none rounded-full bg-white pl-13 pr-14 text-[16px] text-ink shadow-float ring-1 ring-line placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-ink [&::-webkit-search-cancel-button]:hidden"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    searchRef.current?.focus();
+                  }}
+                  aria-label="Vymazať hľadanie"
+                  className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-ink-muted hover:bg-cream-100 focus-visible:outline-2 focus-visible:outline-ink"
+                >
+                  <CloseIcon size={18} />
+                </button>
+              )}
+            </form>
+          </section>
+
+          <section aria-label="Filtre" className="mt-5 space-y-3">
+            <CategoryTabs value={category} onChange={setCategory} />
+            <AgeChips value={ageId} onChange={setAgeId} />
+          </section>
+
+          <div className="mt-6">
+            <MapPreview
+              places={state === "ready" ? results : []}
+              activeId={activeId}
+              onSelect={selectFromMap}
+              onOpenMap={() => showToast("Celú mapu pripravujeme v ďalšej iterácii")}
+              loading={state === "loading"}
+            />
+          </div>
+
+          <section id="vysledky" aria-labelledby="results-title" className="mt-8 scroll-mt-4">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <h2 id="results-title" className="font-display text-[22px] font-bold tracking-[-0.02em] text-ink">
+                  {hasFilters ? "Výsledky" : "Miesta v okolí"}
+                </h2>
+                <p className="mt-0.5 text-[14px] text-ink-muted" aria-live="polite">
+                  {state === "ready" ? placesLabel(results.length) : state === "loading" ? "Načítavam…" : " "}
+                  {state === "ready" && hasFilters && (
+                    <>
+                      {" · "}
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="font-medium text-coral-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ink"
+                      >
+                        Zrušiť filtre
+                      </button>
+                    </>
+                  )}
+                </p>
+              </div>
+              <label className="relative inline-flex shrink-0 items-center">
+                <span className="sr-only">Zoradiť</span>
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortId)}
+                  className="min-h-11 appearance-none rounded-full bg-white py-2 pl-4 pr-10 text-[14px] font-semibold text-ink shadow-card ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                >
+                  {SORT_OPTIONS.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDownIcon size={18} className="pointer-events-none absolute right-3.5 text-ink-muted" />
+              </label>
+            </div>
+
+            <div className="mt-4">
+              {state === "loading" && (
+                <div className="grid gap-4 sm:grid-cols-2" aria-busy="true" aria-label="Načítavam miesta">
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <PlaceCardSkeleton key={i} />
+                  ))}
+                </div>
+              )}
+              {state === "error" && <ErrorState onRetry={retry} />}
+              {state === "ready" && results.length === 0 && <EmptyState query={query.trim()} onReset={resetFilters} />}
+              {state === "ready" && results.length > 0 && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {results.map((p) => (
+                    <PlaceCard
+                      key={p.id}
+                      ref={(el) => {
+                        if (el) cardRefs.current.set(p.id, el);
+                        else cardRefs.current.delete(p.id);
+                      }}
+                      place={p}
+                      saved={saved.has(p.id)}
+                      active={activeId === p.id}
+                      onToggleSave={toggleSave}
+                      onOpen={openPlace}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <p className="mt-8 text-center text-[12.5px] leading-relaxed text-ink-muted">
+              Prototyp KUTISKO · všetky miesta, hodnotenia, ceny a hodiny sú vymyslené (DEMO).
+              <br />
+              Vzdialenosť sa počíta od centra Bratislavy, poloha sa nezisťuje.
+            </p>
+          </section>
+        </main>
+      </div>
+
+      <div
+        role="status"
+        aria-live="polite"
+        className={`pointer-events-none fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-50 flex justify-center px-5 transition duration-200 ${
+          toast ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+        }`}
+      >
+        {toast && (
+          <span className="max-w-sm rounded-2xl bg-ink px-4 py-3 text-center text-[14px] font-medium text-white shadow-float">
+            {toast}
+          </span>
+        )}
+      </div>
+
+      <BottomNav savedCount={saved.size} onSelect={onNav} />
+    </>
+  );
+}

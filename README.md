@@ -5,6 +5,15 @@ Mobil-first aplikácia pre rodičov na objavovanie detských kútikov, vnútorn�
 ## Stav
 Príprava interaktívneho dizajnového prototypu. Zatiaľ bez produkčného backendu a reálnych používateľských dát.
 
+## Spustenie
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm test           # testy logiky vyhľadávania a filtrov
+npm run lint && npm run typecheck && npm run build
+```
+Stavy na testovanie: `/?stav=nacitanie`, `/?stav=chyba`. Všetky miesta sú syntetické (DEMO).
+
 ## Dokumentácia
 - `PRODUCT_MANIFESTO.md` — produktová špecifikácia (pripravuje sa nahratie v1.7)
 - `PROTOTYPE_BRIEF.md` — rozsah prototypu (pripravuje sa)
