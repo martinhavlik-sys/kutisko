@@ -6,10 +6,10 @@ Mobil-first aplikácia pre rodičov na objavovanie detských kútikov, vnútorn�
 Príprava interaktívneho dizajnového prototypu. Zatiaľ bez produkčného backendu a reálnych používateľských dát.
 
 ## Dokumentácia
-- `PRODUCT_MANIFESTO.md` — produktová špecifikácia (pripravuje sa nahratie v1.7)
-- `PROTOTYPE_BRIEF.md` — rozsah prototypu (pripravuje sa)
-- `DESIGN_SYSTEM_PROPOSAL.md` — vizuálny smer (pripravuje sa)
-- `MVP_ROADMAP.md` — fázy realizácie (pripravuje sa)
+- `PRODUCT_MANIFESTO.md` — produktová špecifikácia v1.7
+- `PROTOTYPE_BRIEF.md` — rozsah prototypu (návrh)
+- `DESIGN_SYSTEM_PROPOSAL.md` — dizajnový systém a tokeny (návrh)
+- `MVP_ROADMAP.md` — fázy realizácie (návrh)
 - `CLAUDE.md` — agilný vývoj, kvalita UX/UI a pravidlá Git
 - `CHANGELOG.md` — prehľad dokončených zmien
 - `DECISIONS.md` — rozhodnutia a dôvody
