@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-22 — Uvítanie aj po prihlásení (rozhodnutie Martina)
+**Zmenené**
+- Po prihlásení sa ukáže krátke uvítanie „Ahoj, [meno]!“ s textom „Vitajte späť…“; po registrácii zostáva text „Účet je pripravený…“. Pri bežnom otvorení aplikácie sa uvítanie neukazuje.
+- Registrácia v prototype ostáva nepovinná (zapísané v DECISIONS).
+
+**Otestované**
+- `npm test`, `typecheck`, `lint`, `build` prešli. Playwright (iPhone 13): registrácia → `/vitaj?novy=1`, prihlásenie → `/vitaj` s „Vitajte späť“, Domov bez uvítania.
+
 ## 2026-11-22 — Spodné menu neprekáža, simulovaná registrácia, prihlásenie a uvítanie
 **Zmenené**
 - Spodné menu sa pri posúvaní nadol schová a vráti sa pri posune nahor, pri vrchu a na konci stránky (aj pri fokuse klávesnicou). Na mape ostáva viditeľné. Pri „obmedziť pohyb“ bez animácie.

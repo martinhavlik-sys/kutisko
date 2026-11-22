@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AGE_BANDS } from "@/data/places";
 import { useAccount } from "@/lib/account";
 import { usePreferences } from "@/lib/preferences";
@@ -9,11 +10,12 @@ import { firstName } from "@/lib/validation";
 import { primaryBtn } from "@/components/forms/FormParts";
 
 /**
- * Krátke uvítanie „Ahoj [meno]“ po registrácii (PROTOTYPE_BRIEF bod 9).
+ * Krátke uvítanie „Ahoj [meno]“ po registrácii aj po každom prihlásení (PROTOTYPE_BRIEF bod 9, rozhodnutie Martina).
  * Nič neblokuje: jedno ťuknutie vedie do vyhľadávania, výber veku je nepovinný.
  */
 export function WelcomeScreen() {
   const { account } = useAccount();
+  const isNew = useSearchParams().get("novy") === "1";
   const { prefs, set } = usePreferences();
   const name = account ? firstName(account.name) : null;
   const searchHref = prefs.ageId ? `/hladat?vek=${encodeURIComponent(prefs.ageId)}` : "/";
@@ -44,7 +46,9 @@ export function WelcomeScreen() {
           </h1>
           <p className="mt-3 max-w-xs text-[16px] leading-relaxed text-ink-muted">
             {account
-              ? "Účet je pripravený. Nájdeme kútik, herňu alebo ihrisko, kde sa deťom bude páčiť."
+              ? isNew
+                ? "Účet je pripravený. Nájdeme kútik, herňu alebo ihrisko, kde sa deťom bude páčiť."
+                : "Vitajte späť. Kam to bude dnes: kútik, herňa alebo ihrisko?"
               : "Nájdeme kútik, herňu alebo ihrisko, kde sa deťom bude páčiť."}
           </p>
           {account && <p className="mt-2 rounded-full bg-amber-50 px-3 py-1 text-[12.5px] font-semibold text-amber-700">DEMO účet · iba v tomto prehliadači</p>}

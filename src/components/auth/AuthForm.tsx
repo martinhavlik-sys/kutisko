@@ -66,7 +66,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setBusy(true);
     if (mode === "register") {
       registerDemo(name, email);
-      router.replace("/vitaj");
+      router.replace("/vitaj?novy=1");
       return;
     }
     if (!loginDemo(email)) {
@@ -74,8 +74,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
       setNotFound(true);
       return;
     }
-    // Manifest: po opätovnom prihlásení priamo do vyhľadávania.
-    router.replace("/");
+    // Rozhodnutie Martina: krátke uvítanie po každom prihlásení; odtiaľ jedným ťuknutím do vyhľadávania.
+    router.replace("/vitaj");
   };
 
   return (

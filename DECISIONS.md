@@ -69,10 +69,10 @@
 **Alternatívy:** Menšie menu natrvalo (stále zaberá miesto), menu iba na Domove (horšia orientácia).
 **Dopad:** Viac priestoru na karty a detail; obsah má dolný odstup aj s bezpečnou zónou iPhonu.
 
-## 2026-11-22 — Simulovaná registrácia a prihlásenie (návrh)
+## 2026-11-22 — Simulovaná registrácia a prihlásenie
 **Rozhodnutie (Claude, v rámci PROTOTYPE_BRIEF bod 8–9 a manifestu bod 18):**
 - `/registracia` a `/prihlasenie` fungujú iba v localStorage; heslo sa neukladá ani neoveruje, všetko je označené DEMO.
 - V prototype registrácia **nie je vynútená** (dá sa „pokračovať bez účtu“), aby sa dali testovať všetky toky; v produkcii zostáva povinná.
-- Po registrácii krátke uvítanie `/vitaj` „Ahoj [meno]“ s nepovinným výberom veku a tlačidlom do vyhľadávania (nič neblokuje). Po opätovnom prihlásení rovno na Domov s oslovením (manifest: „po opätovnom prihlásení priamo do vyhľadávania“).
-**Otvorené pre Martina:** či má prototyp registráciu vynucovať a či sa uvítanie má ukázať aj pri každom prihlásení (PROTOTYPE_BRIEF, otvorená otázka 4).
+- Po registrácii krátke uvítanie `/vitaj` „Ahoj [meno]“ s nepovinným výberom veku a tlačidlom do vyhľadávania (nič neblokuje). Domov potom oslovuje menom.
+**Rozhodnutie (Martin, 2026-11-22):** „nemusí byť povinná v prototype a uvítanie stačí len po prihlásení“. Registrácia v prototype ostáva nepovinná. Uvítanie „Ahoj [meno]“ sa ukáže po registrácii aj po každom prihlásení, nie pri bežnom otvorení aplikácie (uzatvára otvorenú otázku 4 PROTOTYPE_BRIEF). Pôvodný návrh viesť po prihlásení rovno na Domov sa tým mení.
 **Dopad:** Pri backende sa nahradí skutočnou autentifikáciou; obľúbené a preferencie sa presunú k účtu.
