@@ -53,12 +53,12 @@ Každé rozhodnutie sa zapíše do `DECISIONS.md`.
 
 | Téma | Návrh na posúdenie | Pozn. |
 |------|--------------------|-------|
-| **Mapový provider** [NÁVRH] | Porovnať **MapLibre GL + OpenStreetMap dlaždice od komerčného poskytovateľa (napr. MapTiler)**, **Mapbox** a **Google Maps Platform**. Kritériá: cena pri pilotnom objeme, licencia a atribúcia OSM, vizuálna prispôsobiteľnosť štýlu, podmienky ukladania dát, kvalita v SR. Predbežné odporúčanie: MapLibre (open-source klient, výmena poskytovateľa dlaždíc bez prepisovania kódu). | Ceny a limity overiť v aktuálnych cenníkoch pred rozhodnutím; ide o platenú službu → schvaľuje vlastník. |
+| **Mapový provider** — klient MapLibre GL [SCHVÁLENÉ 2026-11-22]; poskytovateľ dlaždíc [NÁVRH] | Porovnať **MapLibre GL + OpenStreetMap dlaždice od komerčného poskytovateľa (napr. MapTiler)**, **Mapbox** a **Google Maps Platform**. Kritériá: cena pri pilotnom objeme, licencia a atribúcia OSM, vizuálna prispôsobiteľnosť štýlu, podmienky ukladania dát, kvalita v SR. Predbežné odporúčanie: MapLibre (open-source klient, výmena poskytovateľa dlaždíc bez prepisovania kódu). | Ceny a limity overiť v aktuálnych cenníkoch pred rozhodnutím; ide o platenú službu → schvaľuje vlastník. |
 | **Zdroje dát o miestach** | Vlastný kurátorovaný katalóg ako základ, OSM (ODbL) ako pomocný zdroj s atribúciou, komunitné návrhy. Evidovať `source` a `verification`. | manifest 3 |
 | **Pilotná oblasť a počet miest** | Bratislava (všetky mestské časti) + vybrané obce okolia; 50–100 overených miest na štart. | otvorené v manifeste |
-| **Vekové kategórie** [NÁVRH] | Filtrovacie skupiny 0–2, 3–5, 6–10, 10+; miesto ukladá rozsah min–max, filter hľadá prekrytie. | otvorené v manifeste |
+| **Vekové kategórie** [SCHVÁLENÉ 2026-11-22] | Filtrovacie skupiny 0–2, 3–5, 6–10, 10+; miesto ukladá rozsah min–max, filter hľadá prekrytie. | otvorené v manifeste |
 | **Hodnotenia pri nízkom počte** [NÁVRH] | Pod 3 hodnotenia zobraziť „Málo hodnotení“ namiesto priemeru; pri zoraďovaní použiť bayesovský priemer. | otvorené v manifeste |
-| **KUTISKO skóre 1–5** [NÁVRH] | Nezavádzať v MVP. Ak áno, len so zverejnenou metodikou (napr. úplnosť a overenie údajov), vizuálne odlíšené od hodnotenia rodičov. | manifest: nezobrazovať bez metodiky |
+| **KUTISKO skóre 1–5** [SCHVÁLENÉ 2026-11-22: nie v MVP] | Nezavádzať v MVP. Ak áno, len so zverejnenou metodikou (napr. úplnosť a overenie údajov), vizuálne odlíšené od hodnotenia rodičov. | manifest: nezobrazovať bez metodiky |
 | **Backend** | Supabase (Postgres + RLS + Storage + Auth) podľa kontextu projektu. | manifest: RLS povinné |
 | **Autentifikácia** | E-mail magic link + Sign in with Apple + Google. | otvorené v manifeste |
 | **Súkromie a GDPR** | Minimalizácia údajov, retencia, export a vymazanie účtu, EXIF stripping fotografií. | manifest, Bezpečnosť |

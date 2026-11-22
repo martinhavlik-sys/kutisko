@@ -40,7 +40,7 @@ Vychádza z mockupu (`kutisko mockup.pptx`, snímka „Dashboard“) a manifestu
 Poradie prvkov zhora:
 1. Hlavička: dočasný wordmark KUTISKO [SCHVÁLENÉ 23; logo zatiaľ bez zmeny], lokalita („Bratislava“, zmeniteľná ručne).
 2. Vyhľadávanie: jedno pole „Hľadať kútik, herňu, ihrisko…“ (názov, mestská časť, typ).
-3. Rýchle filtre (chips): kategória (Kútik / Herňa / Ihrisko), Vonku / Vnútri, Vek [NÁVRH], Otvorené teraz [NÁVRH — len ak sú hodiny známe].
+3. Rýchle filtre (chips): kategória (Kútik / Herňa / Ihrisko), Vonku / Vnútri, Vek 0–2 / 3–5 / 6–10 / 10+ [SCHVÁLENÉ 2026-11-22], Otvorené teraz [NÁVRH — len ak sú hodiny známe].
 4. Náhľad mapy s piny výsledkov; tlačidlo „Celá mapa“. Pred výberom providera statický/ilustračný náhľad. [NÁVRH]
 5. Ovládanie zoradenia zoznamu („Najbližšie“, „Najlepšie hodnotené“, „Najnovšie“). [NÁVRH]
 6. Zoznam kariet miest (fotografia, názov, kategória, vzdialenosť/mestská časť, hodnotenie rodičov + počet, vek, štítok overenia).
@@ -82,7 +82,7 @@ type Place = {
   district: string;             // napr. „Petržalka“
   coords?: { lat: number; lng: number };
   address?: string;
-  ageRange?: { min: number; max: number }; // [NÁVRH] kategórie veku nie sú schválené
+  ageRange?: { min: number; max: number }; // filter skupín 0–2, 3–5, 6–10, 10+ hľadá prekrytie
   openingHours?: string;        // undefined = neuvedené, nie „zatvorené“
   price?: string;               // undefined = neuvedené, nie „zadarmo“
   amenities: string[];
@@ -110,7 +110,7 @@ Podľa manifestu, sekcia „UX navigácia“ [SCHVÁLENÉ 14]:
 - Next.js (App Router) + TypeScript + Tailwind CSS. [podľa CLAUDE.md]
 - PWA manifest a ikona; offline režim nie je cieľ.
 - Bez backendu, databázy a reálnej autentifikácie. [SCHVÁLENÉ 15]
-- Mapa: v Fáze A statický náhľad; interaktívna mapa až po výbere providera. [NÁVRH — pozri `DESIGN_SYSTEM_PROPOSAL.md` a `MVP_ROADMAP.md`]
+- Mapa: v Fáze A statický náhľad; interaktívna mapa cez MapLibre GL [SCHVÁLENÉ 2026-11-22] až po výbere poskytovateľa dlaždíc [NÁVRH — pozri `MVP_ROADMAP.md`].
 - Náhľadové nasadenie: Vercel [NÁVRH — podľa kontextu projektu; nasadenie len po súhlase vlastníka].
 - Kontroly pri každej iterácii: `lint`, `typecheck`, `build`, ručné overenie v mobilnom viewporte (390×844) a klávesnicou.
 
@@ -130,8 +130,8 @@ K 2026-11-22 sú v projektových súboroch (mimo verejného repozitára) dostupn
 - `dieta01.png`, `dieta02.png`: autorská ilustrácia dievčatka (s kockami a s loptou). Vlastník 2026-11-22 povolil nahratie do repozitára → `assets/illustrations/` (metadáta odstránené). Použitie výberovo, pozri `DESIGN_SYSTEM_PROPOSAL.md` sekcia 6.
 
 ## 12. Otvorené otázky pre vlastníka
-1. Vekové kategórie filtra (napr. 0–2, 3–5, 6–10?) — [NÁVRH v DESIGN_SYSTEM_PROPOSAL / MVP_ROADMAP]
+1. ~~Vekové kategórie~~ — schválené 0–2, 3–5, 6–10, 10+ (2026-11-22).
 2. Kritériá podrobného hodnotenia (mockup uvádza čistotu, kreativitu priestoru, celkový dojem).
-3. KUTISKO skóre 1–5: zobrazovať v prototype? Návrh: nie, kým nie je metodika.
+3. ~~KUTISKO skóre~~ — schválené: v prototype ani MVP sa nezobrazuje (2026-11-22).
 4. Je uvítacia obrazovka „Ahoj [meno]“ žiadaná pri každom otvorení?
 5. ~~Ilustrácia dievčatka~~ — povolená do repozitára (2026-11-22); návrh použitia: prázdne stavy a uvítanie.

@@ -39,3 +39,21 @@
 **Rozhodnutie:** Vlastník výslovne povolil nahrať ilustráciu dievčatka do verejného repozitára. Uložené ako `assets/illustrations/dievcatko-kocky.png` a `dievcatko-lopta.png` (zo súborov `dieta01.png`, `dieta02.png`; obe zobrazujú tú istú postavu), s odstránenými metadátami.
 **Dôvod:** Použitie v prázdnych stavoch a uvítaní prototypu (manifest bod 21).
 **Dopad:** Súhlas sa týka len tejto ilustrácie; ďalšie autorské podklady stále vyžadujú samostatný súhlas.
+
+## 2026-11-22 — Vekové skupiny filtra: 0–2, 3–5, 6–10, 10+
+**Rozhodnutie:** Schválené vlastníkom (rozhodovacia karta vo vlákne, 2026-11-22). Filter ponúka skupiny 0–2, 3–5, 6–10 a 10+ rokov; miesto ukladá vekový rozsah min–max a filter hľadá prekrytie.
+**Dôvod:** Zodpovedá vývojovým fázam (batoľa, škôlkar, školák) a typickému rozdeleniu kútikov a herní.
+**Alternatívy:** Voľný posuvník veku (pomalší na mobile), jemnejšie skupiny.
+**Dopad:** Uzatvára otvorenú otázku vekových kategórií z manifestu; váhy zoradenia ostávajú otvorené.
+
+## 2026-11-22 — Mapový klient: MapLibre GL
+**Rozhodnutie:** Schválené vlastníkom (rozhodovacia karta, 2026-11-22). Interaktívna mapa sa bude stavať na open-source knižnici MapLibre GL.
+**Dôvod:** Bez viazanosti na jedného poskytovateľa; dlaždice sa dajú vymeniť bez prepisovania kódu; plná kontrola nad štýlom mapy.
+**Alternatívy:** Mapbox GL (licencia a cena viazané na Mapbox), Google Maps Platform (vyššie náklady, menšia kontrola štýlu).
+**Dopad:** Poskytovateľ dlaždíc, jeho cena, limity a podmienky ostávajú otvorené; ide o platenú službu, ktorú vlastník schvaľuje samostatne. V prototype ostáva statický náhľad mapy, kým sa poskytovateľ nevyberie.
+
+## 2026-11-22 — KUTISKO skóre nie je súčasťou MVP
+**Rozhodnutie:** Schválené vlastníkom (rozhodovacia karta, 2026-11-22). Skóre 1–5 hodnotené aplikáciou sa v prototype ani v MVP nezobrazuje; verejné je len hodnotenie rodičov 1–10.
+**Dôvod:** Manifest zakazuje zobrazovať skóre ako rating bez metodiky; metodika neexistuje.
+**Alternatívy:** Skóre s metodikou založenou na úplnosti a overení údajov (možné po MVP).
+**Dopad:** Jednoduchšie UI, menšie riziko zavádzania.

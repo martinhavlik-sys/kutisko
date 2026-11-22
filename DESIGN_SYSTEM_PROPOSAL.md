@@ -159,8 +159,8 @@ Stavy pre každý interaktívny prvok: default, hover (desktop), pressed, focus-
 ## 9. Otvorené rozhodnutia (na schválenie po koncepte Domov)
 1. ~~Typografia~~ — rozhodnuté: Plus Jakarta Sans.
 2. Finálne UI tokeny — potvrdiť tmavšie odtiene (`coral.600`, `turquoise.700`, `yellow.700`) po teste na zariadení.
-3. Mapový provider a vizuál mapy — pozri `MVP_ROADMAP.md`.
-4. Vekové kategórie a ich zobrazenie na karte (napr. „1–6 r.“).
-5. KUTISKO skóre 1–5 — vizuál sa nenavrhuje, kým nie je metodika (manifest: nezobrazovať ako rating bez metodiky).
+3. Vizuál mapy — klient MapLibre GL schválený; poskytovateľ dlaždíc otvorený, pozri `MVP_ROADMAP.md`.
+4. ~~Vekové kategórie~~ — schválené 0–2, 3–5, 6–10, 10+; na karte sa zobrazuje rozsah miesta (napr. „1–6 r.“).
+5. ~~KUTISKO skóre~~ — schválené: nie je v MVP, vizuál sa nenavrhuje.
 6. Logo — zatiaľ bez zmeny (rozhodnutie vlastníka 2026-11-22); v prototype dočasný textový wordmark v `title.l`, 700.
 7. Rozsah a umiestnenie ilustrácií.
