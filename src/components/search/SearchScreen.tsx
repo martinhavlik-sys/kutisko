@@ -309,7 +309,7 @@ export function SearchScreen() {
         }}
       />
       <Toast message={message} />
-      <BottomNav />
+      <BottomNav autoHide={!isMap} />
     </div>
   );
 }

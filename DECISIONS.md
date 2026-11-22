@@ -62,3 +62,17 @@
 ## 2026-11-22 — Schválenie obrazoviek Hľadať, mapa, Obľúbené, Profil a detail
 **Rozhodnutie (Martin):** Po prezretí náhľadov v PR #2 schválil aktuálne obrazovky („je to v poriadku“).
 **Dopad:** Pokračuje sa simulovaným hodnotením, návrhom miesta a náhľadom admin fronty (MVP_ROADMAP, Fáza 2, rezy 5–7).
+
+## 2026-11-22 — Schválenie hodnotenia, návrhu miesta a admin fronty; spodné menu
+**Rozhodnutie (Martin):** Hodnotenie, návrh miesta a náhľad admin fronty sú „v poriadku“. Spodné menu nesmie prekážať v zobrazení obsahu.
+**Riešenie (Claude, UI detail):** Menu sa pri posúvaní nadol schová a vráti sa pri posune nahor, pri vrchu a na konci stránky aj pri fokuse klávesnicou. Na mape (bez posúvania) zostáva stále viditeľné. Rešpektuje „obmedziť pohyb“.
+**Alternatívy:** Menšie menu natrvalo (stále zaberá miesto), menu iba na Domove (horšia orientácia).
+**Dopad:** Viac priestoru na karty a detail; obsah má dolný odstup aj s bezpečnou zónou iPhonu.
+
+## 2026-11-22 — Simulovaná registrácia a prihlásenie (návrh)
+**Rozhodnutie (Claude, v rámci PROTOTYPE_BRIEF bod 8–9 a manifestu bod 18):**
+- `/registracia` a `/prihlasenie` fungujú iba v localStorage; heslo sa neukladá ani neoveruje, všetko je označené DEMO.
+- V prototype registrácia **nie je vynútená** (dá sa „pokračovať bez účtu“), aby sa dali testovať všetky toky; v produkcii zostáva povinná.
+- Po registrácii krátke uvítanie `/vitaj` „Ahoj [meno]“ s nepovinným výberom veku a tlačidlom do vyhľadávania (nič neblokuje). Po opätovnom prihlásení rovno na Domov s oslovením (manifest: „po opätovnom prihlásení priamo do vyhľadávania“).
+**Otvorené pre Martina:** či má prototyp registráciu vynucovať a či sa uvítanie má ukázať aj pri každom prihlásení (PROTOTYPE_BRIEF, otvorená otázka 4).
+**Dopad:** Pri backende sa nahradí skutočnou autentifikáciou; obľúbené a preferencie sa presunú k účtu.

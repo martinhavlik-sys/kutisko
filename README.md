@@ -12,7 +12,7 @@ npm run dev        # http://localhost:3000
 npm test           # testy logiky vyhľadávania a filtrov
 npm run lint && npm run typecheck && npm run build
 ```
-Stavy na testovanie: `/?stav=nacitanie`, `/?stav=chyba`. Obrazovky: `/`, `/hladat` (aj `?zobrazenie=mapa`), `/miesto/demo-01`, `/ulozene`, `/profil`. Všetky miesta sú syntetické (DEMO).
+Stavy na testovanie: `/?stav=nacitanie`, `/?stav=chyba`. Obrazovky: `/`, `/hladat` (aj `?zobrazenie=mapa`), `/miesto/demo-01`, `/ulozene`, `/profil`, `/registracia`, `/prihlasenie`, `/vitaj`. Všetky miesta sú syntetické (DEMO).
 
 ## Dokumentácia
 - `PRODUCT_MANIFESTO.md` — produktová špecifikácia (pripravuje sa nahratie v1.7)

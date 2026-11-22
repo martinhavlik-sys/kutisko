@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-11-22 — Spodné menu neprekáža, simulovaná registrácia, prihlásenie a uvítanie
+**Zmenené**
+- Spodné menu sa pri posúvaní nadol schová a vráti sa pri posune nahor, pri vrchu a na konci stránky (aj pri fokuse klávesnicou). Na mape ostáva viditeľné. Pri „obmedziť pohyb“ bez animácie.
+- `/registracia`: meno (oslovenie), e-mail, heslo (aspoň 8 znakov, zobraziť/skryť), potvrdenie, že ide o DEMO účet. Konkrétne chybové hlášky a fokus na prvé chybné pole.
+- `/prihlasenie`: e-mail a heslo; neznámy e-mail ukáže vysvetlenie a odkaz na registráciu. Heslo sa neukladá ani neoveruje.
+- `/vitaj`: krátke uvítanie „Ahoj, [meno]!“ so Simonkinou ilustráciou, nepovinný výber veku dieťaťa a „Začať hľadať“ (s vekom otvorí vyhľadávanie s filtrom). „Preskočiť“ vedie na Domov.
+- Domov: oslovenie „Ahoj, [meno]!“ a iniciály v hlavičke; bez účtu tlačidlo „Prihlásiť sa“.
+- Profil: karta účtu (meno, e-mail, DEMO) alebo výzva vytvoriť účet / prihlásiť sa; funkčné odhlásenie.
+
+**Otestované**
+- `npm test` (16 testov vrátane validácie registrácie a prihlásenia), `typecheck`, `lint`, `build` prešli.
+- Playwright (iPhone 13): menu sa skryje po posune nadol, vráti sa po posune nahor aj na konci stránky; na mape zostáva; prázdna registrácia → 4 chyby a fokus na meno; registrácia → uvítanie „Ahoj, Jana!“ → výber veku → `/hladat?vek=3-5`; Domov s oslovením; odhlásenie v Profile; prihlásenie neznámeho e-mailu → hláška, známeho (iné veľké písmená) → Domov; bez vodorovného pretečenia, bez chýb v konzole.
+
+**Známe obmedzenia**
+- Účet existuje iba v tomto prehliadači; žiadna skutočná autentifikácia ani overenie hesla.
+- Registrácia sa v prototype nevynucuje (v produkcii bude povinná).
+
 ## 2026-11-22 — Simulované hodnotenie, návrh miesta, nahlásenie a náhľad admin fronty
 **Zmenené**
 - Martin schválil náhľady obrazoviek z PR #2 (zapísané v DECISIONS).

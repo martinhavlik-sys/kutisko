@@ -4,6 +4,9 @@ import { AGE_BANDS } from "@/data/places";
 import { CITIES, DISTANCES, usePreferences } from "@/lib/preferences";
 import { useSaved } from "@/lib/saved";
 import { useMyReviews } from "@/lib/community";
+import { logoutDemo, useAccount } from "@/lib/account";
+import { initials } from "@/lib/validation";
+import { primaryBtn, secondaryBtn } from "@/components/forms/FormParts";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Toast, useToast } from "@/components/ui/Toast";
@@ -12,7 +15,16 @@ import Link from "next/link";
 
 function ChevronRight() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
       <path d="m9 6 6 6-6 6" />
     </svg>
   );
@@ -38,19 +50,29 @@ export function ProfileScreen() {
   const saved = useSaved();
   const [myReviews] = useMyReviews();
   const { message, show } = useToast();
+  const { account } = useAccount();
 
   const rows: { label: string; hint?: string; icon: React.ReactNode; href?: string; onClick?: () => void }[] = [
-    { label: "Obľúbené miesta", hint: saved.ids.length ? String(saved.ids.length) : undefined, icon: <HeartIcon size={20} />, href: "/ulozene" },
+    {
+      label: "Obľúbené miesta",
+      hint: saved.ids.length ? String(saved.ids.length) : undefined,
+      icon: <HeartIcon size={20} />,
+      href: "/ulozene",
+    },
     {
       label: "Moje hodnotenia",
       hint: String(myReviews.length),
       icon: <StarIcon size={18} />,
       onClick: () =>
-        show(myReviews.length ? "Vaše hodnotenia nájdete v detaile hodnotených miest (DEMO)" : "Zatiaľ ste nič nehodnotili. Ohodnotiť môžete v detaile miesta."),
+        show(
+          myReviews.length
+            ? "Vaše hodnotenia nájdete v detaile hodnotených miest (DEMO)"
+            : "Zatiaľ ste nič nehodnotili. Ohodnotiť môžete v detaile miesta.",
+        ),
     },
     { label: "Navrhnúť nové miesto", icon: <PinIcon size={20} />, href: "/navrhnut" },
     { label: "Admin fronta (náhľad)", hint: "DEMO", icon: <CheckBadgeIcon size={20} />, href: "/admin" },
-    { label: "Zmena hesla", icon: <UserIcon size={20} />, onClick: () => show("V prototype sa heslo nemení (DEMO)") },
+    ...(account ? [{ label: "Zmena hesla", icon: <UserIcon size={20} />, onClick: () => show("V prototype sa heslo nemení (DEMO)") }] : []),
   ];
 
   return (
@@ -59,16 +81,41 @@ export function ProfileScreen() {
         <PageHeader title="Profil" />
 
         <main className="mt-4 space-y-8">
-          {/* Účet */}
-          <section aria-label="Účet" className="flex items-center gap-4 rounded-[26px] bg-white p-4 shadow-card ring-1 ring-line">
-            <span aria-hidden="true" className="flex size-14 items-center justify-center rounded-full bg-coral-50 font-display text-[20px] font-bold text-coral-600">
-              DR
-            </span>
-            <div className="min-w-0">
-              <p className="text-[17px] font-semibold text-ink">Demo rodič</p>
-              <p className="text-[13.5px] text-ink-muted">Simulovaný účet · nič sa neukladá na server</p>
-            </div>
-          </section>
+          {/* Účet (simulovaný) */}
+          {account ? (
+            <section aria-label="Účet" className="flex items-center gap-4 rounded-[26px] bg-white p-4 shadow-card ring-1 ring-line">
+              <span
+                aria-hidden="true"
+                className="flex size-14 shrink-0 items-center justify-center rounded-full bg-coral-50 font-display text-[20px] font-bold text-coral-600"
+              >
+                {initials(account.name)}
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-[17px] font-semibold text-ink">{account.name}</p>
+                <p className="truncate text-[13.5px] text-ink-muted">{account.email}</p>
+                <p className="mt-1 inline-block rounded-full bg-amber-50 px-2 py-0.5 text-[11.5px] font-semibold text-amber-700">
+                  DEMO účet · iba v tomto prehliadači
+                </p>
+              </div>
+            </section>
+          ) : (
+            <section aria-labelledby="acc-title" className="rounded-[26px] bg-white p-5 shadow-card ring-1 ring-line">
+              <h2 id="acc-title" className="text-[17px] font-semibold text-ink">
+                Nie ste prihlásení
+              </h2>
+              <p className="mt-1 text-[14px] leading-relaxed text-ink-muted">
+                S účtom budete mať obľúbené miesta, hodnotenia a návrhy pod svojím menom. V prototype je účet len simulovaný (DEMO).
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-2.5">
+                <Link href="/registracia" className={primaryBtn}>
+                  Vytvoriť účet
+                </Link>
+                <Link href="/prihlasenie" className={secondaryBtn}>
+                  Prihlásiť sa
+                </Link>
+              </div>
+            </section>
+          )}
 
           {/* Preferencie */}
           <section aria-labelledby="prefs-title">
@@ -181,15 +228,21 @@ export function ProfileScreen() {
             </ul>
           </section>
 
-          <button
-            type="button"
-            onClick={() => show("Odhlásenie je v prototype len simulované (DEMO)")}
-            className="min-h-12 w-full rounded-full bg-white text-[15px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-          >
-            Odhlásiť sa
-          </button>
+          {account && (
+            <button
+              type="button"
+              onClick={() => {
+                logoutDemo();
+                show("Ste odhlásení (DEMO). Obľúbené a preferencie ostali v tomto prehliadači.");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="min-h-12 w-full rounded-full bg-white text-[15px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              Odhlásiť sa
+            </button>
+          )}
           <p className="text-center text-[12.5px] leading-relaxed text-ink-muted">
-            Prototyp KUTISKO · bez registrácie a bez servera. Všetky údaje sú ukážkové.
+            Prototyp KUTISKO · simulovaný účet, bez servera. Všetky údaje sú ukážkové.
           </p>
         </main>
       </div>

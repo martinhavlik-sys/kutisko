@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId } from "@/data/places";
 import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
+import { useAccount } from "@/lib/account";
+import { firstName, initials } from "@/lib/validation";
 import { Toast, useToast } from "@/components/ui/Toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,6 +49,7 @@ export function HomeScreen() {
   const [ageId, setAgeId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortId>("recommended");
   const saved = useSaved();
+  const { account } = useAccount();
   const [activeId, setActiveId] = useState<string | null>(null);
   const { message: toast, show: showToast } = useToast();
 
@@ -106,13 +109,23 @@ export function HomeScreen() {
               DEMO
             </span>
           </div>
-          <Link
-            href="/profil"
-            aria-label="Profil"
-            className="flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-          >
-            <UserIcon size={20} />
-          </Link>
+          {account ? (
+            <Link
+              href="/profil"
+              aria-label={`Profil: ${account.name}`}
+              className="flex size-11 items-center justify-center rounded-full bg-coral-50 font-display text-[15px] font-bold text-coral-600 shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              {initials(account.name)}
+            </Link>
+          ) : (
+            <Link
+              href="/prihlasenie"
+              className="flex min-h-11 items-center gap-1.5 rounded-full bg-white pl-3 pr-4 text-[14px] font-semibold text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              <UserIcon size={18} />
+              Prihlásiť sa
+            </Link>
+          )}
         </header>
 
         <main>
@@ -126,7 +139,7 @@ export function HomeScreen() {
               priority
               className="pointer-events-none absolute -top-1 right-0 h-auto w-[78px] select-none sm:w-[112px]"
             />
-            <p className="text-[15px] font-medium text-ink-muted">Ahoj!</p>
+            <p className="text-[15px] font-medium text-ink-muted">{account ? `Ahoj, ${firstName(account.name)}!` : "Ahoj!"}</p>
             <h1 id="hero-title" className="mt-0.5 pr-20 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-ink min-[400px]:text-[30px] sm:pr-28 sm:text-[40px]">
               Kam ideme dnes?
             </h1>
