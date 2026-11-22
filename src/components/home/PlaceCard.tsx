@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { forwardRef } from "react";
 import { CATEGORIES, REFERENCE_POINT, type Place } from "@/data/places";
 import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel } from "@/lib/search";
@@ -11,11 +12,10 @@ interface Props {
   saved: boolean;
   active: boolean;
   onToggleSave: (id: string) => void;
-  onOpen: (place: Place) => void;
 }
 
 export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
-  { place, saved, active, onToggleSave, onOpen },
+  { place, saved, active, onToggleSave },
   ref,
 ) {
   const category = CATEGORIES.find((c) => c.id === place.category)!;
@@ -51,13 +51,12 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
       <div className="px-2 pb-2 pt-3.5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-[17px] font-semibold leading-snug tracking-[-0.01em] text-ink">
-            <button
-              type="button"
-              onClick={() => onOpen(place)}
-              className="text-left after:absolute after:inset-0 after:rounded-[26px] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
+            <Link
+              href={`/miesto/${place.id}`}
+              className="after:absolute after:inset-0 after:rounded-[26px] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ink"
             >
               {place.name}
-            </button>
+            </Link>
           </h3>
           {place.score !== null ? (
             <div className="flex shrink-0 items-center gap-1 rounded-full bg-amber-50 px-2 py-1 text-[13px] font-semibold text-amber-700">

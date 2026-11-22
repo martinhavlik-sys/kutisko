@@ -89,13 +89,14 @@ interface Props {
   places: Place[];
   activeId: string | null;
   onSelect: (id: string) => void;
-  onOpenMap: () => void;
+  onOpenMap?: () => void;
+  label?: string;
   loading?: boolean;
 }
 
-export function MapPreview({ places, activeId, onSelect, onOpenMap, loading }: Props) {
+export function MapPreview({ places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" }: Props) {
   return (
-    <section aria-label="Náhľad mapy" className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
+    <section aria-label={label} className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
       <div className="relative aspect-[360/260] w-full">
         <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
           <rect width={W} height={H} fill="#F4EEDD" />
@@ -170,6 +171,7 @@ export function MapPreview({ places, activeId, onSelect, onOpenMap, loading }: P
           Ilustračná mapa · DEMO
         </span>
 
+        {onOpenMap && (
         <button
           type="button"
           onClick={onOpenMap}
@@ -178,6 +180,7 @@ export function MapPreview({ places, activeId, onSelect, onOpenMap, loading }: P
           <MapIcon size={18} />
           Celá mapa
         </button>
+        )}
       </div>
     </section>
   );

@@ -32,4 +32,14 @@
 ## 2026-11-22 — Domov v1: kľúčové UI voľby (návrh na schválenie)
 **Rozhodnutie:** Svetlé krémové pozadie (#FBF7EE), biele karty, farby B len ako akcenty. Koralová #FF526E iba dekoratívne (piny, srdiečko); na text a tlačidlá tmavšia #D6264A (zjednotené s tokenmi z PR #1). Amber spodnú lištu z mockupu nahrádza biela lišta s amber indikátorom (biely text na #F5AD1D nespĺňa kontrast). Mapa je ilustračná SVG s pinmi z GPS fixtures. Fotky miest nahrádzajú abstraktné náhľady podľa kategórie. Vzdialenosť sa počíta od centra Bratislavy, poloha sa nezisťuje.
 **Dôvod:** Manifest body 19, 20, 25 (obsah pred dekoráciou, kontrast); bez mapového providera a licencovaných fotografií.
-**Dopad:** Čaká na vizuálne schválenie Martina (manifest, bod 24) pred ďalšími obrazovkami.
+**Dopad:** Martin vizuálny smer 2026-11-22 schválil („je to v poriadku“); ďalšie obrazovky z neho vychádzajú.
+
+## 2026-11-22 — Schválenie vizuálneho smeru Domov v1
+**Rozhodnutie (Martin):** Vizuálny jazyk konceptu Domov v1 je schválený (manifest, bod 24).
+**Dopad:** Pokračuje sa ďalšími obrazovkami podľa `MVP_ROADMAP.md` (Fáza 2), začína sa detailom miesta.
+
+## 2026-11-22 — Detail miesta: navigácia a hodnotenie (návrh)
+**Rozhodnutie:** Navigácia používa univerzálne webové URL (maps.apple.com, google.com/maps/dir s `api=1`, waze.com/ul) namiesto vlastných schém `comgooglemaps://` / `waze://`; otvárajú aplikáciu, ak je nainštalovaná, inak web. Služby sa neoznačujú ako „nainštalované“. Čiastkové hodnotenie zobrazuje tri kritériá z podkladu `hodnotenie.png` (čistota, kreativita priestoru, celkový dojem) oddelene od celkového skóre. „KUTISKO skóre 1–5“ sa nezobrazuje, kým nie je metodika.
+**Dôvod:** Manifest bod 14 a sekcia „UX navigácia“; spoľahlivý fallback bez detekcie aplikácií.
+**Alternatívy:** Vlastné URL schémy s detekciou (nespoľahlivé vo webe/PWA).
+**Dopad:** Overiť na fyzickom iPhone v Safari a v nainštalovanej PWA.

@@ -134,3 +134,12 @@ export function placesLabel(count: number): string {
   if (count >= 2 && count <= 4) return `${count} miesta`;
   return `${count} miest`;
 }
+
+/** Slovné vyjadrenie skóre 1–10 (pracovný návrh). */
+export function scoreLabel(score: number): string {
+  if (score >= 9) return "Vynikajúce";
+  if (score >= 8) return "Veľmi dobré";
+  if (score >= 7) return "Dobré";
+  if (score >= 5) return "Priemerné";
+  return "Slabšie";
+}

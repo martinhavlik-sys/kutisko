@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId, type Place } from "@/data/places";
+import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId } from "@/data/places";
 import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
+import { useSaved } from "@/lib/saved";
+import { Toast, useToast } from "@/components/ui/Toast";
 import { BottomNav } from "./BottomNav";
 import { AgeChips, CategoryTabs } from "./Filters";
 import { ChevronDownIcon, CloseIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
@@ -42,13 +44,12 @@ export function HomeScreen() {
   const [category, setCategory] = useState<CategoryId | null>(null);
   const [ageId, setAgeId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortId>("recommended");
-  const [saved, setSaved] = useState<Set<string>>(() => new Set());
+  const saved = useSaved();
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const { message: toast, show: showToast } = useToast();
 
   const searchRef = useRef<HTMLInputElement>(null);
   const cardRefs = useRef(new Map<string, HTMLElement>());
-  const toastTimer = useRef<number | undefined>(undefined);
 
   const results = useMemo(() => {
     const band = AGE_BANDS.find((b) => b.id === ageId) ?? null;
@@ -57,36 +58,21 @@ export function HomeScreen() {
 
   const hasFilters = query.trim() !== "" || category !== null || ageId !== null;
 
-  const showToast = useCallback((msg: string) => {
-    setToast(msg);
-    window.clearTimeout(toastTimer.current);
-    toastTimer.current = window.setTimeout(() => setToast(null), 2600);
-  }, []);
-
   const resetFilters = () => {
     setQuery("");
     setCategory(null);
     setAgeId(null);
   };
 
-  const toggleSave = (id: string) =>
-    setSaved((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      showToast(next.has(id) ? "Uložené do obľúbených (iba v tomto prehliadači, DEMO)" : "Odstránené z obľúbených");
-      return next;
-    });
+  const toggleSave = (id: string) => {
+    const nowSaved = saved.toggle(id);
+    showToast(nowSaved ? "Uložené do obľúbených (iba v tomto prehliadači, DEMO)" : "Odstránené z obľúbených");
+  };
 
   const selectFromMap = (id: string) => {
     setActiveId(id);
     const el = cardRefs.current.get(id);
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
-  const openPlace = (p: Place) => {
-    setActiveId(p.id);
-    showToast(`Detail „${p.name}“ pripravujeme v ďalšej iterácii`);
   };
 
   const onNav = (id: "home" | "search" | "saved" | "profile") => {
@@ -264,7 +250,6 @@ export function HomeScreen() {
                       saved={saved.has(p.id)}
                       active={activeId === p.id}
                       onToggleSave={toggleSave}
-                      onOpen={openPlace}
                     />
                   ))}
                 </div>
@@ -280,21 +265,9 @@ export function HomeScreen() {
         </main>
       </div>
 
-      <div
-        role="status"
-        aria-live="polite"
-        className={`pointer-events-none fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-50 flex justify-center px-5 transition duration-200 ${
-          toast ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-        }`}
-      >
-        {toast && (
-          <span className="max-w-sm rounded-2xl bg-ink px-4 py-3 text-center text-[14px] font-medium text-white shadow-float">
-            {toast}
-          </span>
-        )}
-      </div>
+      <Toast message={toast} />
 
-      <BottomNav savedCount={saved.size} onSelect={onNav} />
+      <BottomNav savedCount={saved.ids.length} onSelect={onNav} />
     </>
   );
 }

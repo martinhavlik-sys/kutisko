@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-11-22 — Detail miesta a výber navigácie (prototyp)
+**Zmenené**
+- Martin schválil vizuálny smer obrazovky Domov v1 (pozri DECISIONS).
+- Nová stránka `/miesto/[id]` (staticky generovaná pre 11 DEMO miest): ilustračný náhľad, kategória a vnútri/vonku, skóre 1–10 so slovným vyjadrením a počtom hodnotení, stav overenia, rýchle fakty (vek, cena, dnešné hodiny, prostredie), popis, vybavenie, čiastkové hodnotenie (čistota, kreativita priestoru, celkový dojem podľa `hodnotenie.png`), ukážkové recenzie, týždenné hodiny, poloha na ilustračnej mape, pôvod údajov, ďalšie miesta v okolí.
+- Spodná lišta s cenou a tlačidlom **Navigovať** → výber Apple Mapy / Google Mapy / Waze (oficiálne univerzálne URL s webovým fallbackom, bez zisťovania polohy, s DEMO upozornením).
+- Obľúbené sa ukladajú lokálne (localStorage) a sú spoločné pre Domov aj detail; Domov si pri návrate zo detailu zachová filtre (React Activity v Next.js 16).
+- Stránka „Miesto nenájdené“, skeleton pri načítaní detailu.
+
+**Otestované**
+- `npm test` (10 testov vrátane URL navigácie), `typecheck`, `lint`, `build` prešli.
+- Playwright (iPhone 13, desktop): Domov → filter Herne → karta → detail; uloženie srdiečkom sa prejaví v počítadle na Domove; dialóg navigácie má správne URL pre všetky tri služby a zatvorí sa klávesom Esc; Späť vráti na Domov so zachovaným filtrom; miesto bez hodnotení a neznámych údajov; neexistujúce miesto; bez chýb v konzole.
+
+**Známe obmedzenia**
+- Neexistujúce miesto zobrazí stránku „nenájdené“, ale HTTP kód je 200 (streamovanie s Cache Components).
+- Hodnotenie, nahlásenie chyby a celá mapa zatiaľ zobrazia iba „pripravujeme“.
+- Otvorenie aplikácií Apple Mapy/Waze netestované na fyzickom iPhone.
+
 ## 2026-11-22 — Koncept obrazovky Domov v1 (prototyp)
 **Zmenené**
 - Založený projekt Next.js 16 (App Router) + TypeScript + Tailwind CSS 4, bez ďalších runtime závislostí.
