@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AGE_BANDS, CATEGORIES, PLACES, REFERENCE_POINT } from "@/data/places";
+import { AGE_BANDS, CATEGORIES, PLACES } from "@/data/places";
+import { useOrigin } from "@/lib/preferences";
 import { amenityOptions, filterAndSort, placesLabel, type Environment } from "@/lib/search";
 import type { UrlFilters } from "@/lib/useUrlFilters";
 import { CloseIcon } from "@/components/home/icons";
@@ -54,6 +55,7 @@ export function FilterSheet({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [draft, setDraft] = useState<Draft>(value);
+  const origin = useOrigin();
 
   useEffect(() => {
     const d = ref.current;
@@ -76,9 +78,9 @@ export function FilterSheet({
           onlyVerified: draft.onlyVerified,
           onlyFree: draft.onlyFree,
         },
-        REFERENCE_POINT,
+        origin,
       ).length,
-    [draft],
+    [draft, origin],
   );
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { forwardRef } from "react";
-import { CATEGORIES, REFERENCE_POINT, type Place } from "@/data/places";
+import { CATEGORIES, type Place } from "@/data/places";
+import { useOrigin } from "@/lib/preferences";
 import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel } from "@/lib/search";
 import { CheckBadgeIcon, ClockIcon, HeartIcon, StarIcon } from "./icons";
 import { PlaceArt } from "./PlaceArt";
@@ -19,7 +20,8 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
   ref,
 ) {
   const category = CATEGORIES.find((c) => c.id === place.category)!;
-  const km = distanceKm(REFERENCE_POINT, place);
+  const origin = useOrigin();
+  const km = distanceKm(origin, place);
 
   return (
     <article
@@ -74,7 +76,7 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
         </div>
 
         <p className="mt-0.5 text-[14px] text-ink-muted">
-          {place.area} · {formatDistance(km)} od {REFERENCE_POINT.label}
+          {place.area} · {formatDistance(km)} {origin.city === "Bratislava" ? "od centra" : `od ${origin.of}`}
           {" · "}
           {place.score !== null ? reviewsLabel(place.reviewCount) : "zatiaľ bez hodnotení"}
         </p>

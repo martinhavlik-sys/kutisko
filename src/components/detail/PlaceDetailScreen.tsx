@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CATEGORIES, PLACES, REFERENCE_POINT, type Place } from "@/data/places";
+import { CATEGORIES, PLACES, type Place } from "@/data/places";
+import { useOrigin } from "@/lib/preferences";
 import type { PlaceDetail } from "@/data/placeDetails";
 import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel, scoreLabel } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
@@ -82,7 +83,8 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
   const mine = myReviews.find((r) => r.placeId === place.id);
   const { message, show } = useToast();
   const category = CATEGORIES.find((c) => c.id === place.category)!;
-  const km = distanceKm(REFERENCE_POINT, place);
+  const origin = useOrigin();
+  const km = distanceKm(origin, place);
 
   const goBack = () => {
     if (window.history.length > 1) router.back();
@@ -137,7 +139,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
           </h1>
           <p className="mt-1.5 inline-flex items-center gap-1 text-[15px] text-ink-muted">
             <PinIcon size={16} className="text-turquoise-700" />
-            {place.area} · {formatDistance(km)} od {REFERENCE_POINT.label}
+            {place.area} · {formatDistance(km)} od centra {origin.of}
           </p>
 
           {/* Hodnotenie + overenie */}

@@ -76,3 +76,13 @@
 - Po registrácii krátke uvítanie `/vitaj` „Ahoj [meno]“ s nepovinným výberom veku a tlačidlom do vyhľadávania (nič neblokuje). Domov potom oslovuje menom.
 **Rozhodnutie (Martin, 2026-11-22):** „nemusí byť povinná v prototype a uvítanie stačí len po prihlásení“. Registrácia v prototype ostáva nepovinná. Uvítanie „Ahoj [meno]“ sa ukáže po registrácii aj po každom prihlásení, nie pri bežnom otvorení aplikácie (uzatvára otvorenú otázku 4 PROTOTYPE_BRIEF). Pôvodný návrh viesť po prihlásení rovno na Domov sa tým mení.
 **Dopad:** Pri backende sa nahradí skutočnou autentifikáciou; obľúbené a preferencie sa presunú k účtu.
+
+## 2026-11-22 — Ručný výber mesta namiesto geolokácie (prototyp)
+**Rozhodnutie (Claude, UI/technický detail v rámci manifestu):** Prototyp polohu nezisťuje. Rodič si mesto vyberie na Domove alebo v Profile; vzdialenosť a „Najbližšie“ sa počítajú od približného centra vybraného mesta (pilot: 6 obcí). Bez výberu platí centrum Bratislavy.
+**Dôvod:** Manifest žiada pri zamietnutej geolokácii ručný výber mesta (scenár S5); prototyp tak nemusí pracovať s polohou používateľa.
+**Alternatívy:** Geolokácia prehliadača s ručnou zálohou — odložené do MVP (súkromie, súhlas).
+**Dopad:** Výber sa ukladá iba v prehliadači.
+
+## 2026-11-22 — PWA a dočasná ikona
+**Rozhodnutie (Claude):** Prototyp má manifest a dočasnú ikonu „k“ (koralová na krémovej, žltá bodka), aby sa dal na iPhone pridať na plochu a testovať ako aplikácia. Ikona nie je logo; nahradí sa finálnym logom.
+**Dopad:** Žiadny service worker ani offline režim (mimo MVP).

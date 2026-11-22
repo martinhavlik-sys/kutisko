@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-22 — Príprava testu na iPhone (Fáza 3)
+**Zmenené**
+- Ručný výber mesta (scenár S5): na Domove je lokalita „Bratislava a okolie ▾“ tlačidlom, ktoré otvorí výber mesta (Bratislava, Senec, Stupava, Šamorín, Pezinok, Malacky). Vzdialenosti na kartách a v detaile aj zoradenie „Najbližšie“ sa počítajú od vybraného mesta; výber sa zdieľa s Profilom. Polohu prototyp nezisťuje.
+- PWA: manifest, dočasná ikona „k“ (logo nie je finálne), `apple-touch-icon` a režim na celú obrazovku po „Pridať na plochu“ v Safari.
+- `docs/TEST_IPHONE.md`: scenár testu s rodičmi (S1–S8), záverečné otázky, záznamový hárok, zásady súkromia.
+
+**Otestované**
+- `npm test` (18 testov vrátane výberu mesta a zoradenia od neho), `typecheck`, `lint`, `build` prešli.
+- Playwright (iPhone 13, bez povolenej polohy): S1 vnútorná herňa pre 3–5 r. (3 výsledky), S2 navigačné odkazy Apple/Google/Waze, S3 uloženie a odstránenie so spätnou väzbou, S5 výber Senca → „19,0 km od Senca“, S6 prázdny stav s cestou späť, S7 texty „neuvedené“; manifest a apple-touch-icon sa servírujú. Bez chýb v konzole.
+
+**Známe obmedzenia**
+- Safari/WebKit ani fyzický iPhone zatiaľ netestované; verejný odkaz na test čaká na rozhodnutie o nasadení.
+- Maximálna vzdialenosť z Profilu zatiaľ výsledky nefiltruje.
+
 ## 2026-11-22 — Uvítanie aj po prihlásení (rozhodnutie Martina)
 **Zmenené**
 - Po prihlásení sa ukáže krátke uvítanie „Ahoj, [meno]!“ s textom „Vitajte späť…“; po registrácii zostáva text „Účet je pripravený…“. Pri bežnom otvorení aplikácie sa uvítanie neukazuje.

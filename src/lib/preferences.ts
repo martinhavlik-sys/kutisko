@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { originFor } from "./origin";
 
 /** Voliteľné preferencie (manifest bod 8) — iba lokálne v prehliadači, DEMO. */
 export interface Preferences {
@@ -54,4 +55,9 @@ export function usePreferences() {
     clear: () => write(EMPTY_PREFERENCES),
     isEmpty: prefs.ageId === null && prefs.city === null && prefs.maxDistanceKm === null,
   };
+}
+
+/** Bod, od ktorého sa počíta vzdialenosť: ručne vybrané mesto, inak centrum Bratislavy. */
+export function useOrigin() {
+  return originFor(usePreferences().prefs.city);
 }

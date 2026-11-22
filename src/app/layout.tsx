@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description:
     "Prototyp: objavujte detské kútiky, vnútorné herne a ihriská v Bratislave a okolí. Obsahuje iba ukážkové (DEMO) dáta.",
   robots: { index: false, follow: false },
+  applicationName: "Kutisko",
+  // Po „Pridať na plochu“ sa otvára na celú obrazovku; stavový riadok ostáva čitateľný na krémovom pozadí.
+  appleWebApp: { capable: true, title: "Kutisko", statusBarStyle: "default" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {

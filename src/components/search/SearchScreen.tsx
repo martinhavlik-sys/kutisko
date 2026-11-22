@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { AGE_BANDS, CATEGORIES, PLACES, REFERENCE_POINT } from "@/data/places";
-import { usePreferences } from "@/lib/preferences";
+import { AGE_BANDS, CATEGORIES, PLACES } from "@/data/places";
+import { useOrigin, usePreferences } from "@/lib/preferences";
 import { distanceKm, filterAndSort, formatDistance, formatPrice, formatScore, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
 import { useUrlFilters, type UrlFilters } from "@/lib/useUrlFilters";
 import { useSaved } from "@/lib/saved";
@@ -42,7 +42,8 @@ export function SearchScreen() {
     return () => window.clearTimeout(t);
   }, [draftQuery, state.query, update]);
 
-  const results = useMemo(() => filterAndSort(PLACES, filters, REFERENCE_POINT), [filters]);
+  const origin = useOrigin();
+  const results = useMemo(() => filterAndSort(PLACES, filters, origin), [filters, origin]);
   const active = results.find((p) => p.id === activeId) ?? null;
   const hasAny = state.query.trim() !== "" || state.category !== null || state.ageId !== null || advancedCount > 0;
 
@@ -254,7 +255,7 @@ export function SearchScreen() {
                     {active.name}
                   </Link>
                   <p className="truncate text-[13px] text-ink-muted">
-                    {active.area} · {formatDistance(distanceKm(REFERENCE_POINT, active))} · {formatPrice(active.price)}
+                    {active.area} · {formatDistance(distanceKm(origin, active))} · {formatPrice(active.price)}
                   </p>
                   <p className="mt-0.5 inline-flex items-center gap-1 text-[13px] font-semibold text-amber-700">
                     {active.score !== null ? (

@@ -33,6 +33,11 @@ export const CloseIcon = (p: IconProps) => (
     <path d="M18 6 6 18M6 6l12 12" />
   </Base>
 );
+export const CheckIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="m5 12.5 4.5 4.5L19 7.5" />
+  </Base>
+);
 export const HeartIcon = ({ filled, ...p }: IconProps & { filled?: boolean }) => (
   <Base {...p} fill={filled ? "currentColor" : "none"}>
     <path d="M12 20s-7.5-4.6-9.2-9.3C1.7 7.6 3.7 4.5 7 4.5c2 0 3.3 1.1 5 3 1.7-1.9 3-3 5-3 3.3 0 5.3 3.1 4.2 6.2C19.5 15.4 12 20 12 20Z" />

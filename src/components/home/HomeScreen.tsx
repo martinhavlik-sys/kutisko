@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { AGE_BANDS, PLACES, REFERENCE_POINT, type CategoryId } from "@/data/places";
+import { AGE_BANDS, PLACES, type CategoryId } from "@/data/places";
+import { useOrigin } from "@/lib/preferences";
+import { originFor } from "@/lib/origin";
+import { CityPicker } from "@/components/ui/CityPicker";
 import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
 import { useAccount } from "@/lib/account";
@@ -50,6 +53,8 @@ export function HomeScreen() {
   const [sort, setSort] = useState<SortId>("recommended");
   const saved = useSaved();
   const { account } = useAccount();
+  const origin = useOrigin();
+  const [cityOpen, setCityOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const { message: toast, show: showToast } = useToast();
 
@@ -58,8 +63,8 @@ export function HomeScreen() {
 
   const results = useMemo(() => {
     const band = AGE_BANDS.find((b) => b.id === ageId) ?? null;
-    return filterAndSort(PLACES, { query, category, ageBand: band, sort }, REFERENCE_POINT);
-  }, [query, category, ageId, sort]);
+    return filterAndSort(PLACES, { query, category, ageBand: band, sort }, origin);
+  }, [query, category, ageId, sort, origin]);
 
   const hasFilters = query.trim() !== "" || category !== null || ageId !== null;
 
@@ -143,10 +148,17 @@ export function HomeScreen() {
             <h1 id="hero-title" className="mt-0.5 pr-20 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-ink min-[400px]:text-[30px] sm:pr-28 sm:text-[40px]">
               Kam ideme dnes?
             </h1>
-            <p className="mt-2 inline-flex items-center gap-1 text-[14px] text-ink-muted">
+            <button
+              type="button"
+              onClick={() => setCityOpen(true)}
+              aria-haspopup="dialog"
+              aria-label={`Lokalita: ${origin.city === "Bratislava" ? "Bratislava a okolie" : origin.city}. Zmeniť`}
+              className="-ml-2 mt-1 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[14px] text-ink-muted hover:bg-cream-100 hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
+            >
               <PinIcon size={16} className="text-turquoise-700" />
-              Bratislava a okolie
-            </p>
+              <span className="font-medium text-ink">{origin.city === "Bratislava" ? "Bratislava a okolie" : origin.city}</span>
+              <ChevronDownIcon size={16} />
+            </button>
 
             <form
               role="search"
@@ -275,12 +287,13 @@ export function HomeScreen() {
             <p className="mt-8 text-center text-[12.5px] leading-relaxed text-ink-muted">
               Prototyp KUTISKO · všetky miesta, hodnotenia, ceny a hodiny sú vymyslené (DEMO).
               <br />
-              Vzdialenosť sa počíta od centra Bratislavy, poloha sa nezisťuje.
+              Vzdialenosť sa počíta od centra {origin.of}, poloha sa nezisťuje.
             </p>
           </section>
         </main>
       </div>
 
+      <CityPicker open={cityOpen} onClose={() => setCityOpen(false)} onPicked={(c) => showToast(`Vzdialenosti počítame od centra ${originFor(c).of}`)} />
       <Toast message={toast} />
 
       <BottomNav />
