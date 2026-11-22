@@ -69,14 +69,34 @@ async function crawlArcgis(root, maxServices = 3000) {
 }
 
 async function fetchLayer(layer) {
+  try {
+    return await fetchPaged(layer, "geojson");
+  } catch (e) {
+    note(`Vrstva ${layer.name}: GeoJSON zlyhal (${e.message}), skúšam formát Esri JSON`);
+    return await fetchPaged(layer, "json");
+  }
+}
+
+/** Stránkované stiahnutie vrstvy; formát „json“ (Esri) sa prevedie na GeoJSON body. */
+async function fetchPaged(layer, format) {
   const features = [];
   let offset = 0;
+  const size = format === "json" ? 500 : 1000;
   for (;;) {
-    const q = `${layer.url}/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultOffset=${offset}&resultRecordCount=1000&returnCentroid=true`;
-    const gj = await getJson(q, 60000);
-    features.push(...(gj.features ?? []));
-    if (!gj.features?.length || !(gj.exceededTransferLimit || gj.properties?.exceededTransferLimit)) break;
-    offset += gj.features.length;
+    const extra = format === "geojson" ? "&returnCentroid=true" : "";
+    const q = `${layer.url}/query?where=1%3D1&outFields=*&outSR=4326&f=${format}&resultOffset=${offset}&resultRecordCount=${size}${extra}`;
+    const j = await getJson(q, 60000);
+    if (j.error) throw new Error(`ArcGIS ${j.error.code}: ${j.error.message}`);
+    const batch =
+      format === "geojson"
+        ? (j.features ?? [])
+        : (j.features ?? []).map((f) => ({
+            properties: f.attributes,
+            geometry: f.geometry && "x" in f.geometry ? { type: "Point", coordinates: [f.geometry.x, f.geometry.y] } : null,
+          }));
+    features.push(...batch);
+    if (!batch.length || !(j.exceededTransferLimit || j.properties?.exceededTransferLimit)) break;
+    offset += batch.length;
   }
   return features;
 }
