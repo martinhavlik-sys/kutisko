@@ -3,7 +3,7 @@
 Stav: **pracovný návrh** (2026-11-22). Vychádza z `PROTOTYPE_BRIEF.md` (scenáre S1–S8) a `MVP_ROADMAP.md` (Fáza 3). Počet respondentov 3–5 je návrh.
 
 ## 1. Pred testom
-- Odkaz na prototyp: _doplní sa po nasadení_ (pozri DECISIONS — spôsob zverejnenia čaká na rozhodnutie).
+- Odkaz na prototyp: **https://kutisko.vercel.app/** (Vercel, nasadzuje sa automaticky z vetvy `main`).
 - Na iPhone otvorte odkaz v **Safari** → tlačidlo Zdieľať → **Pridať na plochu**. Ikona „Kutisko“ (dočasná) otvorí prototyp na celú obrazovku.
 - Pred každým respondentom vymažte DEMO údaje: Nastavenia → Safari → Pokročilé → Údaje webových stránok → odstrániť pre doménu prototypu (alebo použite súkromné okno).
 - Povedzte respondentovi: ide o **prototyp s vymyslenými miestami**, testujeme aplikáciu, nie jeho. Môže hovoriť nahlas, čo si myslí.
@@ -49,3 +49,5 @@ Voliteľne: registrácia a prihlásenie (uvítanie „Ahoj, [meno]!“), skrýva
 
 ## 6. Interná kontrola pred testom (2026-11-22)
 Scenáre S1–S8 prešli automatizovane v Chromiu s profilom iPhone 13 (bez povolenej polohy). Zistenie: S5 nemal na Domove ručný výber mesta a lokalita v Profile neovplyvňovala vzdialenosť — opravené (výber mesta na Domove, vzdialenosť a „Najbližšie“ sa počítajú od vybraného mesta). Safari/WebKit ani fyzický iPhone zatiaľ netestované.
+
+Nasadenie (2026-11-22): https://kutisko.vercel.app/ odpovedá (HTTP 200) pre Domov, `/hladat?zobrazenie=mapa` aj manifest, bez prihlasovacej brány. Vizuálnu kontrolu a mapové podklady OpenFreeMap na nasadenej verzii treba overiť na iPhone (zo zostavovacieho prostredia sú tieto adresy blokované).
