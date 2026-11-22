@@ -27,9 +27,12 @@ test("vyhľadávanie bez diakritiky a podľa časti/vybavenia", () => {
 
 test("filter kategórie a veku", () => {
   assert.ok(run({ category: "ihrisko" }).every((p) => p.category === "ihrisko"));
-  const toddlers = run({ ageBand: { min: 0, max: 3 } });
+  const toddlers = run({ ageBand: { min: 0, max: 2 } });
   assert.ok(toddlers.length > 0);
-  assert.ok(toddlers.every((p) => p.ageMin < 3));
+  assert.ok(toddlers.every((p) => p.ageMin <= 2));
+  const older = run({ ageBand: { min: 10, max: 99 } });
+  assert.ok(older.every((p) => p.ageMax >= 10));
+  assert.ok(older.some((p) => p.ageMax === 10), "hraničný vek 10 sa započíta");
 });
 
 test("zoradenie podľa hodnotenia dáva miesta bez hodnotení na koniec", () => {

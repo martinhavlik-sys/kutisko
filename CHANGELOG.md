@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Vekové skupiny podľa schválenia
+- Filter veku používa schválené skupiny 0–2, 3–5, 6–10, 10+ (predtým pracovné 0–3, 3–6, 6–10, 10+); hranice sa započítavajú vrátane.
+- Otestované: `npm test` (rozšírený test hraničného veku), `typecheck`, `lint`, `build`.
+
 ## 2026-11-22 — Detail miesta a výber navigácie (prototyp)
 **Zmenené**
 - Martin schválil vizuálny smer obrazovky Domov v1 (pozri DECISIONS).
@@ -28,7 +32,7 @@
 
 **Otestované**
 - `npm test` (7 testov: filtre, vyhľadávanie bez diakritiky, zoradenie, formátovanie, DEMO označenie), `npm run typecheck`, `npm run lint`, `npm run build` — všetko prešlo.
-- Playwright (Chromium, emulácia iPhone 13 a 320 px, desktop 1280 px): filter Ihriská + 0–3 roky = 3 miesta, hľadanie „kaviaren“ = 4, prázdny stav a „Zrušiť filtre“, ťuk na pin zvýrazní kartu, chyba → „Skúsiť znova“ → 11 miest, bez horizontálneho scrollu na 320 px, bez chýb v konzole. Screenshoty v `docs/screenshots/`.
+- Playwright (Chromium, emulácia iPhone 13 a 320 px, desktop 1280 px): filter Ihriská + 0–3 roky = 3 miesta (pred zmenou vekových skupín), hľadanie „kaviaren“ = 4, prázdny stav a „Zrušiť filtre“, ťuk na pin zvýrazní kartu, chyba → „Skúsiť znova“ → 11 miest, bez horizontálneho scrollu na 320 px, bez chýb v konzole. Screenshoty v `docs/screenshots/`.
 - Kontrast textových farieb prepočítaný podľa WCAG (všetky textové páry ≥ 4,5 : 1).
 
 **Známe obmedzenia**

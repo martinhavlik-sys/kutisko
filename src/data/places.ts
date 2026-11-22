@@ -28,12 +28,12 @@ export interface AgeBand {
   max: number;
 }
 
-/** Pracovné vekové pásma — presné kategórie sú v manifeste otvorené. */
+/** Vekové skupiny filtra — schválené Martinom 2026-11-22 (0–2, 3–5, 6–10, 10+). Miesto má rozsah min–max, filter hľadá prekrytie. */
 export const AGE_BANDS: AgeBand[] = [
-  { id: "0-3", label: "0–3 roky", min: 0, max: 3 },
-  { id: "3-6", label: "3–6 rokov", min: 3, max: 6 },
+  { id: "0-2", label: "0–2 roky", min: 0, max: 2 },
+  { id: "3-5", label: "3–5 rokov", min: 3, max: 5 },
   { id: "6-10", label: "6–10 rokov", min: 6, max: 10 },
-  { id: "10+", label: "10+ rokov", min: 10, max: 15 },
+  { id: "10+", label: "10+ rokov", min: 10, max: 99 },
 ];
 
 export type Price =

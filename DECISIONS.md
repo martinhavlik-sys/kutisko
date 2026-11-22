@@ -43,3 +43,7 @@
 **Dôvod:** Manifest bod 14 a sekcia „UX navigácia“; spoľahlivý fallback bez detekcie aplikácií.
 **Alternatívy:** Vlastné URL schémy s detekciou (nespoľahlivé vo webe/PWA).
 **Dopad:** Overiť na fyzickom iPhone v Safari a v nainštalovanej PWA.
+
+## 2026-11-22 — Vek, mapa a KUTISKO skóre (schválené Martinom)
+**Rozhodnutie (Martin):** Vekové skupiny 0–2, 3–5, 6–10, 10+; mapa cez MapLibre GL (poskytovateľ dlaždíc otvorený); KUTISKO skóre 1–5 nie je súčasťou MVP. Podrobne v `DECISIONS.md` z PR #1.
+**Dopad na prototyp:** Filter veku upravený; plná mapa sa bude stavať na MapLibre GL; skóre 1–5 sa nikde nezobrazuje.

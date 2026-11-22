@@ -41,7 +41,7 @@ export function matchesQuery(place: Place, query: string): boolean {
 
 export function matchesAge(place: Place, band: Filters["ageBand"]): boolean {
   if (!band) return true;
-  return place.ageMin < band.max && place.ageMax >= band.min;
+  return place.ageMin <= band.max && place.ageMax >= band.min;
 }
 
 /** Vzdušná vzdialenosť v km (haversine). */
