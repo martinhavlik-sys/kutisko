@@ -4,7 +4,7 @@ import Link from "next/link";
 import { forwardRef } from "react";
 import { CATEGORIES, type Place } from "@/data/places";
 import { useOrigin } from "@/lib/preferences";
-import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel } from "@/lib/search";
+import { distanceKm, formatAge, formatDate, formatDistance, formatPrice, formatScore, reviewsLabel } from "@/lib/search";
 import { CheckBadgeIcon, ClockIcon, HeartIcon, PinIcon, StarIcon } from "./icons";
 import { PlaceArt } from "./PlaceArt";
 
@@ -94,15 +94,23 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
           <li className={`rounded-full bg-cream-100 px-2.5 py-1 ${place.price.kind === "unknown" ? "text-ink-muted" : "text-ink"}`}>
             {formatPrice(place.price)}
           </li>
+          {place.source === "web" && place.hoursToday && (
+            <li className="inline-flex items-center gap-1 rounded-full bg-cream-100 px-2.5 py-1 text-ink">
+              <ClockIcon size={14} />
+              Dnes {place.hoursToday}
+            </li>
+          )}
           {place.source !== "demo" ? (
             <>
-              {place.amenities.slice(0, 2).map((a) => (
+              {place.amenities.slice(0, place.source === "web" && place.hoursToday ? 1 : 2).map((a) => (
                 <li key={a} className="rounded-full bg-cream-100 px-2.5 py-1 text-ink">
                   {a}
                 </li>
               ))}
-              {place.amenities.length > 2 && (
-                <li className="rounded-full bg-cream-100 px-2.5 py-1 text-ink-muted">+{place.amenities.length - 2}</li>
+              {place.amenities.length > (place.source === "web" && place.hoursToday ? 1 : 2) && (
+                <li className="rounded-full bg-cream-100 px-2.5 py-1 text-ink-muted">
+                  +{place.amenities.length - (place.source === "web" && place.hoursToday ? 1 : 2)}
+                </li>
               )}
             </>
           ) : (
@@ -125,6 +133,10 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
           ) : place.source === "city" ? (
             <>
               <PinIcon size={15} /> Skutočné miesto · register mesta, neoverené
+            </>
+          ) : place.web ? (
+            <>
+              <CheckBadgeIcon size={16} /> Skutočné miesto · overené na webe prevádzky {formatDate(place.web.checkedAt)}
             </>
           ) : place.verified ? (
             <>

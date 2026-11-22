@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-22 — Skutočné herne a kútiky namiesto DEMO
+**Zmenené**
+- 7 vymyslených DEMO kútikov a herní nahradilo **11 skutočných miest** v Bratislave a Ivanke pri Dunaji (MINI CITY, Simba Centrum, Jump Fun Nivy, Jump Fun KidsHouse, RETRO Kids, INSPIRO Park oddychu, Adventica Eurovea, ihrisko v Eurovei, kútik Aupark, BUPPI v Bory Mall, AVION Junior). Údaje sú ručne overené na weboch prevádzok a obchodných centier k 22. 11. 2026 (`src/data/curated/indoor-places.json`). Popisy sú vlastné, bez fotiek, bez údajov z Google, bez hodnotení.
+- Karta: „Skutočné miesto · overené na webe prevádzky 22. 11. 2026“ a dnešné hodiny, ak sú rovnaké celý týždeň. Detail: adresa, týždenné hodiny, poznámka k cene, tlačidlo „Web prevádzky“, odkazy na zdroje. Neuvedené údaje ostávajú sivo „neuvedené“.
+- Nový typ ceny „Vstup pri konzumácii“ (INSPIRO); ceny s desatinnou čiarkou.
+- Navigácia: pri približnej polohe vedie na adresu prevádzky. Upozornenie „DEMO: súradnice sú ilustračné“ sa už ukazuje len pri DEMO miestach (predtým aj pri skutočných ihriskách).
+- Vymyslené DEMO popisy a recenzie odstránené z aplikácie; DEMO miesta ostali len ako testovacie dáta (`src/data/demoFixtures.ts`).
+- `docs/HERNE_KUTIKY.md`: pravidlá zberu, prehľad 11 miest a kandidáti na overenie (nezobrazení).
+- `scripts/curated/geocode.mjs`: presná poloha z OpenStreetMap (Nominatim) s kontrolou vzdialenosti od odhadu.
+
+**Otestované**
+- `npm test` (32; nové: herne a kútiky majú zdroj a dátum, žiadne hodnotenia ani Google; navigácia na adresu), `lint`, `typecheck`, `build` prešli.
+- Playwright (iPhone 13): Domov, detail RETRO Kids a Aupark (chýbajúce údaje), Hľadať herne; bez chýb v konzole.
+
+**Známe obmedzenia**
+- Poloha herní je zatiaľ **približná** (prostredie Claude nemá prístup na Nominatim ani Overpass). Presnú polohu z OSM doplní spustenie `node scripts/curated/geocode.mjs`. Pri Aupark a Eurovea je poloha z Wikipédie, pri Bory Mall z ihriska Bupi v OSM.
+- Ceny a hodiny sa menia, treba ich pravidelne overovať. Aupark a AVION Junior nemajú na webe hodiny, viaceré miesta nemajú cenu.
+- Miesta nemajú fotky (fotky až s úložiskom).
+
 ## 2026-11-22 — Skutočné ihriská prvé v „Odporúčané“, mestské ihriská čakajú na licenciu
 **Zmenené**
 - Zoradenie „Odporúčané“ dáva skutočné ihriská pred DEMO kútiky a herne.

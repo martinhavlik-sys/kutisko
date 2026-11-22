@@ -5,9 +5,9 @@ import { PLACES } from "@/data/places";
 import { getPlaceDetail } from "@/data/placeDetails";
 import { PlaceDetailScreen, PlaceDetailSkeleton } from "@/components/detail/PlaceDetailScreen";
 
-/** Vopred sa generujú len DEMO miesta; stovky ihrísk z OSM sa vykreslia na požiadanie. */
+/** Vopred sa generujú len herne a kútiky; stovky ihrísk z OSM sa vykreslia na požiadanie. */
 export function generateStaticParams() {
-  return PLACES.filter((p) => p.isDemo).map((p) => ({ id: p.id }));
+  return PLACES.filter((p) => p.source === "web").map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/miesto/[id]">): Promise<Metadata> {

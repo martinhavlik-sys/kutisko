@@ -7,7 +7,7 @@ import { CATEGORIES, PLACES, type Place } from "@/data/places";
 import { CITY_REGISTER } from "@/data/sources";
 import { useOrigin } from "@/lib/preferences";
 import type { PlaceDetail } from "@/data/placeDetails";
-import { distanceKm, formatAge, formatDistance, formatPrice, formatScore, reviewsLabel, scoreLabel } from "@/lib/search";
+import { distanceKm, formatAge, formatDate, formatDistance, formatPrice, formatScore, reviewsLabel, scoreLabel } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
 import { Toast, useToast } from "@/components/ui/Toast";
 import { MapPreview } from "@/components/home/MapPreview";
@@ -180,6 +180,10 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               <>
                 <PinIcon size={16} /> Ihrisko z registra športovísk mesta · údaje zatiaľ neoverené, pred návštevou si ich overte
               </>
+            ) : place.web ? (
+              <>
+                <CheckBadgeIcon size={17} /> Skutočné miesto · údaje sme overili na webe prevádzky {formatDate(place.web.checkedAt)}
+              </>
             ) : place.verified ? (
               <>
                 <CheckBadgeIcon size={17} /> Údaje overené kurátorom (simulované)
@@ -199,10 +203,21 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               muted={place.ageMin === null && place.ageMax === null}
             />
             <Fact label="Cena" value={formatPrice(place.price)} muted={place.price.kind === "unknown"} />
-            <Fact label="Dnes" value={place.hoursToday ?? "Hodiny neoverené"} muted={!place.hoursToday} />
+            <Fact
+              label="Dnes"
+              value={place.hoursToday ?? (detail.hoursWeek ? "Pozrite hodiny nižšie" : "Hodiny neoverené")}
+              muted={!place.hoursToday}
+            />
             <Fact label="Prostredie" value={place.indoor ? "Vnútorný priestor" : "Vonkajší priestor"} />
             {place.surface && <Fact label="Povrch" value={place.surface} />}
           </dl>
+
+          {place.web?.priceNote && (
+            <p className="mt-3 text-[14px] leading-relaxed text-ink-muted">
+              <span className="font-semibold text-ink">Cena: </span>
+              {place.web.priceNote}
+            </p>
+          )}
 
           <div className="mt-6">
             <Section title="O mieste">
@@ -306,7 +321,13 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                     </div>
                   ))}
                 </dl>
-              ) : (
+              ) : null}
+              {detail.hoursWeek && place.web && (
+                <p className="mt-2 text-[13px] text-ink-muted">
+                  Podľa webu prevádzky k {formatDate(place.web.checkedAt)}. Cez sviatky sa hodiny môžu líšiť.
+                </p>
+              )}
+              {detail.hoursWeek ? null : (
                 <p className="flex items-start gap-2 text-[15px] leading-relaxed text-ink-muted">
                   <ClockIcon size={18} className="mt-0.5 shrink-0" />
                   {place.openingHours
@@ -320,9 +341,19 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             <Section title="Poloha">
               <MapPreview places={[place]} activeId={place.id} onSelect={() => setNavOpen(true)} label="Poloha na mape" />
               <p className="mt-3 text-[15px] text-ink">
-                {place.area === "Bratislava a okolie" ? place.area : `${place.area}, Bratislava a okolie`}
+                {place.web
+                  ? place.web.address
+                  : place.area === "Bratislava a okolie"
+                    ? place.area
+                    : `${place.area}, Bratislava a okolie`}
               </p>
-              {place.osm ? (
+              {place.web ? (
+                <p className="mt-0.5 text-[13px] text-ink-muted">
+                  {place.web.approxPosition
+                    ? "Bod na mape je len približný; navigácia vedie na adresu prevádzky."
+                    : `GPS ${place.lat.toFixed(5)}, ${place.lng.toFixed(5)} · poloha © prispievatelia OpenStreetMap`}
+                </p>
+              ) : place.osm ? (
                 <p className="mt-0.5 text-[13px] text-ink-muted">
                   GPS {place.lat.toFixed(5)}, {place.lng.toFixed(5)} ·{" "}
                   <a
@@ -362,6 +393,34 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                   {CITY_REGISTER.license ? ` (licencia ${CITY_REGISTER.license})` : ""}. Ihrisko zatiaľ nie je v OpenStreetMap a
                   kurátor KUTISKO ho neoveril; chýbajúci údaj neznamená, že na ihrisku niečo chýba.
                 </p>
+              ) : place.web ? (
+                <div className="text-[14px] leading-relaxed text-ink-muted">
+                  <p>
+                    Názov, adresu, hodiny, cenu, vek a vybavenie sme {formatDate(place.web.checkedAt)} overili na webe
+                    prevádzky alebo obchodného centra. Popis je náš vlastný. Údaje, ktoré prevádzka neuvádza, necháme
+                    prázdne. Hodnotenia rodičov zatiaľ nemáme.
+                  </p>
+                  <a
+                    href={place.web.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex min-h-11 items-center rounded-full bg-white px-4 text-[14px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  >
+                    Web prevádzky<span className="sr-only"> (otvorí sa v novom okne)</span>
+                  </a>
+                  <p className="mt-3 text-[12.5px]">
+                    Zdroj:{" "}
+                    {place.web.sources.map((u, i) => (
+                      <span key={u}>
+                        {i > 0 && ", "}
+                        <a href={u} target="_blank" rel="noopener noreferrer" className="break-all underline underline-offset-2">
+                          {new URL(u).hostname.replace(/^www\./, "")}
+                          {new URL(u).pathname.length > 1 ? new URL(u).pathname.replace(/\/$/, "") : ""}
+                        </a>
+                      </span>
+                    ))}
+                  </p>
+                </div>
               ) : (
                 <p className="text-[14px] leading-relaxed text-ink-muted">
                   Zdroj: syntetické ukážkové dáta prototypu KUTISKO. Miesto, hodnotenia, ceny ani hodiny neexistujú.

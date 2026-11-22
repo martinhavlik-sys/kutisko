@@ -1,20 +1,19 @@
 /**
- * Miesta v prototype pochádzajú z dvoch zdrojov:
- *  - `source: "osm"` — SKUTOČNÉ verejné ihriská z OpenStreetMap (src/data/osm/playgrounds.json,
+ * Miesta v prototype pochádzajú zo skutočných zdrojov:
+ *  - `source: "osm"` — verejné ihriská z OpenStreetMap (src/data/osm/playgrounds.json,
  *    generuje scripts/osm/import-playgrounds.mjs; © prispievatelia OpenStreetMap, ODbL).
- *  - `source: "demo"` — SYNTETICKÉ DEMO kútiky a herne nižšie (vymyslené, označené „DEMO“).
- *
- * SYNTETICKÉ DEMO DÁTA — nie sú to skutočné prevádzky.
- *
- * Názvy, hodnotenia, ceny, hodiny aj vybavenie sú vymyslené pre účely
- * prototypu (PRODUCT_MANIFESTO.md, body 15–17). Súradnice ležia len približne
- * v uvedených mestských častiach / obciach Bratislavy a okolia, aby mapa
- * a vzdialenosti pôsobili realisticky. Nepoužívať ako zdroj informácií.
+ *  - `source: "web"` — vnútorné herne a kútiky, ktorých údaje kurátor ručne overil na webe
+ *    prevádzky alebo obchodného centra (src/data/curated/indoor-places.json). Bez hodnotení,
+ *    bez fotiek, bez údajov z Google. Neuvedené údaje ostávajú prázdne.
+ *  - `source: "city"` — register mesta, zobrazí sa len po overení licencie (src/data/sources.ts).
+ * Syntetické DEMO miesta ostali len ako testovacie dáta (src/data/demoFixtures.ts).
  */
 
 import osmData from "./osm/playgrounds.json" with { type: "json" };
 import cityData from "./osm/city-playgrounds.json" with { type: "json" };
 import { CITY_REGISTER } from "./sources.ts";
+import curatedData from "./curated/indoor-places.json" with { type: "json" };
+import curatedGeo from "./curated/geo.json" with { type: "json" };
 
 export type CategoryId = "kutik" | "herna" | "ihrisko";
 
@@ -48,7 +47,30 @@ export const AGE_BANDS: AgeBand[] = [
 export type Price =
   | { kind: "free" }
   | { kind: "from"; amount: number }
+  /** Bez vstupného pre hostí kaviarne/prevádzky. */
+  | { kind: "purchase" }
   | { kind: "unknown" };
+
+export interface HoursRow {
+  days: string;
+  hours: string;
+}
+
+export interface WebInfo {
+  address: string;
+  website: string;
+  /** Stránky, z ktorých sú údaje (web prevádzky alebo obchodného centra). */
+  sources: string[];
+  /** Dátum overenia údajov (ISO). */
+  checkedAt: string;
+  description: string;
+  priceNote: string | null;
+  hoursWeek: HoursRow[] | null;
+  /** true = poloha je len približná (presnú doplní geokódovanie z OSM). */
+  approxPosition: boolean;
+  /** Objekt v OSM, z ktorého je presná poloha. */
+  geoOsm?: { type: string; id: number };
+}
 
 export interface Place {
   id: string;
@@ -70,11 +92,13 @@ export interface Place {
   /** Text dnešných hodín, alebo null = neoverené (nesmie sa tváriť ako „zatvorené“). */
   hoursToday: string | null;
   amenities: string[];
-  /** Údaje overil kurátor KUTISKO (simulované). */
+  /** Údaje overil kurátor KUTISKO (pri zdroji „web“: na webe prevádzky k dátumu `web.checkedAt`). */
   verified: boolean;
-  /** true = vymyslené DEMO miesto. */
+  /** true = vymyslené DEMO miesto (v aplikácii už žiadne nie sú, len v testoch). */
   isDemo: boolean;
-  source: "demo" | "osm" | "city";
+  source: "demo" | "osm" | "city" | "web";
+  /** Ručne overené údaje z webu prevádzky (len source „web“). */
+  web?: WebInfo;
   /** Pôvodný objekt v OpenStreetMap (len source „osm“). */
   osm?: { type: "node" | "way" | "relation"; id: number };
   /** Surový tag opening_hours z OSM, ak existuje. */
@@ -85,148 +109,69 @@ export interface Place {
   named?: boolean;
 }
 
-export const DEMO_PLACES: Place[] = [
-  {
-    id: "demo-01",
-    name: "Kútik Mravenisko",
-    category: "kutik",
-    area: "Staré Mesto",
-    lat: 48.1452,
-    lng: 17.1125,
-    ageMin: 1,
-    ageMax: 6,
-    indoor: true,
-    score: 8.9,
-    reviewCount: 42,
-    price: { kind: "from", amount: 5 },
-    hoursToday: "9:00 – 19:00",
-    amenities: ["kaviareň", "prebaľovací pult", "detské menu"],
-    verified: true,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-02",
-    name: "Herňa Skokan",
-    category: "herna",
-    area: "Ružinov",
-    lat: 48.1585,
-    lng: 17.1612,
-    ageMin: 3,
-    ageMax: 12,
-    indoor: true,
-    score: 9.2,
-    reviewCount: 118,
-    price: { kind: "from", amount: 9 },
-    hoursToday: "10:00 – 20:00",
-    amenities: ["trampolíny", "oslavy", "kaviareň", "parkovanie"],
-    verified: true,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-04",
-    name: "Kútik Malý Kapitán",
-    category: "kutik",
-    area: "Petržalka",
-    lat: 48.1148,
-    lng: 17.1093,
-    ageMin: 0,
-    ageMax: 5,
-    indoor: true,
-    score: 7.6,
-    reviewCount: 15,
-    price: { kind: "from", amount: 4 },
-    hoursToday: "8:30 – 18:00",
-    amenities: ["prebaľovací pult", "Montessori hračky"],
-    verified: false,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-05",
-    name: "Lezecká herňa Výška",
-    category: "herna",
-    area: "Nové Mesto",
-    lat: 48.1736,
-    lng: 17.1264,
-    ageMin: 5,
-    ageMax: 15,
-    indoor: true,
-    score: 8.7,
-    reviewCount: 63,
-    price: { kind: "from", amount: 12 },
-    hoursToday: "13:00 – 21:00",
-    amenities: ["lezecká stena", "inštruktor", "oslavy"],
-    verified: true,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-07",
-    name: "Kútik Kakao & Kocky",
-    category: "kutik",
-    area: "Rača",
-    lat: 48.2047,
-    lng: 17.1531,
-    ageMin: 1,
-    ageMax: 7,
+interface CuratedEntry {
+  id: string;
+  name: string;
+  category: CategoryId;
+  area: string;
+  address: string;
+  geocode: { queries: string[]; near: number[] };
+  ageMin: number | null;
+  ageMax: number | null;
+  price: { kind: string; amount?: number };
+  priceNote: string | null;
+  hoursWeek: HoursRow[] | null;
+  amenities: string[];
+  description: string;
+  website: string;
+  sources: string[];
+}
+const GEO = (curatedGeo as { places: Record<string, { lat: number; lng: number; osm: { type: string; id: number } }> }).places;
+
+/** Dnešné hodiny len pri jednoznačnom zápise „celý týždeň rovnako“, inak null (detail ukáže celý týždeň). */
+function sameEveryDay(rows: HoursRow[] | null): string | null {
+  if (!rows || rows.length !== 1) return null;
+  return /^Po\s*–\s*Ne/.test(rows[0].days) ? rows[0].hours : null;
+}
+
+/** Skutočné vnútorné herne a kútiky overené na webe prevádzky (DECISIONS.md, 2026-11-22). */
+export const CURATED_PLACES: Place[] = (curatedData.places as CuratedEntry[]).map((e) => {
+  const geo = GEO[e.id];
+  return {
+    id: e.id,
+    name: e.name,
+    category: e.category,
+    area: e.area,
+    lat: geo?.lat ?? e.geocode.near[0],
+    lng: geo?.lng ?? e.geocode.near[1],
+    ageMin: e.ageMin,
+    ageMax: e.ageMax,
     indoor: true,
     score: null,
     reviewCount: 0,
-    price: { kind: "unknown" },
-    hoursToday: null,
-    amenities: ["kaviareň"],
-    verified: false,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-08",
-    name: "Herňa Džungľa pri jazere",
-    category: "herna",
-    area: "Senec",
-    lat: 48.2203,
-    lng: 17.4006,
-    ageMin: 2,
-    ageMax: 12,
-    indoor: true,
-    score: 7.9,
-    reviewCount: 51,
-    price: { kind: "from", amount: 8 },
-    hoursToday: "9:00 – 20:00",
-    amenities: ["tobogán", "bistro", "parkovanie"],
+    price: e.price as Price,
+    hoursToday: sameEveryDay(e.hoursWeek),
+    amenities: e.amenities,
     verified: true,
-    isDemo: true,
-    source: "demo",
-  },
-  {
-    id: "demo-10",
-    name: "Kútik Slniečko",
-    category: "kutik",
-    area: "Stupava",
-    lat: 48.2741,
-    lng: 17.0318,
-    ageMin: 0,
-    ageMax: 4,
-    indoor: true,
-    score: 9.4,
-    reviewCount: 9,
-    price: { kind: "from", amount: 3 },
-    hoursToday: "9:00 – 17:00",
-    amenities: ["prebaľovací pult", "záhrada", "kaviareň"],
-    verified: true,
-    isDemo: true,
-    source: "demo",
-  },
-];
+    isDemo: false,
+    source: "web",
+    web: {
+      address: e.address,
+      website: e.website,
+      sources: e.sources,
+      checkedAt: curatedData.checkedAt,
+      description: e.description,
+      priceNote: e.priceNote,
+      hoursWeek: e.hoursWeek,
+      approxPosition: !geo,
+      ...(geo ? { geoOsm: geo.osm } : {}),
+    },
+  };
+});
 
-/**
- * Všetky miesta: DEMO kútiky a herne + skutočné ihriská z OSM.
- * DEMO ihriská boli odstránené, aby sa vymyslené ihrisko nemiešalo so skutočnými (DECISIONS.md, 2026-11-22).
- */
+/** Všetky miesta: overené herne a kútiky + skutočné ihriská z OSM (+ mestské po overení licencie). */
 export const PLACES: Place[] = [
-  ...DEMO_PLACES,
+  ...CURATED_PLACES,
   ...(osmData.places as unknown as Place[]),
   // Mestské ihriská chýbajúce v OSM — len ak je licencia mestskej vrstvy overená (src/data/sources.ts).
   ...(CITY_REGISTER.approved ? (cityData.places as unknown as Place[]) : []),

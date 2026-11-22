@@ -167,3 +167,14 @@
 - Zoznam `docs/MESTSKE_IHRISKA.md`: 113 verejných ihrísk v prevádzke, ktoré chýbajú v OSM (kandidáti), a 158 vyradených (neverejné, mimo prevádzky, v rekonštrukcii, zámer) — podklad na oslovenie mesta.
 **Alternatívy:** Zobraziť mestské ihriská hneď s odvolaním na CC BY 4.0 staršieho datasetu (právne neisté); doplniť ich do OSM (vyžaduje súhlas mesta pre kompatibilitu s ODbL).
 **Dopad:** Ďalší krok je písomne požiadať Oddelenie dát mesta o licenciu vrstvy (alebo o jej zverejnenie na data.bratislava.sk pod otvorenou licenciou).
+
+## 2026-11-22 — Skutočné herne a kútiky namiesto DEMO
+**Rozhodnutie (Martin):** „áno, začni bodom 1“ — nahradiť 7 DEMO kútikov a herní ručne overeným zoznamom skutočných miest. Platí jeho pravidlo: rizikové údaje nezobrazovať alebo označiť ako neoverené, „dôležité je, aby sme to mali v poriadku po licenčnej a právnej stránke“.
+**Riešenie (Claude):**
+- Zdroj faktov je len web prevádzky alebo obchodného centra; agregátory (sdetmi, zľavomat, kidsmap, multisport, citylife) slúžili iba na nájdenie kandidátov. Žiadne Google Places/Maps, žiadne fotky ani logá, žiadne kopírované texty, žiadne hodnotenia. Pri každom mieste je zdroj a dátum overenia.
+- Zobrazené je len miesto s aktuálnym webom (2026). 11 miest ide do aplikácie, ostatní kandidáti sú v `docs/HERNE_KUTIKY.md` na neskoršie overenie.
+- Takto overené miesta majú `verified: true` a v UI text „overené na webe prevádzky [dátum]“, nie osobnú návštevu. Chýbajúce údaje sa nedopĺňajú odhadom.
+- DEMO miesta sú z aplikácie odstránené (aj vymyslené recenzie); ostali len ako testovacie dáta.
+- Poloha: cieľom je presná poloha z OSM (Nominatim, ODbL). Prostredie Claude nemá prístup na Nominatim, preto je poloha dočasne približná, aplikácia to uvádza a navigácia vedie na adresu.
+**Alternatívy:** Google Places (licencia nedovoľuje ukladanie, platené); prevziať popisy a fotky z webov (autorské právo); zobraziť aj kandidátov zo starších zdrojov so štítkom „neoverené“ (riziko zatvorených prevádzok, odložené).
+**Dopad:** Aplikácia už neobsahuje vymyslené miesta ani hodnotenia. Údaje treba pravidelne obnovovať, neskôr ideálne priamo s prevádzkami.

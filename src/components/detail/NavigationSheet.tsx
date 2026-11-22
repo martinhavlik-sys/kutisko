@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { NAV_PROVIDERS, navigationUrl, type NavProvider } from "@/lib/navigation";
+import { NAV_PROVIDERS, navigationUrl, navTargetOf, type NavProvider } from "@/lib/navigation";
 import type { Place } from "@/data/places";
 import { CloseIcon } from "@/components/home/icons";
 
@@ -66,7 +66,7 @@ export function NavigationSheet({ place, open, onClose }: Props) {
             return (
               <li key={p.id}>
                 <a
-                  href={navigationUrl(p.id, place)}
+                  href={navigationUrl(p.id, navTargetOf(place))}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={onClose}
@@ -90,9 +90,14 @@ export function NavigationSheet({ place, open, onClose }: Props) {
         <p className="mt-4 text-[13px] leading-relaxed text-ink-muted">
           Ak aplikáciu nemáte, otvorí sa jej webová verzia. Štart trasy určí mapová služba, KUTISKO vašu polohu nezisťuje.
         </p>
-        <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-[13px] leading-relaxed text-amber-700">
-          DEMO: súradnice sú len ilustračné. Na tomto mieste prevádzka v skutočnosti nemusí byť.
-        </p>
+        {place.isDemo && (
+          <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-[13px] leading-relaxed text-amber-700">
+            DEMO: súradnice sú len ilustračné. Na tomto mieste prevádzka v skutočnosti nemusí byť.
+          </p>
+        )}
+        {place.web?.approxPosition && (
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">Navigácia vedie na adresu {place.web.address}.</p>
+        )}
       </div>
     </dialog>
   );
