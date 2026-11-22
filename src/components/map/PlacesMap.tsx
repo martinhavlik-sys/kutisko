@@ -24,22 +24,53 @@ interface Props {
   activeId: string | null;
   onSelect: (id: string | null) => void;
   className?: string;
+  /**
+   * Náhľad na Domove: mapa sa nedá posúvať ani zoomovať (nezachytáva posúvanie stránky),
+   * načíta sa až keď je na obrazovke, piny ostávajú klikateľné.
+   */
+  preview?: boolean;
+  /** Ťuk mimo pinu (v náhľade otvorí Celú mapu). */
+  onBackgroundTap?: () => void;
+  /** Podklady sa nenačítali — náhľad môže zobraziť vlastnú zálohu. */
+  onTilesFailed?: () => void;
 }
 
-export function PlacesMap({ places, activeId, onSelect, className }: Props) {
+export function PlacesMap({ places, activeId, onSelect, className, preview = false, onBackgroundTap, onTilesFailed }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MlMap | null>(null);
   const markersRef = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
   const onSelectRef = useRef(onSelect);
   const [ready, setReady] = useState(false);
   const [tilesFailed, setTilesFailed] = useState(false);
+  const [inView, setInView] = useState(!preview);
+  const onFailRef = useRef(onTilesFailed);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
-  }, [onSelect]);
+    onFailRef.current = onTilesFailed;
+  }, [onSelect, onTilesFailed]);
+
+  // Náhľad: knižnicu a podklady načítať až keď je mapa blízko obrazovky.
+  useEffect(() => {
+    if (inView) return;
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        setInView(true);
+        io.disconnect();
+      }
+    }, { rootMargin: "200px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [inView]);
 
   // Inicializácia mapy (iba v prehliadači).
   useEffect(() => {
+    if (!inView) return;
     let cancelled = false;
     let map: MlMap | null = null;
     import("maplibre-gl").then((ml) => {
@@ -54,9 +85,12 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
         dragRotate: false,
         pitchWithRotate: false,
         cooperativeGestures: false,
+        interactive: !preview,
       });
-      map.touchZoomRotate.disableRotation();
-      map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
+      if (!preview) {
+        map.touchZoomRotate.disableRotation();
+        map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
+      }
       let loaded = false;
       map.on("load", () => {
         loaded = true;
@@ -66,6 +100,7 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
         if (loaded || cancelled) return;
         loaded = true;
         setTilesFailed(true);
+        onFailRef.current?.();
         map?.setStyle(FALLBACK_STYLE);
         setReady(true);
       });
@@ -79,6 +114,7 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
         if (!loaded && !cancelled) {
           loaded = true;
           setTilesFailed(true);
+          onFailRef.current?.();
           map?.setStyle(FALLBACK_STYLE);
           setReady(true);
         }
@@ -92,7 +128,7 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
       map?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [inView, preview]);
 
   // Synchronizácia pinov s výsledkami.
   useEffect(() => {
@@ -128,13 +164,14 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
       if (places.length > 0) {
         const b = new ml.LngLatBounds();
         places.forEach((p) => b.extend([p.lng, p.lat]));
-        map.fitBounds(b, { padding: { top: 70, bottom: 170, left: 50, right: 50 }, maxZoom: 13.5, duration: 450 });
+        const padding = preview ? { top: 64, bottom: 36, left: 32, right: 32 } : { top: 70, bottom: 170, left: 50, right: 50 };
+        map.fitBounds(b, { padding, maxZoom: preview ? 12.5 : 13.5, duration: preview ? 0 : 450 });
       }
     });
     return () => {
       alive = false;
     };
-  }, [places, ready]);
+  }, [places, ready, preview]);
 
   // Zvýraznenie aktívneho pinu.
   useEffect(() => {
@@ -146,14 +183,26 @@ export function PlacesMap({ places, activeId, onSelect, className }: Props) {
     });
     const map = mapRef.current;
     const p = places.find((x) => x.id === activeId);
-    if (map && p && ready) map.easeTo({ center: [p.lng, p.lat], duration: 350, offset: [0, -60] });
-  }, [activeId, places, ready]);
+    if (map && p && ready && !preview) map.easeTo({ center: [p.lng, p.lat], duration: 350, offset: [0, -60] });
+  }, [activeId, places, ready, preview]);
 
   return (
     <div className={`relative ${className ?? ""}`}>
-      <div ref={containerRef} className="h-full w-full" aria-label="Mapa miest" role="region" />
+      <div
+        ref={containerRef}
+        className="h-full w-full"
+        aria-label="Mapa miest"
+        role="region"
+        onClick={
+          onBackgroundTap
+            ? (e) => {
+                if (!(e.target as HTMLElement).closest("[data-pin], a, button")) onBackgroundTap();
+              }
+            : undefined
+        }
+      />
       {!ready && <div className="skeleton absolute inset-0" aria-hidden="true" />}
-      {tilesFailed && (
+      {tilesFailed && !preview && (
         <p role="status" className="absolute left-3 right-14 top-3 rounded-2xl bg-white/95 px-3 py-2 text-[13px] leading-snug text-ink-muted shadow-card">
           Mapové podklady sa nepodarilo načítať. Piny miest fungujú, skúste to neskôr znova.
         </p>

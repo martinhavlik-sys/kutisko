@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { CATEGORIES, REFERENCE_POINT, type Place } from "@/data/places";
+import { PlacesMap } from "@/components/map/PlacesMap";
 import { MapIcon } from "./icons";
 
 /**
- * Ilustračný náhľad mapy (bez mapového providera — ten je v manifeste otvorený).
+ * Ilustračná záloha náhľadu mapy (keď sa podklady MapLibre nenačítajú).
  * Piny sú premietnuté z GPS súradníc DEMO miest jednoduchou lineárnou projekciou,
  * takže sa synchronizujú s filtrami a zoznamom.
  */
@@ -94,7 +96,8 @@ interface Props {
   loading?: boolean;
 }
 
-export function MapPreview({ places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" }: Props) {
+/** Ilustračná mapa — záloha, keď sa skutočné podklady nenačítajú. */
+function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" }: Props) {
   return (
     <section aria-label={label} className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
       <div className="relative aspect-[360/260] w-full">
@@ -168,7 +171,7 @@ export function MapPreview({ places, activeId, onSelect, onOpenMap, loading, lab
         {loading && <div className="skeleton absolute inset-0 opacity-60" aria-hidden="true" />}
 
         <span className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-medium text-ink-muted backdrop-blur">
-          Ilustračná mapa · DEMO
+          Ilustračná mapa (podklady nedostupné) · DEMO
         </span>
 
         {onOpenMap && (
@@ -180,6 +183,44 @@ export function MapPreview({ places, activeId, onSelect, onOpenMap, loading, lab
           <MapIcon size={18} />
           Celá mapa
         </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Náhľad mapy na Domove: skutočná mapa MapLibre (rovnaké podklady ako Celá mapa),
+ * bez posúvania a zoomu, aby nezachytávala posúvanie stránky. Ťuk na pin zvýrazní kartu,
+ * ťuk inde alebo „Celá mapa“ otvorí plnú mapu. Pri chybe podkladov sa ukáže ilustračná mapa.
+ */
+export function MapPreview(props: Props) {
+  const { places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" } = props;
+  const [failed, setFailed] = useState(false);
+  if (failed) return <IllustratedMap {...props} />;
+
+  return (
+    <section aria-label={label} className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
+      <div className="relative aspect-[360/260] w-full">
+        <PlacesMap
+          preview
+          places={loading ? [] : places}
+          activeId={activeId}
+          onSelect={(id) => id && onSelect(id)}
+          onBackgroundTap={onOpenMap}
+          onTilesFailed={() => setFailed(true)}
+          className="h-full w-full cursor-pointer"
+        />
+        {loading && <div className="skeleton pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />}
+        {onOpenMap && (
+          <button
+            type="button"
+            onClick={onOpenMap}
+            className="absolute right-3 top-3 z-10 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-ink shadow-float transition active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          >
+            <MapIcon size={18} />
+            Celá mapa
+          </button>
         )}
       </div>
     </section>

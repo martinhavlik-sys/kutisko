@@ -137,3 +137,8 @@
 **Alternatívy:** GitHub Pages (statický export, pomalšie), iba lokálne.
 **Dopad:** Žiadne kľúče ani premenné prostredia; produkčná adresa sleduje vetvu `main`. Náhľady PR sú predvolene chránené prihlásením do Vercelu, preto pre rodičov použiť produkčnú adresu. `robots: noindex` ostáva.
 
+
+## 2026-11-22 — Skutočná mapa v náhľade na Domove
+**Rozhodnutie (Martin, spätná väzba z iPhonu):** Aj náhľad na Domove má ukazovať skutočnú mapu, nie ilustráciu.
+**Riešenie (Claude):** Malá mapa MapLibre bez posúvania a zoomu (nezachytáva posúvanie stránky), piny klikateľné, ťuk inde otvorí Celú mapu; ilustrácia ostáva ako záloha pri chybe podkladov.
+**Dopad:** Viac požiadaviek na podklady OpenFreeMap pri otvorení Domova; mapa sa načíta až pri zobrazení.
