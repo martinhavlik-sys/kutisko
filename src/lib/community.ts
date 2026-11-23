@@ -99,6 +99,22 @@ export function addReport(r: Pick<Report, "placeId" | "reason" | "note">) {
   return next;
 }
 
+/** Krátky praktický tip k miestu (parkovanie, tieň, čo si vziať). */
+export interface ParentTip {
+  id: string;
+  placeId: string;
+  text: string;
+  createdAt: string;
+}
+const tips = createDemoStore<ParentTip[]>("kutisko.demo.tips", []);
+export const useTips = tips.useStore;
+
+export function addTip(placeId: string, text: string) {
+  const next: ParentTip = { id: demoId("t"), placeId, text, createdAt: new Date().toISOString() };
+  tips.write([next, ...tips.read()]);
+  return next;
+}
+
 export function addPhotoUpload(placeId: string, dataUrl: string) {
   const next: PlacePhotoUpload = { id: demoId("p"), placeId, photo: { dataUrl, status: "pending" }, createdAt: new Date().toISOString() };
   photoUploads.write([next, ...photoUploads.read()]);
@@ -107,6 +123,7 @@ export function addPhotoUpload(placeId: string, dataUrl: string) {
 
 export function resetCommunityDemo() {
   photoUploads.write([]);
+  tips.write([]);
   reviews.write([]);
   suggestions.write([]);
   reports.write([]);

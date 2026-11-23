@@ -204,3 +204,12 @@
 - Zdroj fotiek je jedna funkcia (`buildGallery` + `CATALOG_PHOTOS`): po výbere úložiska sa doplnia adresy z neho, obrazovky ostanú.
 **Alternatívy:** iba posuvník (fotky by boli skryté pre tých, čo neposúvajú), mozaika 1 + 4 ako Airbnb na počítači (na mobile zbytočne vysoká), knižnica na posuvník (zbytočná závislosť).
 **Otvorené (rozhodne Martin):** úložisko fotiek pre produkciu (napr. Cloudinary, Supabase Storage, Vercel Blob, Cloudflare R2 — platené služby po prekročení bezplatného limitu) a či môžu fotky pridávať aj prevádzky.
+
+## 2026-11-23 — Doplnky detailu miesta
+**Rozhodnutie (Martin):** „áno, môžeš to doplniť“ — všetkých päť navrhnutých doplnkov (otvorené teraz, Zdieľať, Zavolať/Web, Tipy od rodičov, oslavy).
+**Riešenie (Claude):**
+- „Otvorené teraz“ sa počíta len z jednoznačných hodín (web prevádzky, jednoduché OSM zápisy) v čase Europe/Bratislava; inak sa nezobrazí. Sviatky/prázdniny sa nezohľadňujú.
+- Telefóny len z webu prevádzky so zdrojom a dátumom (`contact` v indoor-places.json); chýbajúci telefón = žiadne tlačidlo.
+- Oslavy: iba fakt „web uvádza oslavy“ (vybavenie „oslavy“) + kontakt; žiadne ceny ani balíčky.
+- Tipy od rodičov zatiaľ bez moderácie (DEMO v prehliadači); v produkcii rovnaká kontrola ako recenzie.
+**Alternatívy:** knižnica na opening_hours (zbytočná závislosť pre pár zápisov); samostatná stránka osláv (bez overených údajov predčasné).

@@ -1,5 +1,5 @@
 {
-  "_comment": "Ručne zostavený zoznam skutočných vnútorných herní a detských kútikov. Fakty (názov, adresa, hodiny, cena, vek, vybavenie) sú prevzaté z webu prevádzky alebo obchodného centra uvedeného v `sources` a overené k dátumu `checkedAt`. Popisy sú vlastné, nie kopírované. Žiadne údaje z Google. Polohu dopĺňa scripts/curated/geocode.mjs z OpenStreetMap (Nominatim, ODbL). Pole null = prevádzka údaj na webe neuvádza. `geocode.near` je približná poloha (overená len pri OC: Wikipédia, resp. ihrisko Bupi v OSM); používa sa, kým geo.json nemá presnú polohu.",
+  "_comment": "Ručne zostavený zoznam skutočných vnútorných herní a detských kútikov. Fakty (názov, adresa, hodiny, cena, vek, vybavenie) sú prevzaté z webu prevádzky alebo obchodného centra uvedeného v `sources` a overené k dátumu `checkedAt`. Popisy sú vlastné, nie kopírované. Žiadne údaje z Google. Polohu dopĺňa scripts/curated/geocode.mjs z OpenStreetMap (Nominatim, ODbL). Pole null = prevádzka údaj na webe neuvádza. `geocode.near` je približná poloha (overená len pri OC: Wikipédia, resp. ihrisko Bupi v OSM); používa sa, kým geo.json nemá presnú polohu. `contact` = telefón z webu prevádzky (zdroj a dátum overenia), null = zatiaľ neoverené.",
   "checkedAt": "2026-11-22",
   "places": [
     {
@@ -43,7 +43,13 @@
       "website": "https://minicity.sk/",
       "sources": [
         "https://minicity.sk/"
-      ]
+      ],
+      "contact": {
+        "phone": "+421 952 521 736",
+        "partyPhone": null,
+        "source": "https://minicity.sk/",
+        "checkedAt": "2026-11-23"
+      }
     },
     {
       "id": "web-simba-petrzalka",
@@ -88,7 +94,13 @@
         "https://www.simbacentrum.sk/",
         "https://www.simbacentrum.sk/cennik/",
         "https://www.simbacentrum.sk/jungle-park/"
-      ]
+      ],
+      "contact": {
+        "phone": "+421 948 503 903",
+        "partyPhone": "+421 948 608 200",
+        "source": "https://www.simbacentrum.sk/",
+        "checkedAt": "2026-11-23"
+      }
     },
     {
       "id": "web-jumpfun-nivy",
@@ -138,7 +150,8 @@
       "sources": [
         "https://www.jumpfun.sk/nivy",
         "https://www.jumpfun.sk/cennik"
-      ]
+      ],
+      "contact": null
     },
     {
       "id": "web-jumpfun-kidshouse",
@@ -185,7 +198,8 @@
       "website": "https://www.jumpfun.sk/kidshouse",
       "sources": [
         "https://www.jumpfun.sk/kidshouse"
-      ]
+      ],
+      "contact": null
     },
     {
       "id": "web-retrokids",
@@ -231,7 +245,13 @@
         "https://retrokids.sk/cennik/",
         "https://retrokids.sk/kontakt/",
         "https://retrokids.sk/o-nas/"
-      ]
+      ],
+      "contact": {
+        "phone": "0917 700 200",
+        "partyPhone": null,
+        "source": "https://retrokids.sk/kontakt/",
+        "checkedAt": "2026-11-23"
+      }
     },
     {
       "id": "web-inspiro-ivanka",
@@ -272,7 +292,13 @@
       "sources": [
         "https://www.park-oddychu.sk/",
         "https://www.park-oddychu.sk/otvaracie-hodiny-a-kontakt/"
-      ]
+      ],
+      "contact": {
+        "phone": "0905 590 142",
+        "partyPhone": "0905 203 284",
+        "source": "https://www.park-oddychu.sk/otvaracie-hodiny-a-kontakt/",
+        "checkedAt": "2026-11-23"
+      }
     },
     {
       "id": "web-adventica-eurovea",
@@ -314,7 +340,13 @@
       "website": "https://www.adventica.sk/",
       "sources": [
         "https://eurovea.sk/en/services/adventica"
-      ]
+      ],
+      "contact": {
+        "phone": "+421 908 341 605",
+        "partyPhone": null,
+        "source": "https://www.adventica.sk/",
+        "checkedAt": "2026-11-23"
+      }
     },
     {
       "id": "web-eurovea-kutik",
@@ -352,7 +384,8 @@
       "website": "https://eurovea.sk/en/for-kids",
       "sources": [
         "https://eurovea.sk/en/for-kids"
-      ]
+      ],
+      "contact": null
     },
     {
       "id": "web-aupark-kutik",
@@ -386,7 +419,8 @@
       "website": "https://aupark-bratislava.sk/en/amenity/25/childrens-corner",
       "sources": [
         "https://aupark-bratislava.sk/en/amenity/25/childrens-corner"
-      ]
+      ],
+      "contact": null
     },
     {
       "id": "web-buppi-bory",
@@ -423,7 +457,8 @@
       "website": "https://www.borymall.sk/en/about-bory-mall",
       "sources": [
         "https://www.borymall.sk/en/about-bory-mall"
-      ]
+      ],
+      "contact": null
     },
     {
       "id": "web-avion-junior",
@@ -457,7 +492,8 @@
       "sources": [
         "https://www.avion.sk/sk/sluzby/avion-bratislava-or-service-or-avion-junior",
         "https://www.startitup.sk/avion-otvara-unikatny-strazeny-detsky-kutik-avion-junior/"
-      ]
+      ],
+      "contact": null
     }
   ]
 }

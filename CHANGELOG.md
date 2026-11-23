@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-23 — Doplnky detailu: otvorené teraz, akcie, tipy, oslavy
+**Zmenené** (Martin schválil všetkých 5 návrhov)
+- **Otvorené teraz:** pod názvom a v hodinách stav „Otvorené · zatvára o 20:00“, „Čoskoro zatvára“ (posledná hodina) alebo „Zatvorené · otvára zajtra o 9:00“; v tabuľke hodín je zvýraznený dnešný riadok, rovnaký stav je v spodnej lište. Počíta sa podľa času v Bratislave. Pri nejasných alebo sezónnych hodinách sa stav nezobrazí (radšej nič ako nesprávne „Otvorené“).
+- **Rýchle akcie** pod názvom: Trasa, Zavolať, Web, Zdieľať. Zdieľať otvorí systémový panel iPhonu (Správy, WhatsApp…), inde skopíruje odkaz.
+- **Telefóny** 5 prevádzok (MINI CITY, Simba Centrum, RETRO KIDS, Inspiro, Adventica) z ich webov, so zdrojom a dátumom overenia. Kde telefón overený nemáme, tlačidlo Zavolať sa neukáže.
+- **Tipy od rodičov:** krátke praktické rady (10–160 znakov), DEMO v prehliadači, prázdny stav s príkladmi.
+- **Narodeninové oslavy** (len herne a kútiky): ak web prevádzky oslavy uvádza, povieme to a ponúkneme číslo na oslavy (Simba a Inspiro majú samostatné) a web. Ceny ani balíčky nevymýšľame; pri ostatných „Zatiaľ nevieme“.
+
+**Otestované**
+- `npm test` (47; nové: popisy dní z webov, otvorené/čoskoro/zatvorené, rôzne dni, nejasné zápisy, OSM zápisy, čas v Bratislave), `lint`, `typecheck`, `build`.
+- Playwright (iPhone 13) s pevným časom: Simba po 15:30 → otvorené, tel. odkaz, kopírovanie odkazu, tip (chyba pri krátkom texte, pridanie), číslo na oslavy; JumpFun bez telefónu; MINI CITY večer → „otvára zajtra o 9:00“; OSM ihrisko len Trasa + Zdieľať a bez oslav; šírka 320 px. Bez chýb v konzole.
+
+**Známe obmedzenia**
+- Sviatky a školské prázdniny nepoznáme; stav sa riadi bežným týždňom (upozornenie pri hodinách ostáva). Telefóny JumpFun (Nivy, Kids House) a kútikov v OC zatiaľ chýbajú (web sa nedal načítať / neuvádza). Netestované na fyzickom iPhone.
+
 ## 2026-11-23 — Galéria fotiek v detaile miesta
 **Zmenené**
 - **Hlavný obrázok ako posuvník:** keď má miesto schválené fotky, potiahnutím prsta sa listuje, dole sú bodky a počítadlo „1 / 4“; na počítači šípky. Ťuknutie otvorí fotku na celú obrazovku.

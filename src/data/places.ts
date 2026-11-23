@@ -70,6 +70,17 @@ export interface WebInfo {
   approxPosition: boolean;
   /** Objekt v OSM, z ktorého je presná poloha. */
   geoOsm?: { type: string; id: number };
+  /** Telefón z webu prevádzky; null = zatiaľ neoverený (nikdy nevymýšľať). */
+  contact: PlaceContact | null;
+}
+
+export interface PlaceContact {
+  phone: string;
+  /** Samostatné číslo na oslavy, ak ho prevádzka uvádza. */
+  partyPhone: string | null;
+  /** Stránka, kde je číslo uvedené. */
+  source: string;
+  checkedAt: string;
 }
 
 export interface Place {
@@ -127,6 +138,7 @@ interface CuratedEntry {
   description: string;
   website: string;
   sources: string[];
+  contact: PlaceContact | null;
 }
 const GEO = (curatedGeo as { places: Record<string, { lat: number; lng: number; osm: { type: string; id: number } }> }).places;
 
@@ -165,6 +177,7 @@ export const CURATED_PLACES: Place[] = (curatedData.places as CuratedEntry[]).ma
       description: e.description,
       priceNote: e.priceNote,
       hoursWeek: e.hoursWeek,
+      contact: e.contact,
       approxPosition: !geo,
       ...(geo ? { geoOsm: geo.osm } : {}),
     },
