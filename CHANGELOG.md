@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-23 — Doladenie pred testom s rodičmi
+**Zmenené**
+- **Ukážka sponzorovaných miest a akcií je predvolene vypnutá** (prepínač v Profile ostáva). Domov je bez reklamnej karty aj pásu akcií.
+- **iPhone:** výbery „Zoradiť“ (Domov, Hľadať) a „Lokalita“ (Profil) majú písmo 16 px, takže Safari už pri ťuknutí nepribližuje stránku.
+- **Hľadať na úzkych displejoch (pod 360 px):** prepínač Zoznam/Mapa zobrazí len ikony, aby sa riadok zmestil (predtým sa „Mapa“ orezávala).
+- **Záložná ilustračná mapa** (keď sa mapové podklady nenačítajú) zhlukuje blízke piny do kruhov s počtom ako skutočná mapa; predtým tam bolo ~980 prekrývajúcich sa bodiek. Tlačidlo „Celá mapa“ a popis mapy sú vždy nad pinmi.
+- **Tlačidlá +/− na mape** majú dotykovú plochu 40 px (predtým 29 px).
+- **Karty miest:** odstránený štítok „Nové“ (bol na každom mieste a len opakoval „zatiaľ bez hodnotení“).
+- **Prihlásenie/registrácia:** text „V produkčnej verzii bude registrácia povinná“ nahradený schváleným pravidlom (účet len na ukladanie, hodnotenie a fotky); odkaz „pokračovať bez účtu“ má 44 px dotykovú plochu.
+- **Profil:** admin fronta presunutá do pätičky („Pre tím“); pätička už netvrdí, že všetky údaje sú ukážkové (miesta sú skutočné).
+- **404:** neznáma adresa hovorí „Túto stránku sme nenašli“; „Toto miesto sme nenašli“ ostáva len pre neexistujúce miesto. Popis v manifeste a metadátach zosúladený so skutočnými miestami.
+
+**Otestované**
+- `npm test` (53), `lint`, `typecheck`, `build`.
+- Playwright (Chromium, profil iPhone 13 a šírka 320 px): všetkých 14 obrazoviek bez vodorovného posúvania, bez chýb JS; písmo všetkých polí a výberov ≥ 16 px; scenáre S1, S3, S6, S8; spodné menu a lišta „Navigovať“ nezakrývajú posledný obsah; ukážka predvolene vypnutá a po zapnutí v Profile sa objaví; záložná mapa so zhlukmi; obe 404.
+
+**Známe obmedzenia**
+- Netestované v Safari/WebKit ani na fyzickom iPhone; skutočné mapové podklady (OpenFreeMap) sú zo zostavovacieho prostredia blokované, overené len záložné správanie.
+
 ## 2026-11-23 — Backend schválený, príprava etapy 1
 **Zmenené**
 - Martin schválil všetky odporúčania R1–R6 (Supabase EÚ, prezeranie bez účtu, e-mail + Google, Supabase Storage, zmazanie obsahu so zrušením účtu, Pro až pri spustení). Zapísané v `docs/BACKEND_NAVRH.md` a `DECISIONS.md`.

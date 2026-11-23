@@ -254,11 +254,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
         )}
 
         <p className="mt-auto pt-8 text-center text-[13px] leading-relaxed text-ink-muted">
-          V produkčnej verzii bude registrácia povinná. V prototype môžete{" "}
-          <Link href="/" className="font-semibold text-ink underline underline-offset-2">
+          Účet potrebujete len na ukladanie, hodnotenie a pridávanie fotiek. Prezerať môžete aj bez neho:{" "}
+          <Link href="/" className="inline-flex min-h-11 items-center font-semibold text-ink underline underline-offset-2">
             pokračovať bez účtu
           </Link>
-          .
         </p>
       </main>
     </div>

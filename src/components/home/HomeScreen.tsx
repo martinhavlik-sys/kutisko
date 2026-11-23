@@ -296,7 +296,7 @@ export function HomeScreen() {
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as SortId)}
-                  className="min-h-11 appearance-none rounded-full bg-white py-2 pl-4 pr-10 text-[14px] font-semibold text-ink shadow-card ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                  className="min-h-11 appearance-none rounded-full bg-white py-2 pl-4 pr-10 text-[16px] font-semibold text-ink shadow-card ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                 >
                   {SORT_OPTIONS.map((o) => (
                     <option key={o.id} value={o.id}>

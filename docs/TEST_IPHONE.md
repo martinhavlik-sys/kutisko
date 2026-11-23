@@ -52,3 +52,6 @@ Voliteľne: registrácia a prihlásenie (uvítanie „Ahoj, [meno]!“), skrýva
 Scenáre S1–S8 prešli automatizovane v Chromiu s profilom iPhone 13 (bez povolenej polohy). Zistenie: S5 nemal na Domove ručný výber mesta a lokalita v Profile neovplyvňovala vzdialenosť — opravené (výber mesta na Domove, vzdialenosť a „Najbližšie“ sa počítajú od vybraného mesta). Safari/WebKit ani fyzický iPhone zatiaľ netestované.
 
 Nasadenie (2026-11-22): https://kutisko.vercel.app/ odpovedá (HTTP 200) pre Domov, `/hladat?zobrazenie=mapa` aj manifest, bez prihlasovacej brány. Vizuálnu kontrolu a mapové podklady OpenFreeMap na nasadenej verzii treba overiť na iPhone (zo zostavovacieho prostredia sú tieto adresy blokované).
+
+## 7. Doladenie pred testom (2026-11-23)
+Ukážka sponzorovaných miest a akcií je predvolene vypnutá, takže respondenti ju neuvidia (ak ju niekto v Profile zapne, po vymazaní údajov webu sa opäť vypne). Opravené priblíženie stránky pri ťuknutí na výber v Safari, orezaný prepínač Zoznam/Mapa na úzkych displejoch a ďalšie drobnosti, pozri `CHANGELOG.md`. Pred testom treba na fyzickom iPhone overiť: načítanie mapy, polohu (S5b) a „Pridať na plochu“.
