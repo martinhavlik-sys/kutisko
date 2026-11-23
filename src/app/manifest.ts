@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
  * PWA manifest — inštalácia na plochu iPhonu („Pridať na plochu“) aj Androidu
  * (Chrome / Samsung Internet „Inštalovať aplikáciu“) a otváranie na celú obrazovku.
  *
- * Ikony sú DOČASNÉ (logo nie je finálne). Pri výmene stačí prepísať súbory
+ * Ikony: schválené logo s kockami (2026-11-23). Pri výmene stačí prepísať súbory
  * v public/icons/ rovnakými názvami a rozmermi — pozri docs/IKONY.md.
  */
 export default function manifest(): MetadataRoute.Manifest {

@@ -26,6 +26,7 @@ import { PROMO_PLACES } from "@/data/promoDemo";
 import { pickSponsored } from "@/lib/promo";
 import { usePromoDemo } from "@/lib/promoDemo";
 import { EventsRail, SponsoredCard } from "@/components/promo/PromoParts";
+import { Logo } from "@/components/ui/Logo";
 
 type LoadState = "loading" | "ready" | "error";
 
@@ -136,10 +137,9 @@ export function HomeScreen() {
 
       <div className="mx-auto max-w-3xl px-5 pb-32 pt-[max(env(safe-area-inset-top),14px)] sm:px-8">
         {/* Hlavička */}
-        <header className="flex items-center justify-between py-3">
-          <div className="flex items-center gap-2">
-            {/* Dočasný wordmark — logo nie je finálne (manifest, bod 23). */}
-            <span className="font-display text-[22px] font-bold tracking-[-0.03em] text-coral-600">kutisko</span>
+        <header className="flex items-center justify-between gap-2 py-3">
+          <div className="flex min-w-0 items-center gap-1.5 min-[380px]:gap-2">
+            <Logo height={28} className="h-[22px] w-auto min-[380px]:h-7" />
             <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-amber-700">
               DEMO
             </span>
@@ -155,7 +155,7 @@ export function HomeScreen() {
           ) : (
             <Link
               href="/prihlasenie"
-              className="flex min-h-11 items-center gap-1.5 rounded-full bg-white pl-3 pr-4 text-[14px] font-semibold text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+              className="flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-white pl-3 pr-4 text-[14px] font-semibold text-ink shadow-card ring-1 ring-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
               <UserIcon size={18} />
               Prihlásiť sa

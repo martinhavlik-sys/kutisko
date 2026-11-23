@@ -1,7 +1,14 @@
 # Ikona aplikácie — čo dodať pri výmene
 
-Súčasná ikona „k“ je **dočasná**. Keď bude finálne logo, stačí prepísať súbory
-v `public/icons/` **rovnakými názvami a rozmermi**. Kód ani manifest netreba meniť.
+Od 2026-11-23 je v aplikácii **schválená ikona s kockami** („k“ + „i“ z 3 kociek a bodky, variant 6).
+Zdroj je `public/brand/ikona-kutisko.svg` (1024 × 1024, obsah v kruhu ~760 px), tmavá verzia `public/brand/ikona-kutisko-tmava.svg`.
+Logo: `public/brand/logo-kutisko.svg` (svetlé pozadie) a `logo-kutisko-tmave.svg` (biele písmo na tmavé pozadie).
+
+**Ako ikony vygenerovať znova:** `python3 scripts/logo/logo.py <PlusJakartaSans-Bold.ttf> <výstup>` vytvorí SVG
+(v `<výstup>/final/`), `node scripts/logo/render.mjs <výstup>/final <priečinok>` z nich spraví PNG; `favicon.ico` vznikne
+z `favicon-16/32/48.png` (napr. `convert`). Ikonka v karte prehliadača je `public/icon.svg` (prepína sa podľa tmavého režimu).
+
+Pri ďalšej výmene stačí prepísať súbory v `public/icons/` **rovnakými názvami a rozmermi**. Kód ani manifest netreba meniť.
 
 | Súbor | Rozmer | Kde sa použije | Pravidlá |
 |---|---|---|---|

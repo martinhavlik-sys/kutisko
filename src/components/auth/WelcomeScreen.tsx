@@ -8,6 +8,7 @@ import { useAccount } from "@/lib/account";
 import { usePreferences } from "@/lib/preferences";
 import { firstName } from "@/lib/validation";
 import { primaryBtn } from "@/components/forms/FormParts";
+import { Logo } from "@/components/ui/Logo";
 
 /**
  * Krátke uvítanie „Ahoj [meno]“ po registrácii aj po každom prihlásení (PROTOTYPE_BRIEF bod 9, rozhodnutie Martina).
@@ -23,7 +24,7 @@ export function WelcomeScreen() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-6 pb-[max(env(safe-area-inset-bottom),24px)] pt-[max(env(safe-area-inset-top),16px)]">
       <header className="flex items-center justify-between py-2">
-        <span className="font-display text-[20px] font-bold tracking-[-0.03em] text-coral-600">kutisko</span>
+        <Logo height={24} />
         <Link href="/" className="inline-flex min-h-11 items-center rounded-full px-3 text-[15px] font-semibold text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-ink">
           Preskočiť
         </Link>
