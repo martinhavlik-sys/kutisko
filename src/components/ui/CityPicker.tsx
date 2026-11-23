@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useBackButtonClose } from "@/lib/pwa";
 import { CITY_ORIGINS, RADIUS_OPTIONS, radiusLabel } from "@/lib/origin";
 import { usePreferences } from "@/lib/preferences";
 import { disableLocation, requestLocation, useLocation, type LocationStatus } from "@/lib/location";
@@ -24,6 +25,7 @@ export function CityPicker({
   onLocated?: (status: LocationStatus) => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  useBackButtonClose(open, onClose);
   const { prefs, set } = usePreferences();
   const loc = useLocation();
   const gpsOn = loc.status === "on";

@@ -14,6 +14,7 @@ import { Toast, useToast } from "@/components/ui/Toast";
 import { ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
 import Link from "next/link";
 import { PromoToggle } from "@/components/promo/PromoParts";
+import { InstallCard } from "@/components/ui/InstallCard";
 
 function ChevronRight() {
   return (
@@ -228,6 +229,8 @@ export function ProfileScreen() {
               </div>
             </div>
           </section>
+
+          <InstallCard onInstalled={() => show("Hotovo. Kutisko nájdete na ploche telefónu.")} />
 
           {/* Ukážka nápadu na monetizáciu (docs/MONETIZACIA.md) */}
           <section aria-label="Ukážky nápadov" className="rounded-[26px] bg-white p-5 ring-1 ring-line">

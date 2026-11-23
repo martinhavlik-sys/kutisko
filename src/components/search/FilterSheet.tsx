@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useBackButtonClose } from "@/lib/pwa";
 import { AGE_BANDS, CATEGORIES, PLACES } from "@/data/places";
 import { useOrigin, usePreferences } from "@/lib/preferences";
 import { RadiusChips } from "@/components/ui/CityPicker";
@@ -55,6 +56,7 @@ export function FilterSheet({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const closeWith = useBackButtonClose(open, onClose);
   const [draft, setDraft] = useState<Draft>(value);
   const origin = useOrigin();
   const { prefs, set: setPrefs } = usePreferences();
@@ -219,7 +221,7 @@ export function FilterSheet({
             type="button"
             onClick={() => {
               if (maxKm !== prefs.maxDistanceKm) setPrefs({ maxDistanceKm: maxKm });
-              onApply(draft);
+              closeWith(() => onApply(draft));
             }}
             className="min-h-12 rounded-full bg-coral-600 px-6 text-[16px] font-semibold text-white transition active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >

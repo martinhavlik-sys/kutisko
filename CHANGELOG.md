@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-23 — Vyladenie pre Android (Chrome, Samsung Internet)
+**Zmenené**
+- **Manifest:** stabilné `id`, maskable ikony 192 aj 512 px (Android ich oreže do tvaru podľa telefónu), skratky po dlhom podržaní ikony („Hľadať“, „Obľúbené“), kategórie. Ikony ostávajú dočasné; čo dodať pri výmene je v `docs/IKONY.md`.
+- **Profil → „Kutisko na ploche telefónu“:** na Androide tlačidlo **Nainštalovať aplikáciu** (systémové okno prehliadača), keď ho prehliadač neponúka, krátky návod cez menu (Chrome ⋮ / Samsung Internet ☰); na iPhone návod „Zdieľať → Pridať na plochu“. Keď aplikácia beží z plochy, karta sa neukazuje.
+- **Systémové Späť na Androide** zatvára otvorené okno (filtre, výber mesta, navigácia, nahlásenie chyby, fotky na celú obrazovku, pridanie fotky) namiesto odchodu zo stránky. Chrome 120+ to robí sám; pre staršie prehliadače (napr. starší Samsung Internet) pridávame jeden krok do histórie, ktorý sa po zatvorení okna sám uprace. Na iPhone sa správanie nemení.
+- **Svetlý vzhľad je vynútený** (`color-scheme: only light`), aby tmavý režim prehliadača aplikáciu neprefarboval.
+- Nový `docs/TEST_ANDROID.md` (kontrolný zoznam pre telefón) a `scripts/qa/android-check.cjs` (automatická kontrola v emulácii).
+
+**Otestované**
+- `npm test` (53), `lint`, `typecheck`, `build`.
+- Playwright (Chromium) `scripts/qa/android-check.cjs`, 37/37: profily Pixel 7 (412 px) a Galaxy S8 (360 px) — Späť zatvára filtre a navigáciu s CloseWatcher aj bez neho, krížik upratuje históriu, použitie filtrov nenechá „prázdny“ krok Späť, ďalšie Späť z detailu odchádza normálne; tlačidlo Nainštalovať so simulovanou udalosťou `beforeinstallprompt`; Domov, Hľadať (zoznam aj mapa), detail a Obľúbené bez vodorovného pretečenia. iPhone 13: otvorenie okna nemení históriu, karta ukazuje návod.
+
+**Známe obmedzenia**
+- Netestované na fyzickom Android telefóne ani v Samsung Internet (len emulácia v Chromiu); systémové Späť sa v emulácii dá len napodobniť. Späť pri fotkách na celú obrazovku overené len kódom (rovnaký mechanizmus), nie samostatným testom.
+- Bez service workera: aplikácia nefunguje offline. Chrome ju nainštalovať vie aj tak; niektoré staršie prehliadače môžu ponúknuť len „Pridať na plochu“ (odkaz) namiesto plnej inštalácie.
+
 ## 2026-11-23 — Doladenie pred testom s rodičmi
 **Zmenené**
 - **Ukážka sponzorovaných miest a akcií je predvolene vypnutá** (prepínač v Profile ostáva). Domov je bez reklamnej karty aj pásu akcií.

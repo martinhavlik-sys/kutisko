@@ -246,3 +246,12 @@
 - Štítok „Nové“ na kartách odstránený: znamenal len „bez hodnotení“, čo už hovorí riadok pod názvom, a pri 986 miestach bez hodnotení bol všade.
 - Text pod prihlásením zosúladený so schváleným R2 (účet len na zápisy) namiesto „registrácia bude povinná“.
 - Odkaz na admin frontu presunutý z hlavného zoznamu v Profile do pätičky („Pre tím“), aby nemiatol rodičov.
+
+## 2026-11-23 — Android: inštalácia, Späť a ikony (technické, v schválenom smere)
+**Zadanie:** Martin: „kým pripravím logo a ikonu, vylaď to aj pre Android“.
+- **Späť zatvára okná:** spoliehame sa na natívne správanie `<dialog>` v Chrome 120+ (CloseWatcher) a na Androide navyše pridávame jeden záznam do histórie ako zálohu pre staršie prehliadače. Alternatíva (záznam v histórii aj na iPhone) zamietnutá, aby sa nemenilo odskúšané správanie na iPhone.
+- **Inštalácia cez kartu v Profile**, nie cez automatický banner: prehliadačov mini-banner potláčame a ponúkame vlastné tlačidlo na pokojnom mieste. Alternatíva (banner na Domove) by pred testom s rodičmi rušila; dá sa doplniť neskôr.
+- **Bez service workera a offline režimu:** Chrome ho na inštaláciu už nevyžaduje a cache by pri častých zmenách prototypu mohla ukazovať staré verzie. Vrátiť sa k tomu pri produkčnej verzii.
+- **Ikony:** maskable varianty vyrobené z dočasnej ikony „k“; finálne podklady dodá Martin podľa `docs/IKONY.md` (stačí prepísať súbory rovnakých názvov).
+- **Vynútený svetlý vzhľad** (`only light`): aplikácia nemá tmavú tému; nechceme, aby ju tmavý režim Samsung Internet automaticky prefarbil a zhoršil kontrast.
+
