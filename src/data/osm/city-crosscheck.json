@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T09:52:15.240Z",
+  "generatedAt": "2026-11-23T10:27:09.514Z",
   "osmCount": 975,
   "layers": [
     {
@@ -700,7 +700,7 @@
         ]
       },
       "metadata": {
-        "checkedAt": "2026-11-23T09:52:11.759Z",
+        "checkedAt": "2026-11-23T10:27:07.050Z",
         "sources": {
           "service": {
             "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer?f=json"
