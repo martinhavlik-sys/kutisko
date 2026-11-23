@@ -7,7 +7,7 @@ Stav k 22. 11. 2026. Dáta: `src/data/curated/indoor-places.json`.
 - **Žiadne údaje z Google** (Mapy, Places, recenzie), žiadne fotky ani logá, žiadne kopírované texty. Popisy sú vlastné, krátke a vecné.
 - Žiadne vymyslené hodnotenia. Údaj, ktorý prevádzka neuvádza, ostáva prázdny („neuvedené“, „Cena neoverená“).
 - Do aplikácie ide len miesto, ktorého web je **aktuálny** (dátum 2026 alebo udalosti v 2026). Agregátory (sdetmi.com, zlavomat.sk, kidsmap.com, multi-sport.sk, citylife.sk) slúžili len na nájdenie kandidátov, nie ako zdroj údajov.
-- Poloha: presná z OpenStreetMap (Nominatim, ODbL) cez `scripts/curated/geocode.mjs`. Kým sa nespustí, bod na mape je **približný** a aplikácia to v detaile hovorí; navigácia vtedy vedie na adresu prevádzky.
+- Poloha: presná z OpenStreetMap (Nominatim, ODbL) cez `scripts/curated/geocode.mjs`, ktorý spúšťa GitHub Action „Poloha herní a kútikov (OSM)“ pri zmene zoznamu. Nové miesto bez nájdenej polohy sa zobrazí s približným bodom a navigácia vedie na adresu.
 
 ## V aplikácii (11)
 | Miesto | Typ | Lokalita | Zdroj | Chýba na webe |
