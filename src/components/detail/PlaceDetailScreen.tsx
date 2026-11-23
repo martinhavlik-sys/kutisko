@@ -16,6 +16,8 @@ import { CheckBadgeIcon, ClockIcon, HeartIcon, PinIcon, StarIcon } from "@/compo
 import { NavigationSheet } from "./NavigationSheet";
 import { ReportDialog } from "./ReportDialog";
 import { useMyReviews } from "@/lib/community";
+import { photosLabel } from "@/lib/gallery";
+import { AddPhotoDialog, GalleryContent, HeroGallery, Lightbox, usePlaceGallery } from "./Gallery";
 
 function BackIcon() {
   return (
@@ -86,6 +88,10 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
   const category = CATEGORIES.find((c) => c.id === place.category)!;
   const origin = useOrigin();
   const km = distanceKm(origin, place);
+  const gallery = usePlaceGallery(place);
+  const [addPhotoOpen, setAddPhotoOpen] = useState(false);
+  const [lightbox, setLightbox] = useState<{ list: "hero" | "all"; index: number } | null>(null);
+  const lightboxPhotos = lightbox?.list === "hero" ? gallery.published : [...gallery.published, ...gallery.mineUnpublished];
 
   const goBack = () => {
     if (window.history.length > 1) router.back();
@@ -102,10 +108,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
       <div className="mx-auto max-w-3xl pb-36 sm:px-8 sm:pt-6">
         {/* Hero */}
         <div className="relative">
-          <div className="aspect-[3/2] overflow-hidden sm:aspect-[16/9] sm:rounded-[28px]">
-            <PlaceArt id={place.id} category={place.category} />
-          </div>
-          <div className="absolute inset-x-0 top-0 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),14px)]">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),14px)] [&>*]:pointer-events-auto">
             <button
               type="button"
               onClick={goBack}
@@ -124,9 +127,12 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               <HeartIcon size={21} filled={isSaved} className={isSaved ? "text-coral-500" : "text-ink"} />
             </button>
           </div>
-          <span className="absolute bottom-9 left-4 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-ink backdrop-blur sm:bottom-4">
-            {place.isDemo ? "DEMO · ilustračný obrázok" : "Ilustračný obrázok"}
-          </span>
+          <HeroGallery
+            place={place}
+            photos={gallery.published}
+            onOpen={(index) => setLightbox({ list: "hero", index })}
+            onAdd={() => setAddPhotoOpen(true)}
+          />
         </div>
 
         <main className="relative -mt-6 rounded-t-[28px] bg-cream-50 px-5 pt-6 sm:mt-0 sm:rounded-none sm:px-0">
@@ -220,6 +226,21 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
           )}
 
           <div className="mt-6">
+            <Section
+              title="Fotky"
+              aside={
+                gallery.published.length > 0 ? (
+                  <span className="text-[14px] text-ink-muted">{photosLabel(gallery.published.length)}</span>
+                ) : undefined
+              }
+            >
+              <GalleryContent
+                view={gallery}
+                onOpen={(index) => setLightbox({ list: "all", index })}
+                onAdd={() => setAddPhotoOpen(true)}
+              />
+            </Section>
+
             <Section title="O mieste">
               <p className="text-[15.5px] leading-relaxed text-ink">{detail.description}</p>
             </Section>
@@ -491,6 +512,23 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
 
       <Toast message={message} offset={88} />
       <NavigationSheet place={place} open={navOpen} onClose={() => setNavOpen(false)} />
+      <Lightbox
+        photos={lightboxPhotos}
+        startIndex={lightbox?.index ?? 0}
+        open={lightbox !== null && lightboxPhotos.length > 0}
+        onClose={() => setLightbox(null)}
+        placeName={place.name}
+      />
+      <AddPhotoDialog
+        placeId={place.id}
+        placeName={place.name}
+        open={addPhotoOpen}
+        onClose={() => setAddPhotoOpen(false)}
+        onDone={() => {
+          setAddPhotoOpen(false);
+          show("Ďakujeme! Fotka čaká na schválenie (DEMO)");
+        }}
+      />
       <ReportDialog
         placeId={place.id}
         open={reportOpen}

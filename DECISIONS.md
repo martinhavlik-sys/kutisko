@@ -195,3 +195,12 @@
 - Poloha na mape je štandardná modrá bodka (odlíšená od pinov kategórií).
 **Alternatívy:** nepretržité sledovanie (`watchPosition`) — zbytočné pre výber miesta, viac batérie; posuvník km — chips sú rýchlejšie na dotyk; okruh v URL — zjednotené s preferenciou, aby platil všade rovnako.
 **Dopad:** Pri produkcii doplniť zmienku o polohe do zásad ochrany súkromia. Na iPhone treba povoliť polohu pre Webové stránky Safari (platí aj pre PWA z plochy).
+
+## 2026-11-23 — Galéria v detaile miesta
+**Požiadavka (Martin):** doplniť do detailu galériu, prípadne hlavný obrázok ako posuvník; riešenie nechal na Claude.
+**Riešenie (Claude, UI a technické detaily):**
+- Oboje: hlavný obrázok je posuvník (štýl iOS/Airbnb: potiahnutie, bodky, počítadlo, ťuknutie → celá obrazovka) a pod rýchlymi údajmi je sekcia „Fotky“ s pásom náhľadov a pridaním fotky. Bez knižníc, len natívne posúvanie s prichytávaním (plynulé na iPhone).
+- Verejne sa zobrazujú len **schválené** fotky (manifest bod 9). Autor vidí svoje čakajúce/neschválené fotky so štítkom. Bez fotiek ostáva ilustrácia, nikdy cudzie fotky z webu.
+- Zdroj fotiek je jedna funkcia (`buildGallery` + `CATALOG_PHOTOS`): po výbere úložiska sa doplnia adresy z neho, obrazovky ostanú.
+**Alternatívy:** iba posuvník (fotky by boli skryté pre tých, čo neposúvajú), mozaika 1 + 4 ako Airbnb na počítači (na mobile zbytočne vysoká), knižnica na posuvník (zbytočná závislosť).
+**Otvorené (rozhodne Martin):** úložisko fotiek pre produkciu (napr. Cloudinary, Supabase Storage, Vercel Blob, Cloudflare R2 — platené služby po prekročení bezplatného limitu) a či môžu fotky pridávať aj prevádzky.

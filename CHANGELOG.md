@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-23 — Galéria fotiek v detaile miesta
+**Zmenené**
+- **Hlavný obrázok ako posuvník:** keď má miesto schválené fotky, potiahnutím prsta sa listuje, dole sú bodky a počítadlo „1 / 4“; na počítači šípky. Ťuknutie otvorí fotku na celú obrazovku.
+- **Celá obrazovka:** čierne pozadie, listovanie prstom alebo šípkami na klávesnici, počítadlo, zavretie krížikom alebo klávesom Esc, pod fotkou kto ju pridal.
+- **Nová sekcia „Fotky“** (hneď pod rýchlymi údajmi): pás náhľadov s dlaždicou „Pridať fotku“. Bez fotiek pekný prázdny stav s ilustráciou dievčatka a výzvou „Pridať prvú fotku“; v hlavnom obrázku ostáva ilustrácia a tlačidlo „Pridať fotku“.
+- **Pridať fotku:** krátke okno s pravidlami (fotiť priestor, nie deti; kontrola pred zverejnením; odstránenie polohy z fotky), povinný súhlas. Fotka čaká na schválenie a vidí ju len autor (štítok „Čaká na schválenie“). Najviac 5 čakajúcich fotiek na miesto.
+- **Admin fronta:** v karte Fotky pribudli fotky z galérie miesta („Galéria miesta“); po schválení sa objavia v hlavnom obrázku aj v galérii.
+- Zdroj fotiek je na jednom mieste (`src/lib/gallery.ts`), pripravený na neskoršie úložisko.
+
+**Otestované**
+- `npm test` (41; nové: len schválené fotky sú verejné, cudzie čakajúce nevidno, poradie, limit, skloňovanie), `lint`, `typecheck`, `build` prešli.
+- Playwright (iPhone 13, Chromium) so syntetickými testovacími obrázkami: prázdny stav, pridanie fotky (chyba bez fotky, chyba bez súhlasu, odoslanie), štítok čakania, schválenie v admin fronte, posuvník 1 → 2 / 4, celá obrazovka (otvorenie na 2. fotke, šípka → 3 / 4, Esc zavrie), šírka 320 px, počítač 1280 px, detail OSM ihriska. Bez chýb v konzole.
+
+**Známe obmedzenia**
+- Fotky sú zatiaľ iba DEMO v tomto prehliadači (zmenšené na 640 px); skutočné úložisko fotiek nie je rozhodnuté. Netestované na fyzickom iPhone.
+
 ## 2026-11-23 — Výraznejšia poloha na Domove
 **Zmenené**
 - Na Domove majú „Bratislava a okolie“ (resp. vybrané mesto alebo „Moja poloha“) a „Použiť moju polohu“ jemné farebné podfarbenie (svetlo ružová a svetlo tyrkysová pilulka s tenkým okrajom), aby boli výraznejšie (požiadavka Martina). Na úzkych displejoch (pod 360 px) sa text skráti na „Použiť polohu“.
