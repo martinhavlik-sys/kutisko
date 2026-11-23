@@ -178,3 +178,8 @@
 - Poloha: cieľom je presná poloha z OSM (Nominatim, ODbL). Prostredie Claude nemá prístup na Nominatim, preto je poloha dočasne približná, aplikácia to uvádza a navigácia vedie na adresu.
 **Alternatívy:** Google Places (licencia nedovoľuje ukladanie, platené); prevziať popisy a fotky z webov (autorské právo); zobraziť aj kandidátov zo starších zdrojov so štítkom „neoverené“ (riziko zatvorených prevádzok, odložené).
 **Dopad:** Aplikácia už neobsahuje vymyslené miesta ani hodnotenia. Údaje treba pravidelne obnovovať, neskôr ideálne priamo s prevádzkami.
+
+## 2026-11-23 — GitHub Action na presnú polohu herní a kútikov
+**Rozhodnutie (Martin):** „áno“ — doplniť presnú polohu herní automatickým krokom na GitHube, rovnako ako pri ihriskách.
+**Riešenie (Claude):** Akcia „Poloha herní a kútikov (OSM)“ sa spúšťa pri zmene `src/data/curated/indoor-places.json` alebo skriptu, geokóduje adresy cez Nominatim (1 požiadavka za sekundu, vlastný User-Agent) a výsledok commitne do vetvy. Výsledok sa prijme, len ak leží do 4 km od odhadu. Poloha je © prispievatelia OpenStreetMap (ODbL), atribúcia je v detaile miesta.
+**Dopad:** Všetkých 11 miest má presnú polohu; pri pridaní miesta stačí doplniť adresu a odhad.

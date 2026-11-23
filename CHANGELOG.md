@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-23 — Presná poloha herní a kútikov
+**Zmenené**
+- Nová GitHub Action „Poloha herní a kútikov (OSM)“ (schválil Martin) spúšťa `scripts/curated/geocode.mjs` a commitne `src/data/curated/geo.json`. Všetkých 11 herní a kútikov má presnú polohu z OpenStreetMap (adresný bod alebo budova OC), každá do 2 km od pôvodného odhadu. Detail ukazuje GPS s atribúciou OSM a navigácia ide na presné súradnice.
+- Kontrolná vzdialenosť od odhadu zvýšená na 4 km (odhady v okrajových častiach boli menej presné).
+
+**Otestované**
+- Akcia prebehla úspešne (11/11). `npm test` (32), `lint`, `typecheck` prešli. Zhody adries som skontroloval podľa výpisu Nominatimu (ulica, číslo, mestská časť).
+
+**Známe obmedzenia**
+- Pri OC je bod na budove centra, nie pri samotnom kútiku.
+
 ## 2026-11-23 — Čitateľné názvy ihrísk bez vlastného mena
 **Zmenené**
 - Z 975 ihrísk z OpenStreetMap má vlastný názov len 113. Ostatným teraz dávame zrozumiteľný názov odvodený z OSM dát namiesto opakovaného „Detské ihrisko“:

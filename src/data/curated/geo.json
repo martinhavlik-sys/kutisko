@@ -1,6 +1,128 @@
 {
   "attribution": "© prispievatelia OpenStreetMap",
   "license": "ODbL 1.0",
-  "generatedAt": null,
-  "places": {}
+  "generatedAt": "2026-11-23T10:14:33.524Z",
+  "places": {
+    "web-minicity-raca": {
+      "lat": 48.216991,
+      "lng": 17.163458,
+      "query": "Pri Vinohradoch 269, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 2876083241
+      },
+      "match": "9797/269, Pri vinohradoch, Grefty, Rača, Bratislava, okres Bratislava III, Bratislava, Bratislavský kraj, 831 06, Slovensko",
+      "kmFromHint": 1.67
+    },
+    "web-simba-petrzalka": {
+      "lat": 48.093097,
+      "lng": 17.118394,
+      "query": "Zuzany Chalupovej 5, Bratislava",
+      "osm": {
+        "type": "way",
+        "id": 558850402
+      },
+      "match": "Green Pharma, 5, Zuzany Chalupovej, Slnečnice Market, Janíkov dvor, Bratislava, okres Bratislava V, Bratislava, Bratislavský kraj, 851 07, Slovensko",
+      "kmFromHint": 1.98
+    },
+    "web-jumpfun-nivy": {
+      "lat": 48.146843,
+      "lng": 17.128698,
+      "query": "Nivy, Mlynské nivy, Bratislava",
+      "osm": {
+        "type": "way",
+        "id": 829898609
+      },
+      "match": "Nivy, 19034/5A, Mlynské nivy, Bratislavský downtown, Bratislava-Ružinov, okres Bratislava I, Bratislava, Bratislavský kraj, 821 09, Slovensko",
+      "kmFromHint": 0.16
+    },
+    "web-jumpfun-kidshouse": {
+      "lat": 48.175031,
+      "lng": 17.190461,
+      "query": "Ivanská cesta 30D, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 13568303227
+      },
+      "match": "17730/30D, Ivanská cesta, Topoľová Jama, Bratislava, okres Bratislava II, Bratislava, Bratislavský kraj, 821 04, Slovensko",
+      "kmFromHint": 0.56
+    },
+    "web-retrokids": {
+      "lat": 48.151851,
+      "lng": 17.157419,
+      "query": "Nevädzová 6, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 6460919715
+      },
+      "match": "Home Credit, 6, Nevädzová, Trávniky, Bratislava, okres Bratislava II, Bratislava, Bratislavský kraj, 821 01, Slovensko",
+      "kmFromHint": 1.27
+    },
+    "web-inspiro-ivanka": {
+      "lat": 48.195389,
+      "lng": 17.259945,
+      "query": "Nádražná 36, Ivanka pri Dunaji",
+      "osm": {
+        "type": "way",
+        "id": 50522977
+      },
+      "match": "1368/36, Nádražná, Ivanka pri Dunaji, okres Senec, Bratislavský kraj, 900 28, Slovensko",
+      "kmFromHint": 1
+    },
+    "web-adventica-eurovea": {
+      "lat": 48.140566,
+      "lng": 17.121817,
+      "query": "Eurovea, Pribinova, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 1528687887
+      },
+      "match": "Eurovea, Pribinova, Dunajská štvrť, Bratislavský downtown, Bratislava, okres Bratislava I, Bratislava, Bratislavský kraj, 811 09, Slovensko",
+      "kmFromHint": 0.07
+    },
+    "web-eurovea-kutik": {
+      "lat": 48.140566,
+      "lng": 17.121817,
+      "query": "Eurovea, Pribinova, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 1528687887
+      },
+      "match": "Eurovea, Pribinova, Dunajská štvrť, Bratislavský downtown, Bratislava, okres Bratislava I, Bratislava, Bratislavský kraj, 811 09, Slovensko",
+      "kmFromHint": 0.07
+    },
+    "web-aupark-kutik": {
+      "lat": 48.132125,
+      "lng": 17.107665,
+      "query": "Aupark, Einsteinova, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 1700761775
+      },
+      "match": "OC Einsteinova, Einsteinova, Sad, Dvory, Bratislava, okres Bratislava V, Bratislava, Bratislavský kraj, 851 01, Slovensko",
+      "kmFromHint": 0.09
+    },
+    "web-buppi-bory": {
+      "lat": 48.203728,
+      "lng": 17.03307,
+      "query": "Bory Mall, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 3187518443
+      },
+      "match": "OC Bory, 505, Bory, Bratislava, okres Bratislava IV, Bratislava, Bratislavský kraj, 840 02, Slovensko",
+      "kmFromHint": 0.16
+    },
+    "web-avion-junior": {
+      "lat": 48.167677,
+      "lng": 17.178148,
+      "query": "Avion Shopping Park, Bratislava",
+      "osm": {
+        "type": "node",
+        "id": 1081847497
+      },
+      "match": "Avion Shop. Park, Ivanská cesta, Trnávka, Bratislava, okres Bratislava II, Bratislava, Bratislavský kraj, 821 04, Slovensko",
+      "kmFromHint": 0.04
+    }
+  }
 }
