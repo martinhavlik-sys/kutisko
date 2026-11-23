@@ -219,3 +219,10 @@
 **Riešenie (Claude):** vzorová ukážka bez platieb a servera. Len vymyslené prevádzky s názvom „Ukážková…“ (nie skutočné herne, aby sa nevytvoril dojem, že niekto platí alebo organizuje akciu). Štítky „Sponzorované“ a „Ukážka“ vždy textom; najviac 1 sponzorované miesto a len pri zhode s filtrami; akcie najviac 14 dní dopredu. Jeden prepínač v Profile, predvolene zapnutý, aby Martin ukážku videl.
 **Alternatívy:** označiť ako sponzorovanú skutočnú herňu (zavádzajúce voči rodičom aj prevádzke); predvolene vypnuté (ukážku by nikto nevidel).
 **Dopad:** reklama a platené profily ostávajú podľa manifestu mimo MVP, kým Martin nerozhodne. Cenník a pravidlá: návrh v docs/MONETIZACIA.md, rozhoduje Martin.
+
+## 2026-11-23 — Návrh backendu (čaká na schválenie)
+**Kontext (Martin):** „áno, pripravme návrh backendu“ — prvý krok k živej aplikácii.
+**Návrh (Claude):** Supabase v EÚ (Postgres + RLS, Auth, Storage), aplikácia ostáva na Verceli, import dát v GitHub Actions zapisuje do databázy. Poloha ostáva len v telefóne (katalóg sa filtruje v prehliadači). Prihlásenie e-mailom (kód + odkaz) a cez Google, Apple neskôr. Fotky najprv v Supabase Storage, schvaľovanie pred zverejnením, zverejnená verzia bez metadát. Päť etáp, prvá (katalóg v databáze) bez osobných údajov. Podrobne: `docs/BACKEND_NAVRH.md`.
+**Alternatívy:** Firebase (NoSQL, ťažšie štatistiky a pravidlá), vlastný server (údržba); Cloudflare R2 pre fotky (lacnejšie pri veľkom objeme).
+**Otvorené pre Martina:** R1 poskytovateľ, R2 povinná registrácia (manifest bod 2 a 18) vs. prezeranie bez účtu, R3 spôsoby prihlásenia, R4 úložisko fotiek, R5 recenzie po zrušení účtu, R6 kedy Supabase Pro.
+**Dopad:** Kým Martin nerozhodne, nič sa neimplementuje; prototyp ostáva bez backendu.

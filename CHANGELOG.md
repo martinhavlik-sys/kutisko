@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-23 — Návrh backendu (len dokument)
+**Zmenené**
+- **docs/BACKEND_NAVRH.md:** návrh backendu na schválenie — architektúra (Supabase EÚ + Vercel + GitHub Actions), dátový model a návrh SQL, práva (RLS), prihlásenie, moderácia a admin, GDPR (poloha len v telefóne), import dát, migrácia z lokálnych dát, náklady a 5 etáp. Šesť otázok R1–R6 na rozhodnutie pre Martina.
+- **DECISIONS.md:** záznam návrhu (stav: čaká na schválenie). **MVP_ROADMAP.md:** odkaz z Fázy 4.
+
+**Otestované**
+- Bez zmeny kódu. Názvy kľúčov localStorage, ID miest a cesty k modulom v dokumente overené voči aktuálnemu kódu. Návrh SQL nebol spustený (ilustračný).
+
+**Známe obmedzenia**
+- Ceny a limity služieb sú orientačné, pred založením účtov ich treba overiť v aktuálnych cenníkoch.
+
 ## 2026-11-23 — Ukážka: sponzorované miesta a akcie (nápad na neskôr)
 **Zmenené** (nápad Martina, len vzorová ukážka, nič nerozhodnuté)
 - **Domov:** nad zoznamom miest jedna karta **„Sponzorované“ · „Ukážka“** (vymyslená „Ukážková herňa“ / „Ukážkový kútik“). Ukáže sa len, keď zodpovedá zvolenej kategórii, veku a hľadaniu; nie je na mape ani v počte miest.
