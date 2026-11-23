@@ -2,6 +2,7 @@
 
 import { AGE_BANDS } from "@/data/places";
 import { CITIES, DISTANCES, usePreferences } from "@/lib/preferences";
+import { disableLocation, requestLocation, useLocation } from "@/lib/location";
 import { useSaved } from "@/lib/saved";
 import { useMyReviews } from "@/lib/community";
 import { logoutDemo, useAccount } from "@/lib/account";
@@ -47,6 +48,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
 
 export function ProfileScreen() {
   const { prefs, set, clear, isEmpty } = usePreferences();
+  const loc = useLocation();
   const saved = useSaved();
   const [myReviews] = useMyReviews();
   const { message, show } = useToast();
@@ -160,11 +162,43 @@ export function ProfileScreen() {
                   </select>
                   <ChevronDownIcon size={18} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-muted" />
                 </div>
-                <p className="mt-1.5 text-[13px] text-ink-muted">Polohu nezisťujeme, lokalitu si vyberáte sami.</p>
+                <p className="mt-1.5 text-[13px] text-ink-muted">Použije sa, keď polohu nezapnete alebo ju zamietnete.</p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-[15px] font-semibold text-ink">Moja poloha</p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-[14px] text-ink-muted" aria-live="polite">
+                    {loc.status === "on"
+                      ? "Zapnutá: vzdialenosti počítame od vás."
+                      : loc.status === "locating"
+                        ? "Zisťujem polohu…"
+                        : loc.status === "denied"
+                          ? "Zamietnutá v nastaveniach telefónu."
+                          : loc.status === "outside"
+                            ? "Ste mimo pilotnej oblasti."
+                            : "Vypnutá."}
+                  </p>
+                  {loc.status === "on" ? (
+                    <button type="button" onClick={disableLocation} className="min-h-10 rounded-full px-4 text-[14px] font-semibold text-ink ring-1 ring-line hover:ring-ink-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+                      Nepoužívať polohu
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={loc.status === "locating" || loc.status === "unavailable"}
+                      onClick={() => void requestLocation()}
+                      className="min-h-10 rounded-full bg-turquoise-700 px-4 text-[14px] font-semibold text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                    >
+                      Použiť moju polohu
+                    </button>
+                  )}
+                </div>
+                <p className="mt-1.5 text-[13px] text-ink-muted">Poloha ostáva len v tomto zariadení, neukladáme ju ani neposielame.</p>
               </div>
 
               <fieldset>
-                <legend className="mb-2.5 text-[15px] font-semibold text-ink">Maximálna vzdialenosť</legend>
+                <legend className="mb-2.5 text-[15px] font-semibold text-ink">Okruh vyhľadávania</legend>
                 <div className="flex flex-wrap gap-2">
                   {DISTANCES.map((d) => (
                     <Chip

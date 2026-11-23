@@ -140,7 +140,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
           </h1>
           <p className="mt-1.5 inline-flex items-center gap-1 text-[15px] text-ink-muted">
             <PinIcon size={16} className="text-turquoise-700" />
-            {place.area} · {formatDistance(km)} od centra {origin.of}
+            {place.area} · {formatDistance(km)} {origin.kind === "gps" ? "od vás" : `od centra ${origin.of}`}
           </p>
 
           {/* Hodnotenie + overenie */}

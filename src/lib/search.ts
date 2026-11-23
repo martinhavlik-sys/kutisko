@@ -19,6 +19,8 @@ export interface Filters {
   amenities?: string[];
   onlyVerified?: boolean;
   onlyFree?: boolean;
+  /** Okruh v km od výchozieho bodu (poloha alebo mesto); `null`/chýba = bez obmedzenia. */
+  maxKm?: number | null;
 }
 
 const CATEGORY_KEYWORDS: Record<CategoryId, string> = {
@@ -92,7 +94,8 @@ export function filterAndSort(
       (!filters.environment || filters.environment === "all" || p.indoor === (filters.environment === "indoor")) &&
       (filters.amenities ?? []).every((a) => p.amenities.includes(a)) &&
       (!filters.onlyVerified || p.verified) &&
-      (!filters.onlyFree || p.price.kind === "free"),
+      (!filters.onlyFree || p.price.kind === "free") &&
+      (filters.maxKm == null || distanceKm(origin, p) <= filters.maxKm),
   );
 
   const byDistance = (a: Place, b: Place) => distanceKm(origin, a) - distanceKm(origin, b);

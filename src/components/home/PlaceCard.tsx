@@ -78,7 +78,7 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
         </div>
 
         <p className="mt-0.5 text-[14px] text-ink-muted">
-          {place.area} · {formatDistance(km)} {origin.city === "Bratislava" ? "od centra" : `od ${origin.of}`}
+          {place.area} · {formatDistance(km)} {origin.from}
           {" · "}
           {place.score !== null ? reviewsLabel(place.reviewCount) : "zatiaľ bez hodnotení"}
         </p>

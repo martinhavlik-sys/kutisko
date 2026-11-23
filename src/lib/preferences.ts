@@ -1,7 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { originFor } from "./origin";
+import { useMemo, useSyncExternalStore } from "react";
+import { RADIUS_OPTIONS, resolveOrigin } from "./origin";
+import { useLocation } from "./location";
 
 /** Voliteľné preferencie (manifest bod 8) — iba lokálne v prehliadači, DEMO. */
 export interface Preferences {
@@ -14,7 +15,8 @@ export const EMPTY_PREFERENCES: Preferences = { ageId: null, city: null, maxDist
 
 /** Ručný výber lokality (pri zamietnutej geolokácii). Pilot: Bratislava a okolie. */
 export const CITIES = ["Bratislava", "Senec", "Stupava", "Šamorín", "Pezinok", "Malacky"];
-export const DISTANCES = [5, 10, 25, 50];
+/** Okruh vyhľadávania (rovnaké voľby na Domove, vo filtroch aj v Profile). */
+export const DISTANCES: readonly number[] = RADIUS_OPTIONS;
 
 const KEY = "kutisko.demo.preferences";
 const listeners = new Set<() => void>();
@@ -57,7 +59,16 @@ export function usePreferences() {
   };
 }
 
-/** Bod, od ktorého sa počíta vzdialenosť: ručne vybrané mesto, inak centrum Bratislavy. */
+/**
+ * Bod, od ktorého sa počíta vzdialenosť: poloha rodiča (ak ju zapol a je v pilotnej oblasti),
+ * inak ručne vybrané mesto, inak centrum Bratislavy.
+ */
 export function useOrigin() {
-  return originFor(usePreferences().prefs.city);
+  const loc = useLocation();
+  const city = usePreferences().prefs.city;
+  const gps = loc.status === "on" ? loc.coords : null;
+  const lat = gps?.lat ?? null;
+  const lng = gps?.lng ?? null;
+  // Nový objekt len pri zmene vstupov, aby sa výsledky zbytočne neprepočítavali.
+  return useMemo(() => resolveOrigin(lat !== null && lng !== null ? { lat, lng } : null, city), [lat, lng, city]);
 }

@@ -121,7 +121,7 @@
 **Rozhodnutie (Martin, 2026-11-22):** „nemusí byť povinná v prototype a uvítanie stačí len po prihlásení“. Registrácia v prototype ostáva nepovinná. Uvítanie „Ahoj [meno]“ sa ukáže po registrácii aj po každom prihlásení, nie pri bežnom otvorení aplikácie (uzatvára otvorenú otázku 4 PROTOTYPE_BRIEF). Pôvodný návrh viesť po prihlásení rovno na Domov sa tým mení.
 **Dopad:** Pri backende sa nahradí skutočnou autentifikáciou; obľúbené a preferencie sa presunú k účtu.
 
-## 2026-11-22 — Ručný výber mesta namiesto geolokácie (prototyp)
+## 2026-11-22 — Ručný výber mesta namiesto geolokácie (prototyp) — *nahradené 2026-11-23, pozri „Poloha používateľa a okruh v km“*
 **Rozhodnutie (Claude, UI/technický detail v rámci manifestu):** Prototyp polohu nezisťuje. Rodič si mesto vyberie na Domove alebo v Profile; vzdialenosť a „Najbližšie“ sa počítajú od približného centra vybraného mesta (pilot: 6 obcí). Bez výberu platí centrum Bratislavy.
 **Dôvod:** Manifest žiada pri zamietnutej geolokácii ručný výber mesta (scenár S5); prototyp tak nemusí pracovať s polohou používateľa.
 **Alternatívy:** Geolokácia prehliadača s ručnou zálohou — odložené do MVP (súkromie, súhlas).
@@ -183,3 +183,15 @@
 **Rozhodnutie (Martin):** „áno“ — doplniť presnú polohu herní automatickým krokom na GitHube, rovnako ako pri ihriskách.
 **Riešenie (Claude):** Akcia „Poloha herní a kútikov (OSM)“ sa spúšťa pri zmene `src/data/curated/indoor-places.json` alebo skriptu, geokóduje adresy cez Nominatim (1 požiadavka za sekundu, vlastný User-Agent) a výsledok commitne do vetvy. Výsledok sa prijme, len ak leží do 4 km od odhadu. Poloha je © prispievatelia OpenStreetMap (ODbL), atribúcia je v detaile miesta.
 **Dopad:** Všetkých 11 miest má presnú polohu; pri pridaní miesta stačí doplniť adresu a odhad.
+
+## 2026-11-23 — Poloha používateľa a okruh v km
+**Rozhodnutie (Martin):** „super, môžeš tak, ako navrhuješ“ — aplikácia vie použiť polohu rodiča a vo filtri sa dá nastaviť okruh v km.
+**Riešenie (Claude, technické a UI detaily):**
+- Poloha sa zisťuje **len po ťuknutí** na „Použiť moju polohu“; pred systémovou otázkou je krátke vysvetlenie, na čo ju používame. Nikdy sa nepýtame sami od seba.
+- Jednorazové zistenie (`getCurrentPosition`, bežná presnosť), nie nepretržité sledovanie: na vzdialenosť v km stačí a šetrí batériu. Po návrate do aplikácie (viac ako 2 min) sa poloha obnoví.
+- **GDPR / súkromie:** súradnice sú iba v pamäti otvorenej stránky; neukladajú sa do localStorage, neposielajú sa na server ani do analytiky. Pamätáme si iba príznak „poloha zapnutá“, aby sa pri ďalšom otvorení zistila potichu, ak ju systém už povoľuje (Permissions API).
+- Záloha: pri zamietnutí, chybe alebo nepodporovanom prehliadači platí ručne vybrané mesto, inak centrum Bratislavy. Poloha ďalej ako 60 km od centra Bratislavy (mimo pilotu) sa nepoužije.
+- Okruh: Bez obmedzenia, 1, 3, 5, 10, 25 km (vzdušnou čiarou). Ukladá sa ako preferencia v prehliadači a platí na Domove, v Hľadať aj v Profile (predtým voľba v Profile vyhľadávanie neovplyvňovala; staré 50 km nahradil rozsah do 25 km pre pilot).
+- Poloha na mape je štandardná modrá bodka (odlíšená od pinov kategórií).
+**Alternatívy:** nepretržité sledovanie (`watchPosition`) — zbytočné pre výber miesta, viac batérie; posuvník km — chips sú rýchlejšie na dotyk; okruh v URL — zjednotené s preferenciou, aby platil všade rovnako.
+**Dopad:** Pri produkcii doplniť zmienku o polohe do zásad ochrany súkromia. Na iPhone treba povoliť polohu pre Webové stránky Safari (platí aj pre PWA z plochy).

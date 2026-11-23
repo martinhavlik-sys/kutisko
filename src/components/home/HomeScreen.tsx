@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { AGE_BANDS, PLACES, type CategoryId } from "@/data/places";
-import { useOrigin } from "@/lib/preferences";
-import { originFor } from "@/lib/origin";
+import { useOrigin, usePreferences } from "@/lib/preferences";
+import { originFor, radiusLabel } from "@/lib/origin";
+import { useLocation } from "@/lib/location";
 import { CityPicker } from "@/components/ui/CityPicker";
 import { filterAndSort, placesLabel, SORT_OPTIONS, type SortId } from "@/lib/search";
 import { useSaved } from "@/lib/saved";
@@ -16,7 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { AgeChips, CategoryTabs } from "./Filters";
-import { ChevronDownIcon, CloseIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
+import { ChevronDownIcon, CloseIcon, LocateIcon, PinIcon, SearchIcon, UserIcon } from "./icons";
 import { MapPreview } from "./MapPreview";
 import { PlaceCardSkeleton } from "./PlaceCard";
 import { PlaceList } from "./PlaceList";
@@ -55,6 +56,9 @@ export function HomeScreen() {
   const saved = useSaved();
   const { account } = useAccount();
   const origin = useOrigin();
+  const loc = useLocation();
+  const { prefs, set: setPrefs } = usePreferences();
+  const maxKm = prefs.maxDistanceKm;
   const [cityOpen, setCityOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const { message: toast, show: showToast } = useToast();
@@ -64,16 +68,26 @@ export function HomeScreen() {
 
   const results = useMemo(() => {
     const band = AGE_BANDS.find((b) => b.id === ageId) ?? null;
-    return filterAndSort(PLACES, { query, category, ageBand: band, sort }, origin);
-  }, [query, category, ageId, sort, origin]);
+    return filterAndSort(PLACES, { query, category, ageBand: band, sort, maxKm }, origin);
+  }, [query, category, ageId, sort, origin, maxKm]);
 
-  const hasFilters = query.trim() !== "" || category !== null || ageId !== null;
+  const hasFilters = query.trim() !== "" || category !== null || ageId !== null || maxKm !== null;
 
   const resetFilters = () => {
     setQuery("");
     setCategory(null);
     setAgeId(null);
+    if (maxKm !== null) setPrefs({ maxDistanceKm: null });
   };
+
+  const placeLabel =
+    loc.status === "locating" && origin.kind !== "gps"
+      ? "Zisťujem polohu…"
+      : origin.kind === "gps"
+        ? "Moja poloha"
+        : origin.city === "Bratislava"
+          ? "Bratislava a okolie"
+          : origin.city;
 
   const toggleSave = (id: string) => {
     const nowSaved = saved.toggle(id);
@@ -149,17 +163,35 @@ export function HomeScreen() {
             <h1 id="hero-title" className="mt-0.5 pr-20 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-ink min-[400px]:text-[30px] sm:pr-28 sm:text-[40px]">
               Kam ideme dnes?
             </h1>
+            <div className="mt-1 flex flex-wrap items-center">
             <button
               type="button"
               onClick={() => setCityOpen(true)}
               aria-haspopup="dialog"
-              aria-label={`Lokalita: ${origin.city === "Bratislava" ? "Bratislava a okolie" : origin.city}. Zmeniť`}
-              className="-ml-2 mt-1 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[14px] text-ink-muted hover:bg-cream-100 hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
+              aria-label={`Lokalita: ${placeLabel}${maxKm !== null ? `, ${radiusLabel(maxKm)}` : ""}. Zmeniť`}
+              className="-ml-2 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[14px] text-ink-muted hover:bg-cream-100 hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
             >
-              <PinIcon size={16} className="text-turquoise-700" />
-              <span className="font-medium text-ink">{origin.city === "Bratislava" ? "Bratislava a okolie" : origin.city}</span>
+              {origin.kind === "gps" ? (
+                <LocateIcon size={15} className="text-[#2563eb]" />
+              ) : (
+                <PinIcon size={16} className="text-turquoise-700" />
+              )}
+              <span className="font-medium text-ink">{placeLabel}</span>
+              {maxKm !== null && <span className="text-ink-muted">· {radiusLabel(maxKm)}</span>}
               <ChevronDownIcon size={16} />
             </button>
+            {origin.kind !== "gps" && loc.status !== "locating" && (
+              <button
+                type="button"
+                onClick={() => setCityOpen(true)}
+                aria-haspopup="dialog"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 text-[14px] font-semibold text-turquoise-700 hover:bg-turquoise-50 focus-visible:outline-2 focus-visible:outline-ink"
+              >
+                <LocateIcon size={15} />
+                Použiť moju polohu
+              </button>
+            )}
+            </div>
 
             <form
               role="search"
@@ -214,6 +246,7 @@ export function HomeScreen() {
               onSelect={selectFromMap}
               onOpenMap={openFullMap}
               loading={state === "loading"}
+              me={origin.kind === "gps" ? origin : null}
             />
           </div>
 
@@ -265,7 +298,7 @@ export function HomeScreen() {
                 </div>
               )}
               {state === "error" && <ErrorState onRetry={retry} />}
-              {state === "ready" && results.length === 0 && <EmptyState query={query.trim()} onReset={resetFilters} />}
+              {state === "ready" && results.length === 0 && <EmptyState query={query.trim()} onReset={resetFilters} radiusKm={maxKm} />}
               {state === "ready" && results.length > 0 && (
                 <PlaceList
                   places={results}
@@ -292,13 +325,26 @@ export function HomeScreen() {
               </a>
               ; herne a kútiky sme overili na weboch prevádzok. Hodnotenia rodičov zatiaľ nie sú.
               <br />
-              Vzdialenosť sa počíta od centra {origin.of}, poloha sa nezisťuje.
+              {origin.kind === "gps"
+                ? "Vzdialenosť počítame od vašej polohy. Poloha ostáva len v tomto zariadení, neukladáme ju."
+                : `Vzdialenosť počítame vzdušnou čiarou od centra ${origin.of}.`}
             </p>
           </section>
         </main>
       </div>
 
-      <CityPicker open={cityOpen} onClose={() => setCityOpen(false)} onPicked={(c) => showToast(`Vzdialenosti počítame od centra ${originFor(c).of}`)} />
+      <CityPicker
+        open={cityOpen}
+        onClose={() => setCityOpen(false)}
+        onPicked={(c) => showToast(`Vzdialenosti počítame od centra ${originFor(c).of}`)}
+        onLocated={(status) => {
+          if (status === "on") {
+            setSort("distance");
+            setCityOpen(false);
+            showToast("Zoraďujeme od najbližšieho k vám");
+          } else if (status === "outside") showToast(`Ste mimo pilotnej oblasti, počítame od centra ${origin.of}`);
+        }}
+      />
       <Toast message={toast} />
 
       <BottomNav />

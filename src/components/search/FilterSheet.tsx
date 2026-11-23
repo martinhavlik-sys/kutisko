@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AGE_BANDS, CATEGORIES, PLACES } from "@/data/places";
-import { useOrigin } from "@/lib/preferences";
+import { useOrigin, usePreferences } from "@/lib/preferences";
+import { RadiusChips } from "@/components/ui/CityPicker";
 import { amenityOptions, filterAndSort, placesLabel, type Environment } from "@/lib/search";
 import type { UrlFilters } from "@/lib/useUrlFilters";
 import { CloseIcon } from "@/components/home/icons";
@@ -56,6 +57,8 @@ export function FilterSheet({
   const ref = useRef<HTMLDialogElement>(null);
   const [draft, setDraft] = useState<Draft>(value);
   const origin = useOrigin();
+  const { prefs, set: setPrefs } = usePreferences();
+  const [maxKm, setMaxKm] = useState<number | null>(prefs.maxDistanceKm);
 
   useEffect(() => {
     const d = ref.current;
@@ -77,10 +80,11 @@ export function FilterSheet({
           amenities: draft.amenities,
           onlyVerified: draft.onlyVerified,
           onlyFree: draft.onlyFree,
+          maxKm,
         },
         origin,
       ).length,
-    [draft, origin],
+    [draft, origin, maxKm],
   );
 
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
@@ -135,6 +139,14 @@ export function FilterSheet({
                 </Chip>
               ))}
             </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="text-[15px] font-semibold text-ink">Vzdialenosť</legend>
+            <p className="mb-2.5 mt-0.5 text-[13px] text-ink-muted">
+              Vzdušnou čiarou {origin.kind === "gps" ? "od vašej polohy" : `od centra ${origin.of}`}. Polohu alebo mesto zmeníte ťuknutím na prvý filter nad výsledkami.
+            </p>
+            <RadiusChips value={maxKm} onChange={setMaxKm} />
           </fieldset>
 
           <fieldset>
@@ -195,16 +207,20 @@ export function FilterSheet({
         <div className="flex items-center justify-between gap-3 border-t border-line bg-white px-5 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 sm:rounded-b-[28px]">
           <button
             type="button"
-            onClick={() =>
-              set({ category: null, ageId: null, environment: "all", amenities: [], onlyVerified: false, onlyFree: false })
-            }
+            onClick={() => {
+              set({ category: null, ageId: null, environment: "all", amenities: [], onlyVerified: false, onlyFree: false });
+              setMaxKm(null);
+            }}
             className="min-h-11 px-1 text-[15px] font-semibold text-ink underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-ink"
           >
             Vymazať všetko
           </button>
           <button
             type="button"
-            onClick={() => onApply(draft)}
+            onClick={() => {
+              if (maxKm !== prefs.maxDistanceKm) setPrefs({ maxDistanceKm: maxKm });
+              onApply(draft);
+            }}
             className="min-h-12 rounded-full bg-coral-600 px-6 text-[16px] font-semibold text-white transition active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             {count === 0 ? "Žiadne výsledky" : `Zobraziť ${placesLabel(count)}`}
