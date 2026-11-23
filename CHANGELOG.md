@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-23 — Backend schválený, príprava etapy 1
+**Zmenené**
+- Martin schválil všetky odporúčania R1–R6 (Supabase EÚ, prezeranie bez účtu, e-mail + Google, Supabase Storage, zmazanie obsahu so zrušením účtu, Pro až pri spustení). Zapísané v `docs/BACKEND_NAVRH.md` a `DECISIONS.md`.
+- `PRODUCT_MANIFESTO.md` bod 2 a 18: vyznačená zmena — účet je povinný len na zápisy.
+- Nový `docs/SUPABASE_NASTAVENIE.md`: návod pre Martina, ako založiť projekt Supabase a uložiť kľúče do GitHubu a Vercelu, a plán etapy 1.
+
+**Otestované**
+- Bez zmeny kódu.
+
+**Známe obmedzenia**
+- Prostredie Claude sa na Supabase nepripojí (overené: požiadavka zablokovaná), migrácie a import preto pobežia v GitHub Actions.
+
 ## 2026-11-23 — Návrh backendu (len dokument)
 **Zmenené**
 - **docs/BACKEND_NAVRH.md:** návrh backendu na schválenie — architektúra (Supabase EÚ + Vercel + GitHub Actions), dátový model a návrh SQL, práva (RLS), prihlásenie, moderácia a admin, GDPR (poloha len v telefóne), import dát, migrácia z lokálnych dát, náklady a 5 etáp. Šesť otázok R1–R6 na rozhodnutie pre Martina.

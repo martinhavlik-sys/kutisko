@@ -226,3 +226,13 @@
 **Alternatívy:** Firebase (NoSQL, ťažšie štatistiky a pravidlá), vlastný server (údržba); Cloudflare R2 pre fotky (lacnejšie pri veľkom objeme).
 **Otvorené pre Martina:** R1 poskytovateľ, R2 povinná registrácia (manifest bod 2 a 18) vs. prezeranie bez účtu, R3 spôsoby prihlásenia, R4 úložisko fotiek, R5 recenzie po zrušení účtu, R6 kedy Supabase Pro.
 **Dopad:** Kým Martin nerozhodne, nič sa neimplementuje; prototyp ostáva bez backendu.
+
+## 2026-11-23 — Backend schválený (R1–R6)
+**Rozhodnutie (Martin):** „súhlasím“ s odporúčaniami v `docs/BACKEND_NAVRH.md`:
+- **R1** poskytovateľ backendu **Supabase** (EÚ, Frankfurt).
+- **R2** registrácia **nie je povinná na prezeranie**; účet treba na uloženie miesta, hodnotenie, tip, fotku a návrh. **Mení manifest bod 2 a 18** (v manifeste vyznačené).
+- **R3** prihlásenie **e-mailom (kód + odkaz) a cez Google**; Apple pred verejným spustením.
+- **R4** fotky v **Supabase Storage**; Cloudflare R2 až pri raste.
+- **R5** po zrušení účtu sa **recenzie, tipy a fotky zmažú**, priemer sa prepočíta.
+- **R6** **Supabase Pro až pri verejnom spustení**; dovtedy bezplatný plán s „budíčkom“ z GitHub Actions.
+**Dopad:** Ďalší krok je etapa 1 (katalóg miest v databáze, bez osobných údajov). Martin založí projekt Supabase podľa `docs/SUPABASE_NASTAVENIE.md`. Práca so skutočnými osobnými údajmi (etapa 2) ešte vyžaduje samostatný súhlas. Odosielanie e-mailov (Resend/Brevo) je nová služba — pred založením sa spýtame.

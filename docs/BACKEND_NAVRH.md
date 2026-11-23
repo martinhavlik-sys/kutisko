@@ -1,7 +1,8 @@
 # KUTISKO — návrh backendu
 
-> **Stav:** návrh na schválenie (23. 11. 2026). Nič z toho nie je implementované a nič nie je rozhodnuté,
-> kým to Martin neschváli. Manifest (bod 15, „Brána medzi prototypom a backendom“) vyžaduje pre backend
+> **Stav:** **schválené Martinom 23. 11. 2026** („súhlasím“ — všetky odporúčania R1–R6, pozri časť 2).
+> Zatiaľ nič nie je implementované; ďalší krok je etapa 1 (návod na prípravu: `docs/SUPABASE_NASTAVENIE.md`).
+> Pôvodne návrh na schválenie. Manifest (bod 15, „Brána medzi prototypom a backendom“) vyžaduje pre backend
 > samostatné rozhodnutie; tento dokument ho pripravuje.
 >
 > Ceny a limity služieb sú orientačné podľa verejných cenníkov, ktoré poznáme. **Pred založením účtov ich
@@ -19,7 +20,11 @@
 - **Postup v 5 etapách**, každá je samostatne použiteľná a ide cez vlastný PR. Prvá (katalóg miest v databáze)
   ešte nepracuje s osobnými údajmi.
 
-## 2. Na rozhodnutie (Martin)
+## 2. Rozhodnutia (Martin, 23. 11. 2026: schválené všetky odporúčania)
+
+**Výsledok:** R1 Supabase · R2 prezeranie bez účtu, účet až na zápis · R3 e-mail + Google, Apple pred
+verejným spustením · R4 Supabase Storage · R5 po zrušení účtu sa recenzie a fotky zmažú · R6 Supabase Pro
+až pri verejnom spustení.
 
 | # | Otázka | Možnosti | Odporúčanie |
 |---|--------|----------|-------------|
