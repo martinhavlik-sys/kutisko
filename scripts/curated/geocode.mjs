@@ -16,7 +16,7 @@ import path from "node:path";
 
 const SRC = path.resolve("src/data/curated/indoor-places.json");
 const OUT = path.resolve("src/data/curated/geo.json");
-const MAX_KM = 2.5;
+const MAX_KM = 4;
 const UA = "kutisko-prototype-geocode/0.1 (+https://github.com/martinhavlik-sys/kutisko)";
 
 const km = (a, b) => {

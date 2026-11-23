@@ -1,0 +1,41 @@
+name: Poloha herní a kútikov (OSM)
+
+# Doplní GPS polohu ručne overeným herniam a kútikom z OpenStreetMap (Nominatim)
+# a výsledok (src/data/curated/geo.json) commitne späť do vetvy.
+# Schválil Martin 2026-11-23 (rovnaký postup ako „Import ihrísk (OSM)“).
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths:
+      - "src/data/curated/indoor-places.json"
+      - "scripts/curated/**"
+      - ".github/workflows/geocode-curated.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geocode-curated-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  geocode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Geokódovanie (Nominatim)
+        run: node scripts/curated/geocode.mjs
+      - name: Commit polohy
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add src/data/curated/geo.json
+          if git diff --cached --quiet; then echo "Bez zmien."; exit 0; fi
+          git commit -m "Dáta: poloha herní a kútikov z OpenStreetMap ($(date -u +%Y-%m-%d))"
+          git push
