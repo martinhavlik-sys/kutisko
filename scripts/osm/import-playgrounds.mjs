@@ -30,8 +30,9 @@ const QUERIES = {
   features: `[out:json][timeout:240];${SK}(nwr["playground"](${bb})(area.sk);node["amenity"~"^(bench|drinking_water|toilets|shelter)$"](${bb})(area.sk););out center;`,
   parks: `[out:json][timeout:240];${SK}nwr["leisure"="park"]["name"](${bb})(area.sk);out geom;`,
   admin: `[out:json][timeout:240];rel["boundary"="administrative"]["admin_level"~"^(8|9|10)$"](${bb});out geom;`,
-  // Pomenované ulice a pešie zóny — na čitateľné názvy ihrísk bez vlastného mena.
-  streets: `[out:json][timeout:240];${SK}way["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service)$"]["name"](${bb})(area.sk);out tags geom;`,
+  // Pomenované ulice do 150 m od ihrísk — na čitateľné názvy ihrísk bez vlastného mena
+  // (len okolie ihrísk, nie celý región, aby dopyt ostal malý).
+  streets: `[out:json][timeout:240];${SK}nwr["leisure"="playground"](${bb})(area.sk)->.p;way(around.p:150)["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service)$"]["name"];out tags geom;`,
 };
 
 async function overpass(name, query) {
@@ -64,7 +65,16 @@ async function overpass(name, query) {
 
 if (rawDir) await mkdir(rawDir, { recursive: true });
 const results = {};
-for (const [name, q] of Object.entries(QUERIES)) results[name] = await overpass(name, q);
+const OPTIONAL = new Set(["streets"]); // bez ulíc import prejde, ihriská bez mena dostanú názov podľa mestskej časti
+for (const [name, q] of Object.entries(QUERIES)) {
+  try {
+    results[name] = await overpass(name, q);
+  } catch (e) {
+    if (!OPTIONAL.has(name)) throw e;
+    console.warn(`! ${name}: preskočené (${e.message})`);
+    results[name] = { elements: [] };
+  }
+}
 
 const places = buildPlaces({
   playgroundEls: results.playgrounds.elements,
@@ -81,6 +91,7 @@ for (const p of places) areas[p.area] = (areas[p.area] ?? 0) + 1;
 const stats = {
   total: places.length,
   rawPlaygrounds: results.playgrounds.elements.length,
+  streets: results.streets.elements.length,
   named: count((p) => p.named),
   nameSources: Object.fromEntries(["osm", "park", "street", "area", "none"].map((k) => [k, count((p) => p.nameSource === k)])),
   duplicateNames: Object.values(places.reduce((m, p) => ((m[p.name] = (m[p.name] ?? 0) + 1), m), {})).filter((n) => n > 1).reduce((a, n) => a + n, 0),
