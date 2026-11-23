@@ -16,7 +16,11 @@ const ENDPOINTS = [
   process.env.OVERPASS_URL,
   "https://overpass-api.de/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
 ].filter(Boolean);
+
+// V GitHub Actions sa varovania zobrazia aj ako anotácie behu (čitateľné cez API bez stiahnutia logu).
+const warn = (msg) => console.warn(process.env.GITHUB_ACTIONS ? `::warning::${msg}` : msg);
 
 const OUT = path.resolve("src/data/osm/playgrounds.json");
 const rawDir = process.argv.includes("--raw") ? process.argv[process.argv.indexOf("--raw") + 1] : null;
@@ -51,11 +55,12 @@ async function overpass(name, query) {
         if (!res.ok) throw new Error(`${url} → HTTP ${res.status}`);
         const json = await res.json();
         console.log(`✓ ${name}: ${json.elements.length} prvkov (${url})`);
+        if (process.env.GITHUB_ACTIONS) console.log(`::notice::${name}: ${json.elements.length} prvkov (${url})`);
         if (rawDir) await writeFile(path.join(rawDir, `${name}.json`), JSON.stringify(json));
         return json;
       } catch (e) {
         lastError = e;
-        console.warn(`! ${name}: pokus ${attempt} zlyhal: ${e.message}`);
+        warn(`${name}: pokus ${attempt} zlyhal: ${e.message}`);
         await new Promise((r) => setTimeout(r, 5000 * attempt));
       }
     }
@@ -71,7 +76,7 @@ for (const [name, q] of Object.entries(QUERIES)) {
     results[name] = await overpass(name, q);
   } catch (e) {
     if (!OPTIONAL.has(name)) throw e;
-    console.warn(`! ${name}: preskočené (${e.message})`);
+    warn(`${name}: preskočené (${e.message})`);
     results[name] = { elements: [] };
   }
 }
