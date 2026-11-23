@@ -12,7 +12,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "KUTISKO — detské kútiky, herne a ihriská",
   description:
-    "Prototyp: objavujte detské kútiky, vnútorné herne a ihriská v Bratislave a okolí. Obsahuje iba ukážkové (DEMO) dáta.",
+    "Prototyp: objavujte detské kútiky, vnútorné herne a ihriská v Bratislave a okolí. Hodnotenia a účty sú zatiaľ len ukážka (DEMO).",
   robots: { index: false, follow: false },
   applicationName: "Kutisko",
   // Po „Pridať na plochu“ sa otvára na celú obrazovku; stavový riadok ostáva čitateľný na krémovom pozadí.

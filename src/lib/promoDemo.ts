@@ -10,7 +10,7 @@ import { demoEvents } from "@/data/promoDemo";
  * Predvolená hodnota platí pre všetkých; v Profile si ju dá každý prepnúť (uloží sa v prehliadači).
  * Na vypnutie pre všetkých (napr. pred testom s rodičmi) stačí zmeniť na `false`.
  */
-export const PROMO_DEMO_DEFAULT_ON = true;
+export const PROMO_DEMO_DEFAULT_ON = false;
 
 const settings = createDemoStore<{ on: boolean | null }>("kutisko.demo.promo", { on: null });
 const added = createDemoStore<PromoEvent[]>("kutisko.demo.promoEvents", []);

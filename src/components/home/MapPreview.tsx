@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CATEGORIES, REFERENCE_POINT, type Place } from "@/data/places";
 import { PlacesMap } from "@/components/map/PlacesMap";
+import { clusterPoints } from "@/lib/cluster";
 import { MapIcon } from "./icons";
 
 /**
@@ -100,6 +101,15 @@ interface Props {
 /** Ilustračná mapa — záloha, keď sa skutočné podklady nenačítajú. */
 function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, me, label = "Náhľad mapy" }: Props) {
   const meXY = me ? project(me.lat, me.lng) : null;
+  // Pri stovkách ihrísk sa blízke piny spoja do kruhu s počtom (rovnako ako na skutočnej mape).
+  const byId = new Map(places.map((p) => [p.id, p]));
+  const items = loading
+    ? []
+    : clusterPoints(
+        places.map((p) => ({ id: p.id, ...project(p.lat, p.lng) })),
+        46,
+        activeId,
+      );
   return (
     <section aria-label={label} className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
       <div className="relative aspect-[360/260] w-full">
@@ -155,8 +165,24 @@ function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, me, la
           )}
         </svg>
 
-        {!loading &&
-          places.map((p) => {
+        {items.map((it) => {
+            if (it.kind === "cluster") {
+              const n = it.ids.length;
+              const size = Math.min(44, 28 + Math.log2(n) * 3);
+              return (
+                <button
+                  key={it.key}
+                  type="button"
+                  onClick={() => (onOpenMap ? onOpenMap() : onSelect(it.ids[0]))}
+                  aria-label={`${n} miest v tejto oblasti, otvoriť mapu`}
+                  className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[2.5px] border-white bg-coral-600 text-[12px] font-bold text-white shadow-[0_2px_6px_rgb(31_26_22/0.25)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ink"
+                  style={{ left: `${(it.x / W) * 100}%`, top: `${(it.y / H) * 100}%`, width: size, height: size }}
+                >
+                  {n > 99 ? "99+" : n}
+                </button>
+              );
+            }
+            const p = byId.get(it.id)!;
             const { x, y } = project(p.lat, p.lng);
             const active = p.id === activeId;
             const cat = CATEGORIES.find((c) => c.id === p.category)!;
@@ -181,7 +207,7 @@ function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, me, la
 
         {loading && <div className="skeleton absolute inset-0 opacity-60" aria-hidden="true" />}
 
-        <span className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-medium text-ink-muted backdrop-blur">
+        <span className="pointer-events-none absolute bottom-3 left-3 z-30 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-medium text-ink-muted backdrop-blur">
           Ilustračná mapa (podklady nedostupné) · DEMO
         </span>
 
@@ -189,7 +215,7 @@ function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, me, la
         <button
           type="button"
           onClick={onOpenMap}
-          className="absolute right-3 top-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-ink shadow-float transition active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          className="absolute right-3 top-3 z-30 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-ink shadow-float transition active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         >
           <MapIcon size={18} />
           Celá mapa

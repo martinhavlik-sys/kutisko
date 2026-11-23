@@ -220,7 +220,7 @@ export function SearchScreen() {
                   <select
                     value={state.sort}
                     onChange={(e) => update({ sort: e.target.value as SortId })}
-                    className="min-h-9 appearance-none rounded-full bg-white py-1 pl-3 pr-8 text-[13.5px] font-semibold text-ink ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                    className="min-h-10 appearance-none rounded-full bg-white py-1 pl-3 pr-8 text-[16px] font-semibold text-ink ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                   >
                     {SORT_OPTIONS.map((o) => (
                       <option key={o.id} value={o.id}>
@@ -231,7 +231,7 @@ export function SearchScreen() {
                   <ChevronDownIcon size={16} className="pointer-events-none absolute right-2.5 text-ink-muted" />
                 </label>
               )}
-              <div role="group" aria-label="Zobrazenie" className="flex rounded-full bg-cream-100 p-0.5">
+              <div role="group" aria-label="Zobrazenie" className="flex shrink-0 rounded-full bg-cream-100 p-0.5">
                 {(
                   [
                     ["list", "Zoznam", ListIcon],
@@ -246,12 +246,12 @@ export function SearchScreen() {
                       setActiveId(null);
                       update({ view: id as UrlFilters["view"] });
                     }}
-                    className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[13.5px] font-semibold transition focus-visible:outline-2 focus-visible:outline-ink ${
+                    className={`inline-flex min-h-10 min-w-10 items-center justify-center gap-1.5 rounded-full px-3 text-[13.5px] font-semibold transition focus-visible:outline-2 focus-visible:outline-ink ${
                       state.view === id ? "bg-white text-ink shadow-card" : "text-ink-muted"
                     }`}
                   >
                     <Icon size={17} />
-                    {label}
+                    <span className="max-[359px]:sr-only">{label}</span>
                   </button>
                 ))}
               </div>

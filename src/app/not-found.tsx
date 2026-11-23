@@ -1,12 +1,13 @@
 import Link from "next/link";
 
+/** Všeobecná 404 (neznáma adresa). Pre neznáme miesto je vlastný text v `miesto/[id]/not-found.tsx`. */
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-6 text-center">
       <p className="text-[13px] font-semibold uppercase tracking-wide text-ink-muted">404</p>
-      <h1 className="mt-2 font-display text-[26px] font-bold tracking-[-0.02em] text-ink">Toto miesto sme nenašli</h1>
+      <h1 className="mt-2 font-display text-[26px] font-bold tracking-[-0.02em] text-ink">Túto stránku sme nenašli</h1>
       <p className="mt-2 text-[15px] leading-relaxed text-ink-muted">
-        Odkaz môže byť neplatný alebo miesto už nie je v katalógu.
+        Odkaz môže byť neplatný alebo stránka už neexistuje.
       </p>
       <Link
         href="/"

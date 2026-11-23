@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "KUTISKO (DEMO)",
     short_name: "Kutisko",
-    description: "Prototyp: detské kútiky, herne a ihriská v Bratislave a okolí. Iba ukážkové dáta.",
+    description: "Prototyp: detské kútiky, herne a ihriská v Bratislave a okolí. Hodnotenia a účty sú zatiaľ len ukážka.",
     lang: "sk",
     start_url: "/",
     scope: "/",

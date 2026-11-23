@@ -11,7 +11,7 @@ import { primaryBtn, secondaryBtn } from "@/components/forms/FormParts";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Toast, useToast } from "@/components/ui/Toast";
-import { CheckBadgeIcon, ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
+import { ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
 import Link from "next/link";
 import { PromoToggle } from "@/components/promo/PromoParts";
 
@@ -74,7 +74,6 @@ export function ProfileScreen() {
         ),
     },
     { label: "Navrhnúť nové miesto", icon: <PinIcon size={20} />, href: "/navrhnut" },
-    { label: "Admin fronta (náhľad)", hint: "DEMO", icon: <CheckBadgeIcon size={20} />, href: "/admin" },
     ...(account ? [{ label: "Zmena hesla", icon: <UserIcon size={20} />, onClick: () => show("V prototype sa heslo nemení (DEMO)") }] : []),
   ];
 
@@ -152,7 +151,7 @@ export function ProfileScreen() {
                     id="city"
                     value={prefs.city ?? ""}
                     onChange={(e) => set({ city: e.target.value || null })}
-                    className="min-h-12 w-full appearance-none rounded-2xl bg-cream-50 px-4 pr-10 text-[15px] text-ink ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+                    className="min-h-12 w-full appearance-none rounded-2xl bg-cream-50 px-4 pr-10 text-[16px] text-ink ring-1 ring-line focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
                   >
                     <option value="">Nevybraté (Bratislava a okolie)</option>
                     {CITIES.map((c) => (
@@ -288,7 +287,12 @@ export function ProfileScreen() {
             </button>
           )}
           <p className="text-center text-[12.5px] leading-relaxed text-ink-muted">
-            Prototyp KUTISKO · simulovaný účet, bez servera. Všetky údaje sú ukážkové.
+            Prototyp KUTISKO · miesta sú skutočné, účet a vaše zápisy sú len ukážka (DEMO) v tomto prehliadači.
+          </p>
+          <p className="-mt-2 text-center text-[12.5px]">
+            <Link href="/admin" className="inline-flex min-h-11 items-center px-2 font-medium text-ink-muted underline underline-offset-2 hover:text-ink">
+              Pre tím: admin fronta (náhľad)
+            </Link>
           </p>
         </main>
       </div>

@@ -70,11 +70,7 @@ export const PlaceCard = forwardRef<HTMLElement, Props>(function PlaceCard(
                 <span className="sr-only"> z 10</span>
               </span>
             </div>
-          ) : (
-            <span className="shrink-0 rounded-full bg-turquoise-50 px-2 py-1 text-[12px] font-semibold text-turquoise-700">
-              Nové
-            </span>
-          )}
+          ) : null}
         </div>
 
         <p className="mt-0.5 text-[14px] text-ink-muted">

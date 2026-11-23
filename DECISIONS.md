@@ -216,7 +216,7 @@
 
 ## 2026-11-23 — Ukážka sponzorovaných miest a akcií
 **Kontext (Martin):** „niektoré kútiky by mohli byť vpredu ako sponzorované… budú si môcť pridávať akcie na najbližší čas. Toto je zatiaľ len nápad, ak chceš, môžeš ho tam vzorovo pridať.“
-**Riešenie (Claude):** vzorová ukážka bez platieb a servera. Len vymyslené prevádzky s názvom „Ukážková…“ (nie skutočné herne, aby sa nevytvoril dojem, že niekto platí alebo organizuje akciu). Štítky „Sponzorované“ a „Ukážka“ vždy textom; najviac 1 sponzorované miesto a len pri zhode s filtrami; akcie najviac 14 dní dopredu. Jeden prepínač v Profile, predvolene zapnutý, aby Martin ukážku videl.
+**Riešenie (Claude):** vzorová ukážka bez platieb a servera. Len vymyslené prevádzky s názvom „Ukážková…“ (nie skutočné herne, aby sa nevytvoril dojem, že niekto platí alebo organizuje akciu). Štítky „Sponzorované“ a „Ukážka“ vždy textom; najviac 1 sponzorované miesto a len pri zhode s filtrami; akcie najviac 14 dní dopredu. Jeden prepínač v Profile, predvolene zapnutý, aby Martin ukážku videl (od 23.11. pred testom s rodičmi predvolene vypnutý, pozri nižšie).
 **Alternatívy:** označiť ako sponzorovanú skutočnú herňu (zavádzajúce voči rodičom aj prevádzke); predvolene vypnuté (ukážku by nikto nevidel).
 **Dopad:** reklama a platené profily ostávajú podľa manifestu mimo MVP, kým Martin nerozhodne. Cenník a pravidlá: návrh v docs/MONETIZACIA.md, rozhoduje Martin.
 
@@ -236,3 +236,13 @@
 - **R5** po zrušení účtu sa **recenzie, tipy a fotky zmažú**, priemer sa prepočíta.
 - **R6** **Supabase Pro až pri verejnom spustení**; dovtedy bezplatný plán s „budíčkom“ z GitHub Actions.
 **Dopad:** Ďalší krok je etapa 1 (katalóg miest v databáze, bez osobných údajov). Martin založí projekt Supabase podľa `docs/SUPABASE_NASTAVENIE.md`. Práca so skutočnými osobnými údajmi (etapa 2) ešte vyžaduje samostatný súhlas. Odosielanie e-mailov (Resend/Brevo) je nová služba — pred založením sa spýtame.
+
+## 2026-11-23 — Pred testom s rodičmi: ukážka sponzorovaných miest predvolene vypnutá
+**Rozhodnutie:** Martin zvolil „doladenie celej aplikácie pred testom s rodičmi, vrátane vypnutia ukážky sponzorovaných miest“. `PROMO_DEMO_DEFAULT_ON = false`; prepínač v Profile ostáva, ukážku si dá zapnúť ručne.
+**Dôvod:** Vymyslené prevádzky a akcie by pri teste odvádzali pozornosť od scenárov S1–S8 a mohli znížiť dôveru v ostatné (skutočné) údaje.
+**Dopad:** Kto si ukážku v prehliadači už zapol, má ju zapnutú ďalej (pred testom sa údaje webu aj tak mažú, `docs/TEST_IPHONE.md`).
+
+## 2026-11-23 — Drobné UX rozhodnutia pri doladení (technické, v schválenom smere)
+- Štítok „Nové“ na kartách odstránený: znamenal len „bez hodnotení“, čo už hovorí riadok pod názvom, a pri 986 miestach bez hodnotení bol všade.
+- Text pod prihlásením zosúladený so schváleným R2 (účet len na zápisy) namiesto „registrácia bude povinná“.
+- Odkaz na admin frontu presunutý z hlavného zoznamu v Profile do pätičky („Pre tím“), aby nemiatol rodičov.
