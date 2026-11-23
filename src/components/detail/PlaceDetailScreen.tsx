@@ -17,6 +17,8 @@ import { NavigationSheet } from "./NavigationSheet";
 import { ReportDialog } from "./ReportDialog";
 import { useMyReviews } from "@/lib/community";
 import { photosLabel } from "@/lib/gallery";
+import { BirthdayInfo, OpenStatusPill, ParentTips, QuickActions, sharePlace, useOpenStatus } from "./DetailExtras";
+import { todayRowIndex } from "@/lib/openingHours";
 import { AddPhotoDialog, GalleryContent, HeroGallery, Lightbox, usePlaceGallery } from "./Gallery";
 
 function BackIcon() {
@@ -89,6 +91,13 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
   const origin = useOrigin();
   const km = distanceKm(origin, place);
   const gallery = usePlaceGallery(place);
+  const { status: openNow, day: today } = useOpenStatus(place);
+  const todayRow = today === null ? -1 : todayRowIndex(detail.hoursWeek, today);
+  const share = async () => {
+    const r = await sharePlace(place);
+    if (r === "copied") show("Odkaz na miesto je skopírovaný");
+    else if (r === "failed") show("Zdieľanie sa nepodarilo");
+  };
   const [addPhotoOpen, setAddPhotoOpen] = useState(false);
   const [lightbox, setLightbox] = useState<{ list: "hero" | "all"; index: number } | null>(null);
   const lightboxPhotos = lightbox?.list === "hero" ? gallery.published : [...gallery.published, ...gallery.mineUnpublished];
@@ -148,6 +157,15 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
             <PinIcon size={16} className="text-turquoise-700" />
             {place.area} · {formatDistance(km)} {origin.kind === "gps" ? "od vás" : `od centra ${origin.of}`}
           </p>
+          {openNow && (
+            <p className="mt-2.5 text-[13.5px]">
+              <a href="#sec-otváracie-hodiny" className="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+                <OpenStatusPill status={openNow} />
+              </a>
+            </p>
+          )}
+
+          <QuickActions place={place} onRoute={() => setNavOpen(true)} onShare={share} />
 
           {/* Hodnotenie + overenie */}
           <div className="mt-5 flex items-center gap-4 rounded-[22px] bg-white p-4 shadow-card ring-1 ring-line">
@@ -332,13 +350,25 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               )}
             </Section>
 
+            <Section title="Tipy od rodičov">
+              <ParentTips placeId={place.id} onAdded={() => show("Ďakujeme za tip (DEMO)")} />
+            </Section>
+
             <Section title="Otváracie hodiny">
+              {openNow && (
+                <p className="mb-3 text-[14px]">
+                  <OpenStatusPill status={openNow} />
+                </p>
+              )}
               {detail.hoursWeek ? (
                 <dl className="divide-y divide-line rounded-[22px] bg-white px-4 ring-1 ring-line">
-                  {detail.hoursWeek.map((h) => (
-                    <div key={h.days} className="flex justify-between py-3 text-[15px]">
-                      <dt className="text-ink-muted">{h.days}</dt>
-                      <dd className="font-medium text-ink">{h.hours}</dd>
+                  {detail.hoursWeek.map((h, i) => (
+                    <div key={h.days} className="flex justify-between gap-3 py-3 text-[15px]">
+                      <dt className={i === todayRow ? "font-semibold text-ink" : "text-ink-muted"}>
+                        {h.days}
+                        {i === todayRow && <span className="ml-1.5 text-[12.5px] font-semibold text-turquoise-700">dnes</span>}
+                      </dt>
+                      <dd className={`text-right text-ink ${i === todayRow ? "font-semibold" : "font-medium"}`}>{h.hours}</dd>
                     </div>
                   ))}
                 </dl>
@@ -358,6 +388,12 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                 </p>
               )}
             </Section>
+
+            {place.indoor && (
+              <Section title="Narodeninové oslavy">
+                <BirthdayInfo place={place} />
+              </Section>
+            )}
 
             <Section title="Poloha">
               <MapPreview places={[place]} activeId={place.id} onSelect={() => setNavOpen(true)} label="Poloha na mape" />
@@ -417,7 +453,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               ) : place.web ? (
                 <div className="text-[14px] leading-relaxed text-ink-muted">
                   <p>
-                    Názov, adresu, hodiny, cenu, vek a vybavenie sme {formatDate(place.web.checkedAt)} overili na webe
+                    Názov, adresu, telefón, hodiny, cenu, vek a vybavenie sme {formatDate(place.web.checkedAt)} overili na webe
                     prevádzky alebo obchodného centra. Popis je náš vlastný. Údaje, ktoré prevádzka neuvádza, necháme
                     prázdne. Hodnotenia rodičov zatiaľ nemáme.
                   </p>
@@ -496,7 +532,11 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
               {formatPrice(place.price)}
             </p>
             <p className="truncate text-[13px] text-ink-muted">
-              {place.hoursToday ? `Dnes ${place.hoursToday}` : "Hodiny neoverené"}
+              {openNow
+                ? `${openNow.label}${openNow.detail ? ` · ${openNow.detail}` : ""}`
+                : place.hoursToday
+                  ? `Dnes ${place.hoursToday}`
+                  : "Hodiny neoverené"}
             </p>
           </div>
           <button

@@ -1,7 +1,7 @@
 {
   "attribution": "© prispievatelia OpenStreetMap",
   "license": "ODbL 1.0",
-  "generatedAt": "2026-11-23T10:14:33.524Z",
+  "generatedAt": "2026-11-23T14:16:28.265Z",
   "places": {
     "web-minicity-raca": {
       "lat": 48.216991,
@@ -37,15 +37,15 @@
       "kmFromHint": 0.16
     },
     "web-jumpfun-kidshouse": {
-      "lat": 48.175031,
-      "lng": 17.190461,
+      "lat": 48.174952,
+      "lng": 17.19037,
       "query": "Ivanská cesta 30D, Bratislava",
       "osm": {
         "type": "node",
-        "id": 13568303227
+        "id": 6003292829
       },
-      "match": "17730/30D, Ivanská cesta, Topoľová Jama, Bratislava, okres Bratislava II, Bratislava, Bratislavský kraj, 821 04, Slovensko",
-      "kmFromHint": 0.56
+      "match": "Jump Arena, 17730/30D, Ivanská cesta, Topoľová Jama, Bratislava, okres Bratislava II, Bratislava, Bratislavský kraj, 821 04, Slovensko",
+      "kmFromHint": 0.55
     },
     "web-retrokids": {
       "lat": 48.151851,
