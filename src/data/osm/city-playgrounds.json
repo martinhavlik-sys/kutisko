@@ -1,10 +1,10 @@
 {
   "_note": "Detské ihriská z registra športovísk hlavného mesta SR Bratislavy, ktoré chýbajú v OSM. Aplikácia ich zobrazí iba ak je licencia overená (src/data/sources.ts). Generované skriptom scripts/osm/city-crosscheck.mjs.",
   "source": "Hlavné mesto SR Bratislava — register športovísk (geoportal.bratislava.sk)",
-  "generatedAt": "2026-11-23T09:39:38.103Z",
+  "generatedAt": "2026-11-23T09:52:15.245Z",
   "layerUrl": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer/1",
   "metadata": {
-    "checkedAt": "2026-11-23T09:39:32.083Z",
+    "checkedAt": "2026-11-23T09:52:11.759Z",
     "sources": {
       "service": {
         "url": "https://geoportal.bratislava.sk/hsite/rest/services/Hosted/%C5%A0portovisk%C3%A1_v_Bratislave/FeatureServer?f=json"
