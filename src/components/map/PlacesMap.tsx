@@ -34,9 +34,11 @@ interface Props {
   onBackgroundTap?: () => void;
   /** Podklady sa nenačítali — náhľad môže zobraziť vlastnú zálohu. */
   onTilesFailed?: () => void;
+  /** Poloha rodiča (iba ak ju zapol) — modrá bodka a súčasť výrezu mapy. */
+  me?: { lat: number; lng: number } | null;
 }
 
-export function PlacesMap({ places, activeId, onSelect, className, preview = false, onBackgroundTap, onTilesFailed }: Props) {
+export function PlacesMap({ places, activeId, onSelect, className, preview = false, onBackgroundTap, onTilesFailed, me = null }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MlMap | null>(null);
   const markersRef = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
@@ -138,6 +140,48 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
    * spoja do kruhu s počtom (ťuk priblíži). Prekresľuje sa po každom posune/zoome mapy.
    */
   const placesRef = useRef(places);
+  const meRef = useRef(me);
+  const meMarkerRef = useRef<Marker | null>(null);
+  const meLat = me?.lat ?? null;
+  const meLng = me?.lng ?? null;
+
+  // Modrá bodka polohy rodiča (nie je klikateľná, nezhlukuje sa).
+  useEffect(() => {
+    meRef.current = meLat !== null && meLng !== null ? { lat: meLat, lng: meLng } : null;
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    if (meLat === null || meLng === null) {
+      meMarkerRef.current?.remove();
+      meMarkerRef.current = null;
+      return;
+    }
+    if (meMarkerRef.current) {
+      meMarkerRef.current.setLngLat([meLng, meLat]);
+      return;
+    }
+    let alive = true;
+    import("maplibre-gl").then((ml) => {
+      if (!alive || meMarkerRef.current) return;
+      const el = document.createElement("div");
+      el.className = "kut-me";
+      el.style.zIndex = "4";
+      el.setAttribute("role", "img");
+      el.setAttribute("aria-label", "Vaša poloha");
+      el.innerHTML = `<span class="kut-me-halo"></span><span class="kut-me-dot"></span>`;
+      meMarkerRef.current = new ml.Marker({ element: el, anchor: "center" }).setLngLat([meLng, meLat]).addTo(map);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [meLat, meLng, ready]);
+
+  useEffect(
+    () => () => {
+      meMarkerRef.current?.remove();
+      meMarkerRef.current = null;
+    },
+    [inView, preview],
+  );
   const activeRef = useRef(activeId);
   const renderRef = useRef<() => void>(() => {});
 
@@ -236,6 +280,7 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
       if (places.length > 0) {
         const b = new ml.LngLatBounds();
         places.forEach((p) => b.extend([p.lng, p.lat]));
+        if (meRef.current) b.extend([meRef.current.lng, meRef.current.lat]);
         const padding = preview ? { top: 64, bottom: 36, left: 32, right: 32 } : { top: 70, bottom: 170, left: 50, right: 50 };
         map.fitBounds(b, { padding, maxZoom: preview ? 12.5 : 13.5, duration: preview ? 0 : 450 });
       }
@@ -272,6 +317,18 @@ export function PlacesMap({ places, activeId, onSelect, className, preview = fal
         }
       />
       {!ready && <div className="skeleton absolute inset-0" aria-hidden="true" />}
+      {me && ready && !preview && (
+        <button
+          type="button"
+          onClick={() => mapRef.current?.easeTo({ center: [me.lng, me.lat], zoom: Math.max(mapRef.current.getZoom(), 14), duration: 450 })}
+          aria-label="Ukázať moju polohu"
+          className="absolute right-[10px] top-[84px] z-10 flex size-[29px] items-center justify-center rounded-[4px] bg-white text-[#2563eb] shadow-[0_0_0_2px_rgb(0_0_0/0.1)] focus-visible:outline-2 focus-visible:outline-ink"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M20.5 3.5 3.5 10.6l7.2 2.7 2.7 7.2 7.1-17Z" />
+          </svg>
+        </button>
+      )}
       {tilesFailed && !preview && (
         <p role="status" className="absolute left-3 right-14 top-3 rounded-2xl bg-white/95 px-3 py-2 text-[13px] leading-snug text-ink-muted shadow-card">
           Mapové podklady sa nepodarilo načítať. Piny miest fungujú, skúste to neskôr znova.

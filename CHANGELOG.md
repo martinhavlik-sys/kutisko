@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-11-23 — Moja poloha a okruh v km
+**Zmenené**
+- Nový panel „Kde hľadáte?“ (Domov, Hľadať): **Použiť moju polohu** s vysvetlením, ručný výber mesta a **okruh** Bez obmedzenia / 1 / 3 / 5 / 10 / 25 km.
+- S polohou: karty ukazujú „X km od vás“, výsledky sa zoradia od najbližšieho, na mape je modrá bodka a tlačidlo „Ukázať moju polohu“.
+- Pri zamietnutí polohy panel vysvetlí, ako ju na iPhone zapnúť, a počíta od mesta (predvolene centrum Bratislavy). Mimo Bratislavy a okolia (nad 60 km) sa poloha nepoužije.
+- Hľadať: prvý rýchly filter „Moja poloha · do X km“, v Filtroch nová sekcia Vzdialenosť. Prázdny stav pri malom okruhu navrhne väčší okruh.
+- Profil: zapnutie/vypnutie polohy; „Okruh vyhľadávania“ teraz naozaj filtruje výsledky.
+- Súkromie: poloha je iba v pamäti zariadenia, neukladá sa ani neodosiela.
+
+**Otestované**
+- `npm test` (36; nové: poloha v/mimo pilotu, záloha na mesto, okruh vylučuje vzdialenejšie miesta), `lint`, `typecheck`, `build` prešli.
+- Playwright (iPhone 13, Chromium) so simulovanou polohou v Petržalke: povolenie → „Moja poloha“, zoradenie od najbližšieho; okruh 1 km = 34 miest; po obnovení stránky sa poloha zistí sama; modrá bodka na mape; zamietnutá poloha → návod a záloha; poloha v Košiciach → záloha na mesto; šírka 320 px. Bez chýb v konzole.
+
+**Známe obmedzenia**
+- Netestované na fyzickom iPhone (Safari/PWA). Safari v PWA z plochy sa môže na polohu pýtať pri každom spustení, to riadi iOS.
+- Vzdialenosť je vzdušnou čiarou, nie po ceste. Ilustračná záloha mapy (keď sa nenačítajú podklady) je hrubá.
+
 ## 2026-11-23 — Presná poloha herní a kútikov
 **Zmenené**
 - Nová GitHub Action „Poloha herní a kútikov (OSM)“ (schválil Martin) spúšťa `scripts/curated/geocode.mjs` a commitne `src/data/curated/geo.json`. Všetkých 11 herní a kútikov má presnú polohu z OpenStreetMap (adresný bod alebo budova OC), každá do 2 km od pôvodného odhadu. Detail ukazuje GPS s atribúciou OSM a navigácia ide na presné súradnice.

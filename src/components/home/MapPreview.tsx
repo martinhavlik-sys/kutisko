@@ -94,10 +94,12 @@ interface Props {
   onOpenMap?: () => void;
   label?: string;
   loading?: boolean;
+  me?: { lat: number; lng: number } | null;
 }
 
 /** Ilustračná mapa — záloha, keď sa skutočné podklady nenačítajú. */
-function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" }: Props) {
+function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, me, label = "Náhľad mapy" }: Props) {
+  const meXY = me ? project(me.lat, me.lng) : null;
   return (
     <section aria-label={label} className="relative overflow-hidden rounded-[28px] bg-cream-100 shadow-card ring-1 ring-line">
       <div className="relative aspect-[360/260] w-full">
@@ -139,9 +141,18 @@ function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, label 
               </text>
             );
           })}
-          {/* referenčný bod */}
-          <circle cx={center.x} cy={center.y} r="10" fill="var(--color-turquoise-400)" fillOpacity="0.18" />
-          <circle cx={center.x} cy={center.y} r="4" fill="#fff" stroke="var(--color-turquoise-700)" strokeWidth="2" />
+          {/* referenčný bod alebo poloha rodiča */}
+          {meXY ? (
+            <g aria-label="Vaša poloha">
+              <circle cx={meXY.x} cy={meXY.y} r="12" fill="#2563eb" fillOpacity="0.18" />
+              <circle cx={meXY.x} cy={meXY.y} r="5.5" fill="#2563eb" stroke="#fff" strokeWidth="2" />
+            </g>
+          ) : (
+            <>
+              <circle cx={center.x} cy={center.y} r="10" fill="var(--color-turquoise-400)" fillOpacity="0.18" />
+              <circle cx={center.x} cy={center.y} r="4" fill="#fff" stroke="var(--color-turquoise-700)" strokeWidth="2" />
+            </>
+          )}
         </svg>
 
         {!loading &&
@@ -195,7 +206,7 @@ function IllustratedMap({ places, activeId, onSelect, onOpenMap, loading, label 
  * ťuk inde alebo „Celá mapa“ otvorí plnú mapu. Pri chybe podkladov sa ukáže ilustračná mapa.
  */
 export function MapPreview(props: Props) {
-  const { places, activeId, onSelect, onOpenMap, loading, label = "Náhľad mapy" } = props;
+  const { places, activeId, onSelect, onOpenMap, loading, me, label = "Náhľad mapy" } = props;
   const [failed, setFailed] = useState(false);
   if (failed) return <IllustratedMap {...props} />;
 
@@ -209,6 +220,7 @@ export function MapPreview(props: Props) {
           onSelect={(id) => id && onSelect(id)}
           onBackgroundTap={onOpenMap}
           onTilesFailed={() => setFailed(true)}
+          me={me}
           className="h-full w-full cursor-pointer"
         />
         {loading && <div className="skeleton pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />}

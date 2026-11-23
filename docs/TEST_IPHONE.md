@@ -17,6 +17,7 @@ Stav: **pracovný návrh** (2026-11-22). Vychádza z `PROTOTYPE_BRIEF.md` (scen�
 | S3 | „Uložte si toto miesto, nájdite ho medzi obľúbenými a potom ho odstráňte.“ | bez chyby, s jasnou spätnou väzbou | Všimne si srdiečko a počet v spodnom menu? |
 | S4 | „Ohodnoťte miesto, kde ste boli.“ | odošle hodnotenie 1–10 | Rozumie, že ide o DEMO zápis? Sú kritériá zrozumiteľné? |
 | S5 | „Ste v Senci. Chcem vidieť, čo je najbližšie.“ | zmení lokalitu ručne | Nájde „Bratislava a okolie ▾“ na Domove? |
+| S5b | „Chcem ihrisko do 1 km od miesta, kde práve som.“ | ťukne „Použiť moju polohu“, povolí, zvolí 1 km | Rozumie vysvetleniu? Vidí modrú bodku a „od vás“? Skúsiť aj zamietnuť polohu. |
 | S6 | „Vyhľadajte ‚trampolína pod vodou‘.“ | rozumie prázdnemu stavu a vráti sa späť | Použije „Zrušiť filtre“? |
 | S7 | „Pri ktorom mieste nepoznáme cenu alebo hodiny? Ako to na vás pôsobí?“ | „neuvedené“ nepôsobí negatívne | Dôvera v ostatné údaje |
 | S8 | „Navrhnite nové miesto, ale vyplňte len názov ‚a‘ a odošlite.“ | chybová hláška je konkrétna a prívetivá | Vie, čo opraviť? |

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AlertIcon, RefreshIcon } from "./icons";
 
-export function EmptyState({ query, onReset }: { query: string; onReset: () => void }) {
+export function EmptyState({ query, onReset, radiusKm = null }: { query: string; onReset: () => void; radiusKm?: number | null }) {
   return (
     <div className="flex flex-col items-center rounded-[26px] bg-white px-6 py-10 text-center shadow-card ring-1 ring-line">
       <Image src="/illustrations/dieta-lopta.png" alt="" width={681} height={674} className="mb-2 h-auto w-[132px] select-none" />
@@ -14,7 +14,7 @@ export function EmptyState({ query, onReset }: { query: string; onReset: () => v
         ) : (
           "S týmito filtrami nemáme žiadne miesto."
         )}{" "}
-        Skúste iný výraz alebo zrušte filtre.
+        {radiusKm !== null ? `V okruhu ${radiusKm} km nič nie je, skúste väčší okruh alebo zrušte filtre.` : "Skúste iný výraz alebo zrušte filtre."}
       </p>
       <button
         type="button"

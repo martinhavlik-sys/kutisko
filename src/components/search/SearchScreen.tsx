@@ -16,6 +16,9 @@ import { EmptyState } from "@/components/home/States";
 import { ChevronDownIcon, CloseIcon, HeartIcon, MapIcon, SearchIcon, SlidersIcon, StarIcon } from "@/components/home/icons";
 import { PlacesMap } from "@/components/map/PlacesMap";
 import { FilterSheet } from "./FilterSheet";
+import { CityPicker } from "@/components/ui/CityPicker";
+import { LocateIcon, PinIcon } from "@/components/home/icons";
+import { originFor } from "@/lib/origin";
 
 function ListIcon() {
   return (
@@ -28,7 +31,9 @@ function ListIcon() {
 export function SearchScreen() {
   const { state, filters, update, reset, advancedCount } = useUrlFilters();
   const saved = useSaved();
-  const { prefs } = usePreferences();
+  const { prefs, set: setPrefs } = usePreferences();
+  const maxKm = prefs.maxDistanceKm;
+  const [placeOpen, setPlaceOpen] = useState(false);
   const prefAge = AGE_BANDS.find((b) => b.id === prefs.ageId) ?? null;
   const { message, show } = useToast();
   const [draftQuery, setDraftQuery] = useState(state.query);
@@ -44,9 +49,9 @@ export function SearchScreen() {
   }, [draftQuery, state.query, update]);
 
   const origin = useOrigin();
-  const results = useMemo(() => filterAndSort(PLACES, filters, origin), [filters, origin]);
+  const results = useMemo(() => filterAndSort(PLACES, { ...filters, maxKm }, origin), [filters, origin, maxKm]);
   const active = results.find((p) => p.id === activeId) ?? null;
-  const hasAny = state.query.trim() !== "" || state.category !== null || state.ageId !== null || advancedCount > 0;
+  const hasAny = state.query.trim() !== "" || state.category !== null || state.ageId !== null || advancedCount > 0 || maxKm !== null;
 
   const toggleSave = (id: string) => {
     const now = saved.toggle(id);
@@ -56,6 +61,7 @@ export function SearchScreen() {
   const clearAll = () => {
     setDraftQuery("");
     reset();
+    if (maxKm !== null) setPrefs({ maxDistanceKm: null });
   };
 
   const quickChips: { key: string; label: string; active: boolean; onClick: () => void }[] = [
@@ -86,7 +92,9 @@ export function SearchScreen() {
   ];
 
   const isMap = state.view === "map";
-  const filterBadge = advancedCount + (state.category ? 1 : 0) + (state.ageId ? 1 : 0);
+  const filterBadge = advancedCount + (state.category ? 1 : 0) + (state.ageId ? 1 : 0) + (maxKm !== null ? 1 : 0);
+  const placeChipActive = origin.kind === "gps" || maxKm !== null;
+  const placeChipLabel = `${origin.kind === "gps" ? "Moja poloha" : origin.city}${maxKm !== null ? ` · do ${maxKm} km` : ""}`;
 
   return (
     <div className={isMap ? "flex h-dvh flex-col overflow-hidden" : ""}>
@@ -151,6 +159,19 @@ export function SearchScreen() {
           </div>
 
           <div role="group" aria-label="Rýchle filtre" className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <button
+              type="button"
+              onClick={() => setPlaceOpen(true)}
+              aria-haspopup="dialog"
+              aria-label={`Poloha a okruh: ${placeChipLabel}. Zmeniť`}
+              className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[13.5px] font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
+                placeChipActive ? "bg-ink text-white" : "bg-white text-ink ring-1 ring-line hover:ring-ink-subtle"
+              }`}
+            >
+              {origin.kind === "gps" ? <LocateIcon size={14} /> : <PinIcon size={15} />}
+              {placeChipLabel}
+              <ChevronDownIcon size={14} />
+            </button>
             {quickChips.map((c) => (
               <button
                 key={c.key}
@@ -241,7 +262,7 @@ export function SearchScreen() {
 
       {isMap ? (
         <div className="relative flex-1 pb-[calc(58px+env(safe-area-inset-bottom))]">
-          <PlacesMap places={results} activeId={activeId} onSelect={setActiveId} className="h-full w-full" />
+          <PlacesMap places={results} activeId={activeId} onSelect={setActiveId} className="h-full w-full" me={origin.kind === "gps" ? origin : null} />
           <div className="pointer-events-none absolute inset-x-0 bottom-[calc(70px+env(safe-area-inset-bottom))] z-10 flex justify-center px-4">
             {active ? (
               <div className="pointer-events-auto relative flex w-full max-w-md items-center gap-3 rounded-[22px] bg-white p-2.5 pr-3 shadow-float ring-1 ring-line">
@@ -256,7 +277,7 @@ export function SearchScreen() {
                     {active.name}
                   </Link>
                   <p className="truncate text-[13px] text-ink-muted">
-                    {active.area} · {formatDistance(distanceKm(origin, active))} · {formatPrice(active.price)}
+                    {active.area} · {formatDistance(distanceKm(origin, active))} {origin.from} · {formatPrice(active.price)}
                   </p>
                   <p className="mt-0.5 inline-flex items-center gap-1 text-[13px] font-semibold text-amber-700">
                     {active.score !== null ? (
@@ -291,7 +312,7 @@ export function SearchScreen() {
       ) : (
         <main id="vysledky" className="mx-auto max-w-3xl px-4 pb-32 pt-4 sm:px-8">
           {results.length === 0 ? (
-            <EmptyState query={state.query.trim()} onReset={clearAll} />
+            <EmptyState query={state.query.trim()} onReset={clearAll} radiusKm={maxKm} />
           ) : (
             <PlaceList places={results} savedHas={saved.has} onToggleSave={toggleSave} />
           )}
@@ -306,6 +327,18 @@ export function SearchScreen() {
         onApply={(d) => {
           setSheetOpen(false);
           update(d);
+        }}
+      />
+      <CityPicker
+        open={placeOpen}
+        onClose={() => setPlaceOpen(false)}
+        onPicked={(c) => show(`Vzdialenosti počítame od centra ${originFor(c).of}`)}
+        onLocated={(status) => {
+          if (status === "on") {
+            update({ sort: "distance" });
+            setPlaceOpen(false);
+            show("Zoraďujeme od najbližšieho k vám");
+          } else if (status === "outside") show(`Ste mimo pilotnej oblasti, počítame od centra ${origin.of}`);
         }}
       />
       <Toast message={message} />

@@ -142,3 +142,9 @@ export const CategoryIhriskoIcon = (p: IconProps) => (
     <path d="M17 6v8M15.5 14h3" />
   </Base>
 );
+/** Navigačná šípka — „Moja poloha“. */
+export const LocateIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M20.5 3.5 3.5 10.6l7.2 2.7 2.7 7.2 7.1-17Z" />
+  </Base>
+);
