@@ -10,6 +10,7 @@ import {
   seedAdminDemo,
   useAudit,
   useMyReviews,
+  usePhotoUploads,
   useReports,
   useSuggestions,
   type ModerationStatus,
@@ -69,19 +70,22 @@ export function AdminScreen() {
   const [reports, setReports] = useReports();
   const [reviews, setReviews] = useMyReviews();
   const [audit] = useAudit();
+  const [uploads, setUploads] = usePhotoUploads();
 
   useEffect(() => {
     seedAdminDemo();
   }, []);
 
   const photos = [
+    ...uploads.map((u) => ({ key: `p:${u.id}`, title: placeName(u.placeId), src: u.photo.dataUrl, status: u.photo.status, source: "Galéria miesta" })),
     ...suggestions.filter((s) => s.photo).map((s) => ({ key: `s:${s.id}`, title: s.name, src: s.photo!.dataUrl, status: s.photo!.status, source: "Návrh miesta" })),
     ...reviews.filter((r) => r.photo).map((r) => ({ key: `r:${r.id}`, title: placeName(r.placeId), src: r.photo!.dataUrl, status: r.photo!.status, source: "Hodnotenie" })),
   ];
 
   const setPhotoStatus = (key: string, status: ModerationStatus) => {
     const [kind, id] = key.split(":");
-    if (kind === "s") setSuggestions((all) => all.map((s) => (s.id === id && s.photo ? { ...s, photo: { ...s.photo, status } } : s)));
+    if (kind === "p") setUploads((all) => all.map((u) => (u.id === id ? { ...u, photo: { ...u.photo, status } } : u)));
+    else if (kind === "s") setSuggestions((all) => all.map((s) => (s.id === id && s.photo ? { ...s, photo: { ...s.photo, status } } : s)));
     else setReviews((all) => all.map((r) => (r.id === id && r.photo ? { ...r, photo: { ...r.photo, status } } : r)));
   };
 
@@ -193,7 +197,7 @@ export function AdminScreen() {
 
         {tab === "photos" &&
           (photos.length === 0 ? (
-            <Empty text="Žiadne fotky na kontrolu. Fotku pridáte pri hodnotení alebo návrhu miesta." />
+            <Empty text="Žiadne fotky na kontrolu. Fotku pridáte v galérii miesta, pri hodnotení alebo návrhu miesta." />
           ) : (
             <ul className="grid gap-3 sm:grid-cols-2">
               {photos.map((p) => (

@@ -121,7 +121,10 @@ export function PhotoPicker({
   consent,
   onConsent,
   consentError,
+  compact,
 }: {
+  /** V dialógu „Pridať fotku“ je fotka povinná a pravidlá sú uvedené inde — bez nadpisu. */
+  compact?: boolean;
   value: string | null;
   onChange: (dataUrl: string | null) => void;
   consent: boolean;
@@ -135,12 +138,16 @@ export function PhotoPicker({
 
   return (
     <div>
-      <p className="text-[15px] font-semibold text-ink">
-        Fotografia <span className="ml-1 text-[13px] font-normal text-ink-muted">nepovinné</span>
-      </p>
-      <p className="mt-0.5 text-[13px] leading-relaxed text-ink-muted">
-        Pred zverejnením ju skontroluje administrátor. Polohu a ďalšie údaje z fotky odstránime.
-      </p>
+      {!compact && (
+        <>
+          <p className="text-[15px] font-semibold text-ink">
+            Fotografia <span className="ml-1 text-[13px] font-normal text-ink-muted">nepovinné</span>
+          </p>
+          <p className="mt-0.5 text-[13px] leading-relaxed text-ink-muted">
+            Pred zverejnením ju skontroluje administrátor. Polohu a ďalšie údaje z fotky odstránime.
+          </p>
+        </>
+      )}
       <input
         ref={inputRef}
         id={id}
@@ -176,7 +183,7 @@ export function PhotoPicker({
       ) : (
         <label
           htmlFor={id}
-          className="mt-3 flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-line bg-white text-[14px] font-semibold text-ink transition hover:border-ink-subtle focus-within:outline-2 focus-within:outline-ink"
+          className="mt-3 flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-line bg-white text-[14px] font-semibold text-ink transition hover:border-ink-subtle focus-within:outline-2 focus-within:outline-ink"
         >
           {busy ? "Spracúvam fotku…" : "+ Pridať fotku"}
           <span className="mt-0.5 text-[12.5px] font-normal text-ink-muted">JPG alebo PNG, najviac 15 MB</span>

@@ -61,6 +61,16 @@ const suggestions = createDemoStore<Suggestion[]>("kutisko.demo.suggestions", []
 const reports = createDemoStore<Report[]>("kutisko.demo.reports", []);
 const audit = createDemoStore<AuditEntry[]>("kutisko.demo.audit", []);
 
+/** Fotka pridaná priamo k miestu (tlačidlo „Pridať fotku“ v galérii). */
+export interface PlacePhotoUpload {
+  id: string;
+  placeId: string;
+  photo: DemoPhoto;
+  createdAt: string;
+}
+const photoUploads = createDemoStore<PlacePhotoUpload[]>("kutisko.demo.photos", []);
+export const usePhotoUploads = photoUploads.useStore;
+
 export const useMyReviews = reviews.useStore;
 export const useSuggestions = suggestions.useStore;
 export const useReports = reports.useStore;
@@ -89,7 +99,14 @@ export function addReport(r: Pick<Report, "placeId" | "reason" | "note">) {
   return next;
 }
 
+export function addPhotoUpload(placeId: string, dataUrl: string) {
+  const next: PlacePhotoUpload = { id: demoId("p"), placeId, photo: { dataUrl, status: "pending" }, createdAt: new Date().toISOString() };
+  photoUploads.write([next, ...photoUploads.read()]);
+  return next;
+}
+
 export function resetCommunityDemo() {
+  photoUploads.write([]);
   reviews.write([]);
   suggestions.write([]);
   reports.write([]);
