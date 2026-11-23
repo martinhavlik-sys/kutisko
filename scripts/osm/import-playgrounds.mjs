@@ -34,9 +34,11 @@ const QUERIES = {
   features: `[out:json][timeout:240];${SK}(nwr["playground"](${bb})(area.sk);node["amenity"~"^(bench|drinking_water|toilets|shelter)$"](${bb})(area.sk););out center;`,
   parks: `[out:json][timeout:240];${SK}nwr["leisure"="park"]["name"](${bb})(area.sk);out geom;`,
   admin: `[out:json][timeout:240];rel["boundary"="administrative"]["admin_level"~"^(8|9|10)$"](${bb});out geom;`,
-  // Pomenované ulice do 150 m od ihrísk — na čitateľné názvy ihrísk bez vlastného mena
+  // Pomenované ulice do 300 m od ihrísk — na čitateľné názvy ihrísk bez vlastného mena
   // (len okolie ihrísk, nie celý región, aby dopyt ostal malý).
-  streets: `[out:json][timeout:240];${SK}nwr["leisure"="playground"](${bb})(area.sk)->.p;way(around.p:150)["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service)$"]["name"];out tags geom;`,
+  streets: `[out:json][timeout:240];${SK}nwr["leisure"="playground"](${bb})(area.sk)->.p;way(around.p:300)["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service)$"]["name"];out tags geom;`,
+  // Pomenované štvrte a lokality (napr. „Dlhé diely“) — záloha pre ihriská ďaleko od ulíc.
+  places: `[out:json][timeout:240];${SK}node["place"~"^(neighbourhood|quarter|suburb|hamlet)$"]["name"](${bb})(area.sk);out;`,
 };
 
 async function overpass(name, query) {
@@ -70,7 +72,7 @@ async function overpass(name, query) {
 
 if (rawDir) await mkdir(rawDir, { recursive: true });
 const results = {};
-const OPTIONAL = new Set(["streets"]); // bez ulíc import prejde, ihriská bez mena dostanú názov podľa mestskej časti
+const OPTIONAL = new Set(["streets", "places"]); // bez ulíc import prejde, ihriská bez mena dostanú názov podľa mestskej časti
 for (const [name, q] of Object.entries(QUERIES)) {
   try {
     results[name] = await overpass(name, q);
@@ -87,6 +89,7 @@ const places = buildPlaces({
   parkEls: results.parks.elements,
   adminEls: results.admin.elements,
   streetEls: results.streets.elements,
+  placeEls: results.places.elements,
 });
 
 // Prehľad kvality dát do logu (a do súboru).
@@ -98,7 +101,7 @@ const stats = {
   rawPlaygrounds: results.playgrounds.elements.length,
   streets: results.streets.elements.length,
   named: count((p) => p.named),
-  nameSources: Object.fromEntries(["osm", "park", "street", "area", "none"].map((k) => [k, count((p) => p.nameSource === k)])),
+  nameSources: Object.fromEntries(["osm", "park", "street", "place", "area", "none"].map((k) => [k, count((p) => p.nameSource === k)])),
   duplicateNames: Object.values(places.reduce((m, p) => ((m[p.name] = (m[p.name] ?? 0) + 1), m), {})).filter((n) => n > 1).reduce((a, n) => a + n, 0),
   withEquipment: count((p) => p.amenities.length > 0),
   withAge: count((p) => p.ageMin !== null || p.ageMax !== null),
