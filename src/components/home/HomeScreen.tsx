@@ -22,6 +22,10 @@ import { MapPreview } from "./MapPreview";
 import { PlaceCardSkeleton } from "./PlaceCard";
 import { PlaceList } from "./PlaceList";
 import { EmptyState, ErrorState } from "./States";
+import { PROMO_PLACES } from "@/data/promoDemo";
+import { pickSponsored } from "@/lib/promo";
+import { usePromoDemo } from "@/lib/promoDemo";
+import { EventsRail, SponsoredCard } from "@/components/promo/PromoParts";
 
 type LoadState = "loading" | "ready" | "error";
 
@@ -70,6 +74,17 @@ export function HomeScreen() {
     const band = AGE_BANDS.find((b) => b.id === ageId) ?? null;
     return filterAndSort(PLACES, { query, category, ageBand: band, sort, maxKm }, origin);
   }, [query, category, ageId, sort, origin, maxKm]);
+
+  // UKÁŽKA monetizácie (docs/MONETIZACIA.md): najviac 1 sponzorované miesto, len ak zodpovedá filtrom.
+  const promo = usePromoDemo();
+  const sponsored = useMemo(
+    () => (promo.on ? pickSponsored(PROMO_PLACES, { category, ageBand: AGE_BANDS.find((b) => b.id === ageId) ?? null, query }) : []),
+    [promo.on, category, ageId, query],
+  );
+  const hidePromo = () => {
+    promo.setOn(false);
+    showToast("Ukážka je skrytá. Zapnete ju v Profile.");
+  };
 
   const hasFilters = query.trim() !== "" || category !== null || ageId !== null || maxKm !== null;
 
@@ -252,6 +267,8 @@ export function HomeScreen() {
             />
           </div>
 
+          {state === "ready" && <EventsRail category={category} onHide={hidePromo} />}
+
           <section id="vysledky" aria-labelledby="results-title" className="mt-8 scroll-mt-4">
             <div className="flex items-end justify-between gap-3">
               <div>
@@ -301,6 +318,13 @@ export function HomeScreen() {
               )}
               {state === "error" && <ErrorState onRetry={retry} />}
               {state === "ready" && results.length === 0 && <EmptyState query={query.trim()} onReset={resetFilters} radiusKm={maxKm} />}
+              {state === "ready" && results.length > 0 && sponsored.length > 0 && (
+                <div className="mb-4 grid gap-4 sm:grid-cols-2">
+                  {sponsored.map((p) => (
+                    <SponsoredCard key={p.id} place={p} />
+                  ))}
+                </div>
+              )}
               {state === "ready" && results.length > 0 && (
                 <PlaceList
                   places={results}
@@ -326,6 +350,7 @@ export function HomeScreen() {
                 © prispievatelia OpenStreetMap
               </a>
               ; herne a kútiky sme overili na weboch prevádzok. Hodnotenia rodičov zatiaľ nie sú.
+              {promo.on && " Sponzorované miesto a akcie sú len vymyslená ukážka nápadu."}
               <br />
               {origin.kind === "gps"
                 ? "Vzdialenosť počítame od vašej polohy. Poloha ostáva len v tomto zariadení, neukladáme ju."

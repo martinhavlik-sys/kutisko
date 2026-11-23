@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Toast, useToast } from "@/components/ui/Toast";
 import { CheckBadgeIcon, ChevronDownIcon, HeartIcon, PinIcon, StarIcon, UserIcon } from "@/components/home/icons";
 import Link from "next/link";
+import { PromoToggle } from "@/components/promo/PromoParts";
 
 function ChevronRight() {
   return (
@@ -227,6 +228,17 @@ export function ProfileScreen() {
                 </button>
               </div>
             </div>
+          </section>
+
+          {/* Ukážka nápadu na monetizáciu (docs/MONETIZACIA.md) */}
+          <section aria-label="Ukážky nápadov" className="rounded-[26px] bg-white p-5 ring-1 ring-line">
+            <PromoToggle onChange={(on) => show(on ? "Ukážka zapnutá, nájdete ju na Domove" : "Ukážka vypnutá")} />
+            <Link
+              href="/pre-prevadzky"
+              className="mt-3 inline-flex min-h-11 items-center text-[14px] font-semibold text-coral-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ink"
+            >
+              Ako by to videli prevádzky
+            </Link>
           </section>
 
           {/* Ďalšie */}
