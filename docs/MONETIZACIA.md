@@ -13,8 +13,8 @@
   posúvajú s dneškom). Každá má štítok „Ukážka“. Tlačidlo „Skryť ukážku“ všetko skryje.
 - **Stránka „Pre prevádzky“ (`/pre-prevadzky`):** čo uvidia rodičia, návrh zásad, zoznam akcií a ukážkový
   formulár „Pridať akciu“ (názov, deň do 14 dní, čas, poznámka). Uloží sa len v prehliadači.
-- **Jeden prepínač:** Profil → „Ukážka: sponzorované miesta a akcie“. Predvolene **zapnuté** (aby ukážka bola
-  vidieť). Pre všetkých sa vypne zmenou `PROMO_DEMO_DEFAULT_ON` na `false` v `src/lib/promoDemo.ts`.
+- **Jeden prepínač:** Profil → „Ukážka: sponzorované miesta a akcie“. Od 23.11. predvolene **vypnuté** (pred testom s rodičmi,
+  rozhodnutie Martina); zapne sa v Profile. Predvolenú hodnotu určuje `PROMO_DEMO_DEFAULT_ON` v `src/lib/promoDemo.ts`.
 
 Žiadne platby, žiadny server, žiadne skutočné akcie reálnych herní.
 
@@ -36,7 +36,7 @@
 - **Cenník:** pilotná cena / prvé mesiace zadarmo pre prvé herne v Bratislave?
 - **Kto môže pridávať akcie:** len overené prevádzky s účtom (účty prevádzok sú dnes mimo MVP).
 - **Kde všade:** len Domov, alebo aj Hľadať a detail miesta?
-- **Ukážka pri teste s rodičmi:** nechať zapnutú, alebo pred testom vypnúť, aby neovplyvnila odpovede?
+- ~~**Ukážka pri teste s rodičmi:** nechať zapnutú, alebo pred testom vypnúť?~~ Rozhodnuté 23.11.: vypnúť.
 
 ## Technické poznámky
 
