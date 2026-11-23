@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-23 — Profil: tlačidlo „Vytvoriť účet“ sa už nezalamuje
+**Zmenené**
+- Pri odhlásenom profile boli „Vytvoriť účet“ a „Prihlásiť sa“ vedľa seba aj na úzkych telefónoch a text sa zalomil na dva riadky. Pod 380 px sú teraz pod sebou, širšie displeje ich majú vedľa seba bez zalomenia.
+
+**Otestované**
+- `lint`, `build`; Playwright (Chromium) pri šírkach 320, 360, 379, 380, 390, 412 a 768 px: obe tlačidlá majú výšku 48 px (jeden riadok), text nepreteká.
+
+**Známe obmedzenia**
+- Pri zväčšenom systémovom písme v telefóne môžu byť tlačidlá vedľa seba tesné (od 380 px).
+
 ## 2026-11-23 — Nové logo a ikona aplikácie (kocky)
 **Zmenené**
 - **Logo KUTISKO (variant G, vybral Martin):** slovo „kutisko“ písmom aplikácie (Plus Jakarta Sans Bold, koralové), písmeno „i“ tvoria 3 farebné kocky (tyrkys, amber, zelená) a štvrtá kocka (fialovomodrá) sa vznáša ako bodka. Nahrádza dočasný textový wordmark v hlavičke Domov, na uvítaní a pri prihlásení/registrácii (komponent `Logo`). Tmavá verzia s bielym písmom je pripravená v `public/brand/`.
