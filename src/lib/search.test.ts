@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { DEMO_PLACES, PLACES, REFERENCE_POINT, type Place } from "../data/places.ts";
+import { CURATED_PLACES, PLACES, REFERENCE_POINT, type Place } from "../data/places.ts";
+import { DEMO_PLACES } from "../data/demoFixtures.ts";
 import { amenityOptions, filterAndSort, formatAge, formatDistance, matchesQuery, normalize, placesLabel, type Filters } from "./search.ts";
 
 const base: Filters = { query: "", category: null, ageBand: null, sort: "recommended" };
@@ -41,12 +42,32 @@ test("skutočné ihriská z OSM: zdroj, kategória, poloha v pilotnej oblasti, u
   }
 });
 
+test("herne a kútiky: skutočné, overené na webe prevádzky, bez vymyslených hodnotení", () => {
+  assert.ok(CURATED_PLACES.length >= 8);
+  assert.ok(!PLACES.some((p) => p.isDemo), "v aplikácii nie sú DEMO miesta");
+  for (const p of CURATED_PLACES) {
+    assert.equal(p.source, "web");
+    assert.ok(p.id.startsWith("web-"));
+    assert.ok(p.category === "kutik" || p.category === "herna");
+    assert.equal(p.score, null);
+    assert.equal(p.reviewCount, 0);
+    assert.ok(p.indoor);
+    assert.ok(p.web && p.web.sources.length > 0 && p.web.sources.every((u) => u.startsWith("https://")));
+    assert.ok(p.web.website.startsWith("https://"));
+    assert.ok(!p.web.sources.some((u) => /google\./.test(u)), "žiadne údaje z Google");
+    assert.match(p.web.checkedAt, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(p.lat > 47.9 && p.lat < 48.5 && p.lng > 16.8 && p.lng < 17.5, p.id);
+    if (p.ageMin !== null && p.ageMax !== null) assert.ok(p.ageMin <= p.ageMax);
+  }
+});
+
 test("normalize odstráni diakritiku", () => {
   assert.equal(normalize("  Kútik Ružinov "), "kutik ruzinov");
 });
 
 test("vyhľadávanie bez diakritiky a podľa časti/vybavenia", () => {
-  assert.ok(matchesQuery(PLACES[0], "mravenisko"));
+  assert.ok(matchesQuery(DEMO_PLACES[0], "mravenisko"));
+  assert.ok(PLACES.some((p) => matchesQuery(p, "eurovea")));
   assert.equal(run({ query: "ruzinov" }).length, 1);
   assert.ok(run({ query: "kaviaren" }).length >= 3);
   assert.equal(run({ query: "neexistuje xyz" }).length, 0);

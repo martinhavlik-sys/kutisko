@@ -10,11 +10,14 @@ export interface NavTarget {
   lat: number;
   lng: number;
   name: string;
+  /** Ak je poloha len približná, navigácia ide na adresu (presnejšie ako odhadnutý bod). */
+  address?: string;
 }
 
 const coord = (n: number) => n.toFixed(6);
 
 export function navigationUrl(provider: NavProvider, t: NavTarget): string {
+  if (t.address) return addressUrl(provider, t.address);
   const ll = `${coord(t.lat)},${coord(t.lng)}`;
   switch (provider) {
     case "apple": {
@@ -30,6 +33,22 @@ export function navigationUrl(provider: NavProvider, t: NavTarget): string {
       return `https://waze.com/ul?${q.toString()}`;
     }
   }
+}
+
+function addressUrl(provider: NavProvider, address: string): string {
+  switch (provider) {
+    case "apple":
+      return `https://maps.apple.com/?${new URLSearchParams({ daddr: address, dirflg: "d" }).toString()}`;
+    case "google":
+      return `https://www.google.com/maps/dir/?${new URLSearchParams({ api: "1", destination: address, travelmode: "driving" }).toString()}`;
+    case "waze":
+      return `https://waze.com/ul?${new URLSearchParams({ q: address, navigate: "yes" }).toString()}`;
+  }
+}
+
+/** Cieľ navigácie pre miesto: pri približnej polohe adresa, inak GPS. */
+export function navTargetOf(p: { lat: number; lng: number; name: string; web?: { address: string; approxPosition: boolean } }): NavTarget {
+  return { lat: p.lat, lng: p.lng, name: p.name, ...(p.web?.approxPosition ? { address: p.web.address } : {}) };
 }
 
 export const NAV_PROVIDERS: { id: NavProvider; label: string }[] = [

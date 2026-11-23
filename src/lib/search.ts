@@ -132,10 +132,18 @@ export function formatPrice(price: Price): string {
     case "free":
       return "Zadarmo";
     case "from":
-      return `od ${price.amount} €`;
+      return `od ${String(price.amount).replace(".", ",")} €`;
+    case "purchase":
+      return "Vstup pri konzumácii";
     default:
       return "Cena neoverená";
   }
+}
+
+/** ISO dátum → „22. 11. 2026“. */
+export function formatDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d}. ${m}. ${y}`;
 }
 
 export function formatAge(min: number | null, max: number | null): string {

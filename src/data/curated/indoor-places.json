@@ -1,0 +1,463 @@
+{
+  "_comment": "Ručne zostavený zoznam skutočných vnútorných herní a detských kútikov. Fakty (názov, adresa, hodiny, cena, vek, vybavenie) sú prevzaté z webu prevádzky alebo obchodného centra uvedeného v `sources` a overené k dátumu `checkedAt`. Popisy sú vlastné, nie kopírované. Žiadne údaje z Google. Polohu dopĺňa scripts/curated/geocode.mjs z OpenStreetMap (Nominatim, ODbL). Pole null = prevádzka údaj na webe neuvádza. `geocode.near` je približná poloha (overená len pri OC: Wikipédia, resp. ihrisko Bupi v OSM); používa sa, kým geo.json nemá presnú polohu.",
+  "checkedAt": "2026-11-22",
+  "places": [
+    {
+      "id": "web-minicity-raca",
+      "name": "MINI CITY",
+      "category": "herna",
+      "area": "Rača",
+      "address": "Pri Vinohradoch 269/A, Bratislava-Rača",
+      "geocode": {
+        "queries": [
+          "Pri Vinohradoch 269, Bratislava",
+          "Pri Vinohradoch, Rača, Bratislava"
+        ],
+        "near": [
+          48.205,
+          17.15
+        ]
+      },
+      "ageMin": 1,
+      "ageMax": 10,
+      "price": {
+        "kind": "from",
+        "amount": 6
+      },
+      "priceNote": "6 € za každú začatú hodinu na dieťa od 12 mesiacov; permanentka 10 hodín za 50 €.",
+      "hoursWeek": [
+        {
+          "days": "Po – Ne",
+          "hours": "9:00 – 19:00"
+        }
+      ],
+      "amenities": [
+        "trampolína",
+        "šmykľavky",
+        "bazén s loptičkami",
+        "kaviareň",
+        "oslavy",
+        "parkovanie"
+      ],
+      "description": "Detská herňa v Rači s hracími domčekmi na hranie rolí, trampolínou a šmykľavkami. Rodičia môžu počkať v kaviarni. Vlastné jedlo a pitie sa podľa prevádzky nosiť nesmie.",
+      "website": "https://minicity.sk/",
+      "sources": [
+        "https://minicity.sk/"
+      ]
+    },
+    {
+      "id": "web-simba-petrzalka",
+      "name": "Simba Centrum",
+      "category": "herna",
+      "area": "Petržalka",
+      "address": "Zuzany Chalupovej 5, 851 07 Bratislava",
+      "geocode": {
+        "queries": [
+          "Zuzany Chalupovej 5, Bratislava",
+          "Zuzany Chalupovej, Petržalka, Bratislava"
+        ],
+        "near": [
+          48.11,
+          17.11
+        ]
+      },
+      "ageMin": 3,
+      "ageMax": 12,
+      "price": {
+        "kind": "from",
+        "amount": 3.9
+      },
+      "priceNote": "Vnútorné ihrisko Jungle park 3,90 € za hodinu, trampolíny 7,90 € za hodinu, kombinovaný vstup 9,90 € za hodinu. Web neuvádza, či ide o detské ceny.",
+      "hoursWeek": [
+        {
+          "days": "Po – Ne",
+          "hours": "8:00 – 20:00"
+        }
+      ],
+      "amenities": [
+        "trampolíny",
+        "ninja dráha",
+        "bazén s loptičkami",
+        "zóna pre batoľatá",
+        "reštaurácia",
+        "oslavy"
+      ],
+      "description": "Športovo-zábavné centrum v Petržalke. Má vnútorné ihrisko s preliezkami a tunelmi pre deti od 3 do 12 rokov, samostatnú zónu pre menšie deti, trampolínový park a soľný bazén.",
+      "website": "https://www.simbacentrum.sk/",
+      "sources": [
+        "https://www.simbacentrum.sk/",
+        "https://www.simbacentrum.sk/cennik/",
+        "https://www.simbacentrum.sk/jungle-park/"
+      ]
+    },
+    {
+      "id": "web-jumpfun-nivy",
+      "name": "Jump Fun Nivy",
+      "category": "herna",
+      "area": "Ružinov",
+      "address": "Mlynské nivy 5A, 821 09 Bratislava (OC Nivy)",
+      "geocode": {
+        "queries": [
+          "Nivy, Mlynské nivy, Bratislava",
+          "Mlynské nivy 5, Bratislava"
+        ],
+        "near": [
+          48.146,
+          17.127
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "from",
+        "amount": 10.9
+      },
+      "priceNote": "Vstup na 60 minút 10,90 €; deti do 3 rokov polovičná cena. Deti do 7 rokov len so sprievodom dospelého, ktorý platí polovicu. Na trampolíny treba protišmykové ponožky.",
+      "hoursWeek": [
+        {
+          "days": "Po – Št",
+          "hours": "11:00 – 20:00"
+        },
+        {
+          "days": "Pi",
+          "hours": "11:00 – 21:00"
+        },
+        {
+          "days": "So – Ne a sviatky",
+          "hours": "9:00 – 21:00"
+        }
+      ],
+      "amenities": [
+        "trampolíny",
+        "laser game",
+        "reštaurácia",
+        "oslavy"
+      ],
+      "description": "Trampolínové a zábavné centrum v obchodnom centre Nivy. Vhodné skôr pre väčšie deti; menšie deti potrebujú sprievod dospelého priamo na ploche.",
+      "website": "https://www.jumpfun.sk/nivy",
+      "sources": [
+        "https://www.jumpfun.sk/nivy",
+        "https://www.jumpfun.sk/cennik"
+      ]
+    },
+    {
+      "id": "web-jumpfun-kidshouse",
+      "name": "Jump Fun KidsHouse (pri letisku)",
+      "category": "herna",
+      "area": "Ružinov",
+      "address": "Ivanská cesta 30/D, 821 04 Bratislava",
+      "geocode": {
+        "queries": [
+          "Ivanská cesta 30D, Bratislava",
+          "Ivanská cesta 30, Bratislava"
+        ],
+        "near": [
+          48.17,
+          17.19
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "from",
+        "amount": 5.9
+      },
+      "priceNote": "Od 5,90 € za hodinu. Web neuvádza, či ide o cenu pre dieťa.",
+      "hoursWeek": [
+        {
+          "days": "Pracovné dni",
+          "hours": "14:00 – 20:00"
+        },
+        {
+          "days": "Víkendy, sviatky a prázdniny",
+          "hours": "9:00 – 20:00"
+        }
+      ],
+      "amenities": [
+        "preliezky",
+        "šmykľavky",
+        "trampolíny",
+        "zóna pre batoľatá",
+        "ihrisko na loptové hry",
+        "oslavy"
+      ],
+      "description": "Veľká rodinná herňa (asi 1 800 m²) pri letisku s preliezkami, dlhou šmykľavkou, malými trampolínami a ihriskom na loptové hry. Najmenšie deti majú vlastnú zónu.",
+      "website": "https://www.jumpfun.sk/kidshouse",
+      "sources": [
+        "https://www.jumpfun.sk/kidshouse"
+      ]
+    },
+    {
+      "id": "web-retrokids",
+      "name": "RETRO Kids",
+      "category": "herna",
+      "area": "Ružinov",
+      "address": "OC RETRO, Nevädzová 6, 821 01 Bratislava",
+      "geocode": {
+        "queries": [
+          "Nevädzová 6, Bratislava",
+          "Retro, Nevädzová, Bratislava"
+        ],
+        "near": [
+          48.158,
+          17.143
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "from",
+        "amount": 4
+      },
+      "priceNote": "Cez pracovné dni 9:00 – 12:00 4 € za 3 hodiny, inak 4 € za hodinu na dieťa. Jeden sprievod zadarmo.",
+      "hoursWeek": [
+        {
+          "days": "Po – Ne a sviatky",
+          "hours": "9:00 – 20:00"
+        }
+      ],
+      "amenities": [
+        "trampolína",
+        "autodráha",
+        "bazén s loptičkami",
+        "šmykľavky",
+        "kaviareň",
+        "oslavy",
+        "tvorivé dielne"
+      ],
+      "description": "Detské centrum v obchodnom centre RETRO s hernými zónami, autodráhou a kaviarňou. Okrem voľnej hry ponúka tvorivé dielne, divadielka a krúžky.",
+      "website": "https://retrokids.sk/",
+      "sources": [
+        "https://retrokids.sk/cennik/",
+        "https://retrokids.sk/kontakt/",
+        "https://retrokids.sk/o-nas/"
+      ]
+    },
+    {
+      "id": "web-inspiro-ivanka",
+      "name": "INSPIRO Park oddychu",
+      "category": "kutik",
+      "area": "Ivanka pri Dunaji",
+      "address": "Nádražná 36, 900 28 Ivanka pri Dunaji",
+      "geocode": {
+        "queries": [
+          "Nádražná 36, Ivanka pri Dunaji",
+          "Nádražná, Ivanka pri Dunaji"
+        ],
+        "near": [
+          48.187,
+          17.255
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "purchase"
+      },
+      "priceNote": "Herne sú pre hostí kaviarne bez vstupného.",
+      "hoursWeek": [
+        {
+          "days": "Po – Ne",
+          "hours": "9:00 – 20:00"
+        }
+      ],
+      "amenities": [
+        "kaviareň",
+        "vonkajšie ihrisko",
+        "oslavy",
+        "parkovanie zadarmo"
+      ],
+      "description": "Rodinná kaviareň s vnútornou aj vonkajšou hracou plochou. Herne sú otvorené počas otváracích hodín kaviarne.",
+      "website": "https://www.park-oddychu.sk/",
+      "sources": [
+        "https://www.park-oddychu.sk/",
+        "https://www.park-oddychu.sk/otvaracie-hodiny-a-kontakt/"
+      ]
+    },
+    {
+      "id": "web-adventica-eurovea",
+      "name": "Adventica Eurovea",
+      "category": "herna",
+      "area": "Staré Mesto",
+      "address": "Eurovea, Pribinova 8, Bratislava (budova E1, 1. poschodie)",
+      "geocode": {
+        "queries": [
+          "Eurovea, Pribinova, Bratislava",
+          "Pribinova 8, Bratislava"
+        ],
+        "near": [
+          48.140676,
+          17.120914
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "unknown"
+      },
+      "priceNote": "Platený vstup na 1 hodinu, 2 hodiny alebo celý deň; sumy sme na webe nenašli.",
+      "hoursWeek": [
+        {
+          "days": "Po – Ne",
+          "hours": "10:00 – 21:00"
+        }
+      ],
+      "amenities": [
+        "nafukovacia trampolína",
+        "šmykľavky",
+        "bazén s loptičkami",
+        "ninja dráha",
+        "zóna pre batoľatá",
+        "oslavy"
+      ],
+      "description": "Rodinné zábavné centrum v Eurovei s plochou takmer 2 000 m². Má zóny pre deti do 9 rokov aj samostatnú zónu pre deti do 3 rokov a priestor na oddych pre rodičov.",
+      "website": "https://www.adventica.sk/",
+      "sources": [
+        "https://eurovea.sk/en/services/adventica"
+      ]
+    },
+    {
+      "id": "web-eurovea-kutik",
+      "name": "Detské ihrisko v Eurovei",
+      "category": "kutik",
+      "area": "Staré Mesto",
+      "address": "Eurovea, Pribinova 8, Bratislava (1. poschodie)",
+      "geocode": {
+        "queries": [
+          "Eurovea, Pribinova, Bratislava",
+          "Pribinova 8, Bratislava"
+        ],
+        "near": [
+          48.140676,
+          17.120914
+        ]
+      },
+      "ageMin": 0,
+      "ageMax": 6,
+      "price": {
+        "kind": "unknown"
+      },
+      "priceNote": null,
+      "hoursWeek": [
+        {
+          "days": "Po – Ne (otváracie hodiny centra)",
+          "hours": "10:00 – 21:00"
+        }
+      ],
+      "amenities": [
+        "hracia plocha",
+        "bez dozoru"
+      ],
+      "description": "Vnútorná hracia plocha pre deti do 6 rokov v obchodnom centre, bez dozoru personálu. Ďalšie hracie prvky sú na promenáde a pri food courte.",
+      "website": "https://eurovea.sk/en/for-kids",
+      "sources": [
+        "https://eurovea.sk/en/for-kids"
+      ]
+    },
+    {
+      "id": "web-aupark-kutik",
+      "name": "Detský kútik Aupark",
+      "category": "kutik",
+      "area": "Petržalka",
+      "address": "Aupark, Einsteinova 18, Bratislava",
+      "geocode": {
+        "queries": [
+          "Aupark, Einsteinova, Bratislava",
+          "Einsteinova 18, Bratislava"
+        ],
+        "near": [
+          48.132928,
+          17.107944
+        ]
+      },
+      "ageMin": 3,
+      "ageMax": 10,
+      "price": {
+        "kind": "unknown"
+      },
+      "priceNote": null,
+      "hoursWeek": null,
+      "amenities": [
+        "strážený kútik",
+        "preliezky",
+        "šmykľavky"
+      ],
+      "description": "Strážený detský kútik s plochou vyše 540 m², kde sa o deti od 3 do 10 rokov starajú inštruktori. Za centrom je aj vonkajšie ihrisko.",
+      "website": "https://aupark-bratislava.sk/en/amenity/25/childrens-corner",
+      "sources": [
+        "https://aupark-bratislava.sk/en/amenity/25/childrens-corner"
+      ]
+    },
+    {
+      "id": "web-buppi-bory",
+      "name": "BUPPI Detský svet (Bory Mall)",
+      "category": "herna",
+      "area": "Lamač",
+      "address": "Bory Mall, Lamač 6780, 841 03 Bratislava",
+      "geocode": {
+        "queries": [
+          "Bory Mall, Bratislava",
+          "Bory Mall"
+        ],
+        "near": [
+          48.2045,
+          17.0349
+        ]
+      },
+      "ageMin": null,
+      "ageMax": null,
+      "price": {
+        "kind": "unknown"
+      },
+      "priceNote": null,
+      "hoursWeek": [
+        {
+          "days": "Po – Ne",
+          "hours": "9:00 – 20:00"
+        }
+      ],
+      "amenities": [
+        "herné zóny"
+      ],
+      "description": "Veľké detské zábavné centrum v Bory Mall s viac ako 4 200 m² atrakcií a herných zón.",
+      "website": "https://www.borymall.sk/en/about-bory-mall",
+      "sources": [
+        "https://www.borymall.sk/en/about-bory-mall"
+      ]
+    },
+    {
+      "id": "web-avion-junior",
+      "name": "AVION Junior",
+      "category": "kutik",
+      "area": "Ružinov",
+      "address": "Avion Shopping Park, Ivanská cesta 16, 821 04 Bratislava (1. poschodie)",
+      "geocode": {
+        "queries": [
+          "Avion Shopping Park, Bratislava",
+          "Ivanská cesta 16, Bratislava"
+        ],
+        "near": [
+          48.168,
+          17.178
+        ]
+      },
+      "ageMin": 3,
+      "ageMax": 10,
+      "price": {
+        "kind": "unknown"
+      },
+      "priceNote": "Vstup je platený; sumu sme na webe nenašli.",
+      "hoursWeek": null,
+      "amenities": [
+        "strážený kútik",
+        "bazén s loptičkami"
+      ],
+      "description": "Strážený detský kútik v Avione pre deti od 3 do 10 rokov, o ktoré sa starajú zaškolení zamestnanci. Otvorený denne okrem sviatkov.",
+      "website": "https://www.avion.sk/sk/sluzby/avion-bratislava-or-service-or-avion-junior",
+      "sources": [
+        "https://www.avion.sk/sk/sluzby/avion-bratislava-or-service-or-avion-junior",
+        "https://www.startitup.sk/avion-otvara-unikatny-strazeny-detsky-kutik-avion-junior/"
+      ]
+    }
+  ]
+}

@@ -162,9 +162,9 @@ export function seedAdminDemo() {
     ...readReports(),
     {
       id: "seed-n1",
-      placeId: "demo-04",
-      reason: "Nesprávne otváracie hodiny",
-      note: "Ukážkové nahlásenie: cez víkend je zatvorené.",
+      placeId: "web-eurovea-kutik",
+      reason: "Iný problém",
+      note: "Ukážkové nahlásenie (DEMO) na otestovanie admin fronty, nie skutočný podnet.",
       createdAt: iso(240),
       status: "open",
       mine: false,

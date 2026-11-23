@@ -6,9 +6,9 @@ import { ReviewForm } from "@/components/review/ReviewForm";
 
 export const metadata: Metadata = { title: "Ohodnotiť miesto — KUTISKO (DEMO)" };
 
-/** Vopred sa generujú len DEMO miesta; stovky ihrísk z OSM sa vykreslia na požiadanie. */
+/** Vopred sa generujú len herne a kútiky; stovky ihrísk z OSM sa vykreslia na požiadanie. */
 export function generateStaticParams() {
-  return PLACES.filter((p) => p.isDemo).map((p) => ({ id: p.id }));
+  return PLACES.filter((p) => p.source === "web").map((p) => ({ id: p.id }));
 }
 
 async function Content({ params }: { params: Promise<{ id: string }> }) {

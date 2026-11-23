@@ -281,7 +281,7 @@ export function HomeScreen() {
             </div>
 
             <p className="mt-8 text-center text-[12.5px] leading-relaxed text-ink-muted">
-              Prototyp KUTISKO · ihriská sú skutočné z{" "}
+              Prototyp KUTISKO · všetky miesta sú skutočné. Ihriská z{" "}
               <a
                 href="https://www.openstreetmap.org/copyright"
                 target="_blank"
@@ -290,7 +290,7 @@ export function HomeScreen() {
               >
                 © prispievatelia OpenStreetMap
               </a>
-              ; kútiky a herne označené DEMO, hodnotenia aj recenzie sú vymyslené.
+              ; herne a kútiky sme overili na weboch prevádzok. Hodnotenia rodičov zatiaľ nie sú.
               <br />
               Vzdialenosť sa počíta od centra {origin.of}, poloha sa nezisťuje.
             </p>
