@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-23 — Ukážka: sponzorované miesta a akcie (nápad na neskôr)
+**Zmenené** (nápad Martina, len vzorová ukážka, nič nerozhodnuté)
+- **Domov:** nad zoznamom miest jedna karta **„Sponzorované“ · „Ukážka“** (vymyslená „Ukážková herňa“ / „Ukážkový kútik“). Ukáže sa len, keď zodpovedá zvolenej kategórii, veku a hľadaniu; nie je na mape ani v počte miest.
+- **Domov:** pás **„Akcie v najbližších dňoch“** pod mapou s vymyslenými akciami na najbližších 14 dní, každá so štítkom „Ukážka“; tlačidlo „Skryť ukážku“.
+- **Nová stránka „Pre prevádzky“** (`/pre-prevadzky`): čo uvidia rodičia, návrh zásad, zoznam akcií a ukážkový formulár „Pridať akciu“ (uloží sa len v prehliadači, akciu možno odstrániť).
+- **Profil:** jeden prepínač „Ukážka: sponzorované miesta a akcie“ (predvolene zapnuté). Pre všetkých sa vypne jedným riadkom (`PROMO_DEMO_DEFAULT_ON`).
+- **docs/MONETIZACIA.md:** návrh zásad, aby reklama nezavádzala, a otázky na cenník a pravidlá pre Martina.
+
+**Otestované**
+- `npm test` (53; nové: dnešok v Bratislave, okno 14 dní a poradie akcií, ukážkové akcie patria len vymysleným prevádzkam, najviac 1 sponzorované a len pri zhode s filtrami, kontrola formulára), `lint`, `typecheck`, `build`.
+- Playwright (iPhone 13, Chromium): pás akcií a sponzorovaná karta na Domove; filter Ihriská → bez reklamy aj akcií; formulár (chyby pri prázdnych poliach, pridanie akcie → objaví sa na Domove so štítkom „Pridali ste vy“); „Skryť ukážku“ → zmizne všetko a prepínač v Profile je vypnutý, opätovné zapnutie; šírka 320 px bez vodorovného posúvania. V konzole len nenačítané mapové podklady (sieť sandboxu).
+
+**Známe obmedzenia**
+- Iba ukážka v prehliadači: žiadne platby, účty prevádzok ani schvaľovanie akcií. Sponzorované miesto a akcie vedú na stránku „Pre prevádzky“, nie na skutočný detail. Zatiaľ len na Domove (nie v Hľadať). Netestované na fyzickom iPhone.
+
 ## 2026-11-23 — Doplnky detailu: otvorené teraz, akcie, tipy, oslavy
 **Zmenené** (Martin schválil všetkých 5 návrhov)
 - **Otvorené teraz:** pod názvom a v hodinách stav „Otvorené · zatvára o 20:00“, „Čoskoro zatvára“ (posledná hodina) alebo „Zatvorené · otvára zajtra o 9:00“; v tabuľke hodín je zvýraznený dnešný riadok, rovnaký stav je v spodnej lište. Počíta sa podľa času v Bratislave. Pri nejasných alebo sezónnych hodinách sa stav nezobrazí (radšej nič ako nesprávne „Otvorené“).

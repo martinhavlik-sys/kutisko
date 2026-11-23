@@ -213,3 +213,9 @@
 - Oslavy: iba fakt „web uvádza oslavy“ (vybavenie „oslavy“) + kontakt; žiadne ceny ani balíčky.
 - Tipy od rodičov zatiaľ bez moderácie (DEMO v prehliadači); v produkcii rovnaká kontrola ako recenzie.
 **Alternatívy:** knižnica na opening_hours (zbytočná závislosť pre pár zápisov); samostatná stránka osláv (bez overených údajov predčasné).
+
+## 2026-11-23 — Ukážka sponzorovaných miest a akcií
+**Kontext (Martin):** „niektoré kútiky by mohli byť vpredu ako sponzorované… budú si môcť pridávať akcie na najbližší čas. Toto je zatiaľ len nápad, ak chceš, môžeš ho tam vzorovo pridať.“
+**Riešenie (Claude):** vzorová ukážka bez platieb a servera. Len vymyslené prevádzky s názvom „Ukážková…“ (nie skutočné herne, aby sa nevytvoril dojem, že niekto platí alebo organizuje akciu). Štítky „Sponzorované“ a „Ukážka“ vždy textom; najviac 1 sponzorované miesto a len pri zhode s filtrami; akcie najviac 14 dní dopredu. Jeden prepínač v Profile, predvolene zapnutý, aby Martin ukážku videl.
+**Alternatívy:** označiť ako sponzorovanú skutočnú herňu (zavádzajúce voči rodičom aj prevádzke); predvolene vypnuté (ukážku by nikto nevidel).
+**Dopad:** reklama a platené profily ostávajú podľa manifestu mimo MVP, kým Martin nerozhodne. Cenník a pravidlá: návrh v docs/MONETIZACIA.md, rozhoduje Martin.
