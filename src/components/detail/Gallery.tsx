@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useBackButtonClose } from "@/lib/pwa";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Place } from "@/data/places";
 import { addPhotoUpload, useMyReviews, usePhotoUploads } from "@/lib/community";
@@ -344,6 +345,7 @@ export function Lightbox({
   placeName: string;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  useBackButtonClose(open, onClose);
   const { ref, index, onScroll, go } = useSlider(photos.length);
 
   useEffect(() => {
@@ -462,6 +464,7 @@ export function AddPhotoDialog({
   onDone: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  useBackButtonClose(open, onClose);
   const [photo, setPhoto] = useState<string | null>(null);
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);

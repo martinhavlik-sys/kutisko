@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useBackButtonClose } from "@/lib/pwa";
 import { addReport } from "@/lib/community";
 import { CloseIcon } from "@/components/home/icons";
 import { FieldError, primaryBtn } from "@/components/forms/FormParts";
@@ -9,6 +10,7 @@ const REASONS = ["Nesprávne otváracie hodiny", "Nesprávna cena", "Miesto je z
 
 export function ReportDialog({ placeId, open, onClose, onDone }: { placeId: string; open: boolean; onClose: () => void; onDone: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
+  useBackButtonClose(open, onClose);
   const [reason, setReason] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [error, setError] = useState<string | undefined>();

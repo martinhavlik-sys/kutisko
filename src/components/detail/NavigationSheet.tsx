@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useBackButtonClose } from "@/lib/pwa";
 import { NAV_PROVIDERS, navigationUrl, navTargetOf, type NavProvider } from "@/lib/navigation";
 import type { Place } from "@/data/places";
 import { CloseIcon } from "@/components/home/icons";
@@ -23,6 +24,7 @@ interface Props {
  */
 export function NavigationSheet({ place, open, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
+  useBackButtonClose(open, onClose);
 
   useEffect(() => {
     const d = ref.current;
