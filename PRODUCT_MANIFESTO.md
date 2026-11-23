@@ -7,7 +7,7 @@ Mobilne orientovaná webová aplikácia pre rodičov na objavovanie, porovnávan
 
 ## Schválené produktové rozhodnutia
 1. Kategórie: detské kútiky, vnútorné herne, vonkajšie ihriská.
-2. Registrácia je povinná pred používaním aplikácie.
+2. ~~Registrácia je povinná pred používaním aplikácie.~~ *Zmenené 2026-11-23 (Martin, DECISIONS.md): prezerať miesta môže každý; účet je potrebný na uloženie miesta, hodnotenie, tip, fotku a návrh miesta.*
 3. Údaje o miestach: legálne použiteľné externé zdroje, vlastný kurátorovaný katalóg, komunitné návrhy. Evidovať pôvod a overenie údajov.
 4. Rodičia navrhujú nové miesta; zverejnenie až po schválení administrátorom.
 5. Rozšírený detail miesta: názov, kategória, opis, fotografie, GPS/adresa/navigácia, vhodný vek, hodiny, cena, vybavenie, recenzie a údaj o overení. Neznáme údaje nesmú byť interpretované ako negatívne.
@@ -69,7 +69,7 @@ Rezervácie, účty prevádzkovateľov, platené profily, reklama, AI odporúča
 15. Najprv vytvoriť interaktívny mobil-first prototyp s ukážkovými dátami, bez produkčného backendu. Až po UX testovaní a odsúhlasení pripojiť autentifikáciu, Supabase a skutočný obsah.
 16. Prototyp musí obsahovať klikateľné toky: Domov → filtrovanie → mapa/zoznam → detail → výber externej navigácie; Uložené; Profil; simulované hodnotenie, návrh miesta a pridanie fotografie; náhľad administrátorskej fronty.
 17. Simulované účty a zápisy musia byť jasne označené ako demo; nesmú vyvolávať dojem bezpečného serverového uloženia ani publikovania. Nepoužívať skutočné osobné údaje ani fotografie detí.
-18. Povinná registrácia zostáva požiadavkou na produkčné MVP. V prototype sa jej tok iba simuluje.
+18. ~~Povinná registrácia zostáva požiadavkou na produkčné MVP.~~ *Zmenené 2026-11-23: v MVP je účet povinný len na zápisy (pozri bod 2).* V prototype sa jej tok iba simuluje.
 
 ## Brána medzi prototypom a backendom
 - Otestovať na iPhone hlavné scenáre a stavy: bez polohy, nulové výsledky, neznáme údaje, prázdne obľúbené, chybný formulár.

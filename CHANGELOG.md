@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-11-23 — Backend schválený, príprava etapy 1
+**Zmenené**
+- Martin schválil všetky odporúčania R1–R6 (Supabase EÚ, prezeranie bez účtu, e-mail + Google, Supabase Storage, zmazanie obsahu so zrušením účtu, Pro až pri spustení). Zapísané v `docs/BACKEND_NAVRH.md` a `DECISIONS.md`.
+- `PRODUCT_MANIFESTO.md` bod 2 a 18: vyznačená zmena — účet je povinný len na zápisy.
+- Nový `docs/SUPABASE_NASTAVENIE.md`: návod pre Martina, ako založiť projekt Supabase a uložiť kľúče do GitHubu a Vercelu, a plán etapy 1.
+
+**Otestované**
+- Bez zmeny kódu.
+
+**Známe obmedzenia**
+- Prostredie Claude sa na Supabase nepripojí (overené: požiadavka zablokovaná), migrácie a import preto pobežia v GitHub Actions.
+
+## 2026-11-23 — Návrh backendu (len dokument)
+**Zmenené**
+- **docs/BACKEND_NAVRH.md:** návrh backendu na schválenie — architektúra (Supabase EÚ + Vercel + GitHub Actions), dátový model a návrh SQL, práva (RLS), prihlásenie, moderácia a admin, GDPR (poloha len v telefóne), import dát, migrácia z lokálnych dát, náklady a 5 etáp. Šesť otázok R1–R6 na rozhodnutie pre Martina.
+- **DECISIONS.md:** záznam návrhu (stav: čaká na schválenie). **MVP_ROADMAP.md:** odkaz z Fázy 4.
+
+**Otestované**
+- Bez zmeny kódu. Názvy kľúčov localStorage, ID miest a cesty k modulom v dokumente overené voči aktuálnemu kódu. Návrh SQL nebol spustený (ilustračný).
+
+**Známe obmedzenia**
+- Ceny a limity služieb sú orientačné, pred založením účtov ich treba overiť v aktuálnych cenníkoch.
+
 ## 2026-11-23 — Ukážka: sponzorované miesta a akcie (nápad na neskôr)
 **Zmenené** (nápad Martina, len vzorová ukážka, nič nerozhodnuté)
 - **Domov:** nad zoznamom miest jedna karta **„Sponzorované“ · „Ukážka“** (vymyslená „Ukážková herňa“ / „Ukážkový kútik“). Ukáže sa len, keď zodpovedá zvolenej kategórii, veku a hľadaniu; nie je na mape ani v počte miest.

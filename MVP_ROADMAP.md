@@ -59,7 +59,7 @@ Každé rozhodnutie sa zapíše do `DECISIONS.md`.
 | **Vekové kategórie** [SCHVÁLENÉ 2026-11-22] | Filtrovacie skupiny 0–2, 3–5, 6–10, 10+; miesto ukladá rozsah min–max, filter hľadá prekrytie. | otvorené v manifeste |
 | **Hodnotenia pri nízkom počte** [NÁVRH] | Pod 3 hodnotenia zobraziť „Málo hodnotení“ namiesto priemeru; pri zoraďovaní použiť bayesovský priemer. | otvorené v manifeste |
 | **KUTISKO skóre 1–5** [SCHVÁLENÉ 2026-11-22: nie v MVP] | Nezavádzať v MVP. Ak áno, len so zverejnenou metodikou (napr. úplnosť a overenie údajov), vizuálne odlíšené od hodnotenia rodičov. | manifest: nezobrazovať bez metodiky |
-| **Backend** | Supabase (Postgres + RLS + Storage + Auth) podľa kontextu projektu. | manifest: RLS povinné |
+| **Backend** | Supabase (Postgres + RLS + Storage + Auth) podľa kontextu projektu. Podrobný návrh: `docs/BACKEND_NAVRH.md` (2026-11-23, čaká na schválenie). | manifest: RLS povinné |
 | **Autentifikácia** | E-mail magic link + Sign in with Apple + Google. | otvorené v manifeste |
 | **Súkromie a GDPR** | Minimalizácia údajov, retencia, export a vymazanie účtu, EXIF stripping fotografií. | manifest, Bezpečnosť |
 | **Akceptačné kritériá MVP** | Spísať po Fáze 3 na základe zistení. | otvorené v manifeste |
