@@ -109,11 +109,12 @@ export function ProfileScreen() {
               <p className="mt-1 text-[14px] leading-relaxed text-ink-muted">
                 S účtom budete mať obľúbené miesta, hodnotenia a návrhy pod svojím menom. V prototype je účet len simulovaný (DEMO).
               </p>
-              <div className="mt-4 grid grid-cols-2 gap-2.5">
-                <Link href="/registracia" className={primaryBtn}>
+              {/* Na bežných telefónoch (pod 380 px) sú tlačidlá pod sebou, aby sa text nezalamoval. */}
+              <div className="mt-4 grid grid-cols-1 gap-2.5 min-[380px]:grid-cols-2">
+                <Link href="/registracia" className={`${primaryBtn} whitespace-nowrap px-4`}>
                   Vytvoriť účet
                 </Link>
-                <Link href="/prihlasenie" className={secondaryBtn}>
+                <Link href="/prihlasenie" className={`${secondaryBtn} whitespace-nowrap px-4`}>
                   Prihlásiť sa
                 </Link>
               </div>
