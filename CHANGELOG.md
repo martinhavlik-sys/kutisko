@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-23 — Výraznejšia poloha na Domove
+**Zmenené**
+- Na Domove majú „Bratislava a okolie“ (resp. vybrané mesto alebo „Moja poloha“) a „Použiť moju polohu“ jemné farebné podfarbenie (svetlo ružová a svetlo tyrkysová pilulka s tenkým okrajom), aby boli výraznejšie (požiadavka Martina). Na úzkych displejoch (pod 360 px) sa text skráti na „Použiť polohu“.
+
+**Otestované**
+- `lint`, `build`; Playwright (iPhone 13 bez polohy aj s polohou, šírka 320 px).
+
 ## 2026-11-23 — Moja poloha a okruh v km
 **Zmenené**
 - Nový panel „Kde hľadáte?“ (Domov, Hľadať): **Použiť moju polohu** s vysvetlením, ručný výber mesta a **okruh** Bez obmedzenia / 1 / 3 / 5 / 10 / 25 km.

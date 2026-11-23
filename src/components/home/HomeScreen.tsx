@@ -163,20 +163,20 @@ export function HomeScreen() {
             <h1 id="hero-title" className="mt-0.5 pr-20 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-ink min-[400px]:text-[30px] sm:pr-28 sm:text-[40px]">
               Kam ideme dnes?
             </h1>
-            <div className="mt-1 flex flex-wrap items-center">
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
             <button
               type="button"
               onClick={() => setCityOpen(true)}
               aria-haspopup="dialog"
               aria-label={`Lokalita: ${placeLabel}${maxKm !== null ? `, ${radiusLabel(maxKm)}` : ""}. Zmeniť`}
-              className="-ml-2 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[14px] text-ink-muted hover:bg-cream-100 hover:text-ink focus-visible:outline-2 focus-visible:outline-ink"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-coral-50 pl-3 pr-2 text-[14px] text-ink-muted ring-1 ring-coral-600/15 transition hover:ring-coral-600/35 hover:text-ink active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
               {origin.kind === "gps" ? (
                 <LocateIcon size={15} className="text-[#2563eb]" />
               ) : (
-                <PinIcon size={16} className="text-turquoise-700" />
+                <PinIcon size={16} className="text-coral-600" />
               )}
-              <span className="font-medium text-ink">{placeLabel}</span>
+              <span className="font-semibold text-ink">{placeLabel}</span>
               {maxKm !== null && <span className="text-ink-muted">· {radiusLabel(maxKm)}</span>}
               <ChevronDownIcon size={16} />
             </button>
@@ -185,10 +185,12 @@ export function HomeScreen() {
                 type="button"
                 onClick={() => setCityOpen(true)}
                 aria-haspopup="dialog"
-                className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 text-[14px] font-semibold text-turquoise-700 hover:bg-turquoise-50 focus-visible:outline-2 focus-visible:outline-ink"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-turquoise-50 px-3 text-[14px] font-semibold text-turquoise-700 ring-1 ring-turquoise-700/20 transition hover:ring-turquoise-700/45 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               >
                 <LocateIcon size={15} />
-                Použiť moju polohu
+                <span>
+                  Použiť <span className="max-[359px]:hidden">moju </span>polohu
+                </span>
               </button>
             )}
             </div>
