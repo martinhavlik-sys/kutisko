@@ -1,6 +1,6 @@
 # Mestské detské ihriská, ktoré chýbajú v OpenStreetMap
 
-Generované 2026-11-22 skriptom `scripts/osm/city-crosscheck.mjs` z registra športovísk hlavného mesta (vrstva `sport_body_08_26_vsetky_sportoviska`).
+Generované 2026-11-23 skriptom `scripts/osm/city-crosscheck.mjs` z registra športovísk hlavného mesta (vrstva `sport_body_08_26_vsetky_sportoviska`).
 Aplikácia ich zobrazí, iba ak je licencia vrstvy overená (`src/data/sources.ts`). Zoznam slúži na oslovenie mesta a mestských častí.
 
 ## Licencia vrstvy podľa metadát

@@ -11,6 +11,26 @@
 **Známe obmedzenia**
 - Pri OC je bod na budove centra, nie pri samotnom kútiku.
 
+## 2026-11-23 — Čitateľné názvy ihrísk bez vlastného mena
+**Zmenené**
+- Z 975 ihrísk z OpenStreetMap má vlastný názov len 113. Ostatným teraz dávame zrozumiteľný názov odvodený z OSM dát namiesto opakovaného „Detské ihrisko“:
+  - **758 podľa najbližšej ulice** (do 300 m), napr. „Ihrisko, Romanova“. Pri viacerých rovnakých sa pridá druhá ulica: „Ihrisko, Studená / Krajná“.
+  - **50 podľa parku**, napr. „Ihrisko v parku Andreja Hlinku“ alebo „Ihrisko, Sad Janka Kráľa“ (ihrisko aj do 30 m od okraja parku).
+  - **12 podľa štvrte/lokality** (place=neighbourhood…, do 800 m), keď v okolí nie je pomenovaná ulica.
+  - **42 podľa mestskej časti alebo obce** ako posledná záloha, napr. „Ihrisko, Karlova Ves“.
+- Ihriská s vlastným názvom v OSM sa nemenia. Nové pole `nameSource` (`osm`/`park`/`street`/`place`/`area`) označuje pôvod názvu.
+- Import z OSM sťahuje aj pomenované ulice (do 300 m od ihrísk) a štvrte; ulice aj štvrte sú nepovinné (bez nich import prejde). Pridaný záložný Overpass server a varovania behu ako anotácie.
+- Detail → „Pôvod údajov“: doplnené, že názov bez vlastného mena je odvodený od parku, ulice, štvrte alebo mestskej časti. Licencia zdroja (© prispievatelia OpenStreetMap, ODbL) ostáva uvedená.
+
+**Otestované**
+- `npm test` (34; nové: názov podľa ulice/parku/štvrte/mestskej časti, vzdialenosť k ulici, rozlíšenie rovnakých názvov druhou ulicou, vynechanie mostov), `lint`, `typecheck`, `build` prešli.
+- GitHub Action „Import ihrísk (OSM)“ prebehla úspešne, dáta commitnuté do vetvy.
+- Playwright (iPhone 13): Domov, Hľadať (zoznam s novými názvami), detail ihriska — bez chýb v konzole (mapové dlaždice sú z cloudu blokované, to je očakávané).
+
+**Známe obmedzenia**
+- Odvodený názov je orientačný: ukazuje najbližšiu ulicu/park, nie nutne oficiálny názov ihriska. 42 ihrísk ostáva len s názvom mestskej časti (napr. odľahlé obce bez pomenovaných ulíc v OSM).
+- Rovnaké názvy, ktoré sa nedajú rozlíšiť druhou ulicou, ostávajú — odlíši ich poloha na mape a mestská časť.
+
 ## 2026-11-22 — Skutočné herne a kútiky namiesto DEMO
 **Zmenené**
 - 7 vymyslených DEMO kútikov a herní nahradilo **11 skutočných miest** v Bratislave a Ivanke pri Dunaji (MINI CITY, Simba Centrum, Jump Fun Nivy, Jump Fun KidsHouse, RETRO Kids, INSPIRO Park oddychu, Adventica Eurovea, ihrisko v Eurovei, kútik Aupark, BUPPI v Bory Mall, AVION Junior). Údaje sú ručne overené na weboch prevádzok a obchodných centier k 22. 11. 2026 (`src/data/curated/indoor-places.json`). Popisy sú vlastné, bez fotiek, bez údajov z Google, bez hodnotení.
