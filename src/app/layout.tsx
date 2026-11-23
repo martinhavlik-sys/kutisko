@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   applicationName: "Kutisko",
   // Po „Pridať na plochu“ sa otvára na celú obrazovku; stavový riadok ostáva čitateľný na krémovom pozadí.
   appleWebApp: { capable: true, title: "Kutisko", statusBarStyle: "default" },
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  icons: {
+    // SVG ikonka v karte prehliadača sa prepne do tmavej verzie podľa tmavého režimu systému; favicon.ico (src/app) je záloha.
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: "/icons/apple-touch-icon.png",
+  },
   formatDetection: { telephone: false },
 };
 

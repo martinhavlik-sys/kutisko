@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-23 — Nové logo a ikona aplikácie (kocky)
+**Zmenené**
+- **Logo KUTISKO (variant G, vybral Martin):** slovo „kutisko“ písmom aplikácie (Plus Jakarta Sans Bold, koralové), písmeno „i“ tvoria 3 farebné kocky (tyrkys, amber, zelená) a štvrtá kocka (fialovomodrá) sa vznáša ako bodka. Nahrádza dočasný textový wordmark v hlavičke Domov, na uvítaní a pri prihlásení/registrácii (komponent `Logo`). Tmavá verzia s bielym písmom je pripravená v `public/brand/`.
+- **Ikona aplikácie (variant 6):** „k“ a „i“ z kociek na krémovom pozadí; vymenené všetky ikony v `public/icons/` (Android vrátane maskable, iPhone, inštalačná karta) a `favicon.ico`. Nová SVG ikonka v karte prehliadača sa v tmavom režime systému prepne na tmavú verziu (biele „k“ na tmavom pozadí).
+- Na úzkych displejoch (pod 380 px) je logo v hlavičke Domov o niečo menšie a tlačidlo „Prihlásiť sa“ sa nezalamuje.
+- Generátor loga a ikon: `scripts/logo/` (z obrysov písma, nie ručne kreslené).
+
+**Otestované**
+- `lint`, `build`.
+- Playwright (Chromium): hlavička Domov pri 390 aj 320 px bez prekrývania, uvítanie a prihlásenie; SVG ikonka vo svetlom aj tmavom režime; HTML odkazuje na `icon.svg`, `favicon.ico` aj ikonu pre iPhone. Maskable ikona: obsah je v kruhu 74 % plochy (požiadavka 80 %).
+
+**Známe obmedzenia**
+- Netestované na fyzickom telefóne; Android aj iPhone môžu držať starú ikonu, kým sa aplikácia z plochy neodstráni a znova nepridá.
+- Aplikácia nemá tmavý režim, tmavé logo a tmavá ikona sú zatiaľ len pripravené súbory (okrem ikonky v karte prehliadača).
+
 ## 2026-11-23 — Vyladenie pre Android (Chrome, Samsung Internet)
 **Zmenené**
 - **Manifest:** stabilné `id`, maskable ikony 192 aj 512 px (Android ich oreže do tvaru podľa telefónu), skratky po dlhom podržaní ikony („Hľadať“, „Obľúbené“), kategórie. Ikony ostávajú dočasné; čo dodať pri výmene je v `docs/IKONY.md`.

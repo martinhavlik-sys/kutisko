@@ -255,3 +255,9 @@
 - **Ikony:** maskable varianty vyrobené z dočasnej ikony „k“; finálne podklady dodá Martin podľa `docs/IKONY.md` (stačí prepísať súbory rovnakých názvov).
 - **Vynútený svetlý vzhľad** (`only light`): aplikácia nemá tmavú tému; nechceme, aby ju tmavý režim Samsung Internet automaticky prefarbil a zhoršil kontrast.
 
+
+## 2026-11-23 — Logo a ikona aplikácie s kockami
+**Rozhodnutie (Martin):** Logo = slovo „kutisko“ písmom Plus Jakarta Sans Bold, „i“ zložené z 3 kociek + 1 kocka ako bodka vo vzduchu (variant G, koralové písmo), aj s verziou pre tmavé pozadie. Ikona aplikácie = „k“ + „i“ z kociek (variant 6), aj tmavá verzia.
+**Dôvod:** Kocky odkazujú na hru a na ilustráciu dievčatka, ktoré stavia vežu z kociek; písmo ostáva rovnaké ako v aplikácii.
+**Alternatívy:** Varianty A–D (4+1 kocka), E–F (iné farby/čierne písmo), ikony len so stĺpikom „i“ alebo na koralovom pozadí (náhľady v projektových súboroch, `logo-navrh/`).
+**Dopad:** Nahrádza dočasný wordmark a dočasnú ikonu „k“. Farby kociek sú dekoratívne (brand), čitateľnosť nesie koralové písmo `#D6264A`.

@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { loginDemo, logoutDemo, registerDemo, useAccount } from "@/lib/account";
 import { firstName, hasErrors, PASSWORD_MIN, validateLogin, validateRegistration } from "@/lib/validation";
 import { DemoNotice, FieldError, primaryBtn, secondaryBtn } from "@/components/forms/FormParts";
+import { Logo } from "@/components/ui/Logo";
 
 type Mode = "login" | "register";
 
@@ -90,7 +91,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
             <path d="M15 5 8 12l7 7" />
           </svg>
         </Link>
-        <span className="font-display text-[20px] font-bold tracking-[-0.03em] text-coral-600">kutisko</span>
+        <Logo height={24} />
         <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-amber-700">DEMO</span>
       </header>
 
