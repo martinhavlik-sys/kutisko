@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildPlaces, cleanAreaName, displayName, isPublic, parseAge, pickArea, makePolygon } from "./transform.mjs";
+import {
+  buildPlaces, cleanAreaName, disambiguate, displayName, isPublic, makePolygon, makeStreetIndex, metersToSegment,
+  nearestStreets, parseAge, pickArea,
+} from "./transform.mjs";
 
 // Syntetické prvky v tvare odpovede Overpass (nie skutočné OSM objekty).
 const square = (lat, lon, d) => [
@@ -51,12 +54,60 @@ test("vek z OSM tagov, neznámy = null", () => {
   assert.equal(parseAge("baby"), null);
 });
 
-test("názov: vlastný, podľa parku, všeobecný", () => {
-  assert.equal(displayName({ name: "Detské ihrisko Jasovská" }), "Detské ihrisko Jasovská");
-  assert.equal(displayName({ name: "Pirátska loď" }), "Ihrisko Pirátska loď");
-  assert.equal(displayName({}, "Park Andreja Hlinku"), "Ihrisko v parku Andreja Hlinku");
-  assert.equal(displayName({ "addr:street": "Lipová" }), "Ihrisko, Lipová");
-  assert.equal(displayName({}), "Detské ihrisko");
+test("názov: vlastný, park, ulica, mestská časť, všeobecný", () => {
+  const n = (tags, ctx) => displayName(tags, ctx).name;
+  assert.equal(n({ name: "Detské ihrisko Jasovská" }), "Detské ihrisko Jasovská");
+  assert.equal(n({ name: "Pirátska loď" }, { parkName: "Sad Janka Kráľa" }), "Ihrisko Pirátska loď");
+  assert.equal(n({}, { parkName: "Park Andreja Hlinku" }), "Ihrisko v parku Andreja Hlinku");
+  assert.equal(n({}, { parkName: "Kaštieľsky park" }), "Ihrisko, Kaštieľsky park");
+  assert.equal(n({ "addr:street": "Lipová" }, { streets: ["Iná"] }), "Ihrisko, Lipová");
+  assert.equal(n({}, { streets: ["Romanova", "Jungmannova"], area: "Petržalka" }), "Ihrisko, Romanova");
+  assert.equal(n({}, { streets: [], area: "Lamač" }), "Ihrisko, Lamač");
+  assert.equal(n({}, { streets: [], placeName: "Dlhé diely", area: "Karlova Ves" }), "Ihrisko, Dlhé diely");
+  assert.equal(n({}, { streets: [], placeName: "Senec", area: "Senec" }), "Ihrisko, Senec");
+  assert.equal(n({}), "Detské ihrisko");
+  assert.equal(displayName({}, { streets: ["Romanova"] }).nameSource, "street");
+  assert.equal(displayName({ name: "X ihrisko" }).nameSource, "osm");
+});
+
+test("vzdialenosť k úseku a najbližšie ulice do 300 m, bez mostov", () => {
+  // ~111 m severne od úseku
+  assert.ok(Math.abs(metersToSegment({ lat: 48.001, lon: 17.0005 }, { lat: 48, lon: 17 }, { lat: 48, lon: 17.001 }) - 111.3) < 1);
+  const idx = makeStreetIndex([
+    { type: "way", id: 1, tags: { name: "Blízka" }, geometry: [{ lat: 48, lon: 17 }, { lat: 48, lon: 17.002 }] },
+    { type: "way", id: 2, tags: { name: "Blízka" }, geometry: [{ lat: 48.0005, lon: 17 }, { lat: 48.0005, lon: 17.002 }] },
+    { type: "way", id: 3, tags: { name: "Druhá" }, geometry: [{ lat: 48.0012, lon: 17 }, { lat: 48.0012, lon: 17.002 }] },
+    { type: "way", id: 4, tags: { name: "Ďaleká" }, geometry: [{ lat: 48.01, lon: 17 }, { lat: 48.01, lon: 17.002 }] },
+    { type: "way", id: 5, tags: {}, geometry: [{ lat: 48.0004, lon: 17 }, { lat: 48.0004, lon: 17.002 }] },
+    { type: "way", id: 6, tags: { name: "Starý most", bridge: "yes" }, geometry: [{ lat: 48.0004, lon: 17 }, { lat: 48.0004, lon: 17.002 }] },
+  ]);
+  assert.deepEqual(nearestStreets(48.0004, 17.001, idx), ["Blízka", "Druhá"]);
+  assert.deepEqual(nearestStreets(48.05, 17.001, idx), []);
+});
+
+test("rovnaké odvodené názvy sa rozlíšia druhou ulicou, vlastné ostanú", () => {
+  const e = (name, nameSource, streets) => ({ place: { name, nameSource }, streets });
+  const list = [
+    e("Ihrisko, Romanova", "street", ["Romanova", "Jungmannova"]),
+    e("Ihrisko, Romanova", "street", ["Romanova", "Gessayova"]),
+    e("Ihrisko, Romanova", "street", ["Romanova"]),
+    e("Ihrisko, Sad Janka Kráľa", "park", ["Viedenská cesta"]),
+    e("Ihrisko, Sad Janka Kráľa", "park", []),
+    e("Ihrisko Mier", "osm", ["Romanova"]),
+    e("Ihrisko Mier", "osm", ["Romanova"]),
+    e("Ihrisko, Lipová", "street", ["Lipová"]),
+  ];
+  disambiguate(list);
+  assert.deepEqual(list.map((x) => x.place.name), [
+    "Ihrisko, Romanova / Jungmannova",
+    "Ihrisko, Romanova / Gessayova",
+    "Ihrisko, Romanova",
+    "Ihrisko, Sad Janka Kráľa (Viedenská cesta)",
+    "Ihrisko, Sad Janka Kráľa",
+    "Ihrisko Mier",
+    "Ihrisko Mier",
+    "Ihrisko, Lipová",
+  ]);
 });
 
 test("buildPlaces: vybavenie v ploche, oblasť, park, duplicitný bod, súkromné", () => {
@@ -67,6 +118,10 @@ test("buildPlaces: vybavenie v ploche, oblasť, park, duplicitný bod, súkromn�
       { type: "node", id: 11, lat: 48.1203, lon: 17.1203, tags: { leisure: "playground" } }, // duplicita v ploche
       { type: "node", id: 12, lat: 48.15, lon: 17.15, tags: { leisure: "playground", name: "Pri jazere", min_age: "3", max_age: "12", fee: "yes" } },
       { type: "node", id: 13, lat: 48.16, lon: 17.16, tags: { leisure: "playground", access: "private" } },
+      { type: "node", id: 14, lat: 48.17, lon: 17.17, tags: { leisure: "playground" } }, // pri ulici
+      { type: "node", id: 15, lat: 48.18, lon: 17.18, tags: { leisure: "playground" } }, // bez ulice → mestská časť
+      { type: "node", id: 17, lat: 48.19, lon: 17.19, tags: { leisure: "playground" } }, // bez ulice, ~300 m od štvrte
+      { type: "node", id: 16, lat: 48.1302, lon: 17.125, tags: { leisure: "playground" } }, // ~22 m za okrajom parku
     ],
     featureEls: [
       { type: "node", id: 20, lat: 48.1204, lon: 17.1204, tags: { playground: "slide" } },
@@ -77,11 +132,20 @@ test("buildPlaces: vybavenie v ploche, oblasť, park, duplicitný bod, súkromn�
     ],
     parkEls: [{ type: "way", id: 30, tags: { leisure: "park", name: "Sad Janka Kráľa" }, geometry: square(48.11, 17.11, 0.02) }],
     adminEls: [admin(2, "9", "Bratislava-Petržalka", 48.1, 17.1, 0.1)],
+    placeEls: [{ type: "node", id: 50, lat: 48.1927, lon: 17.19, tags: { place: "neighbourhood", name: "Dlhé diely" } }],
+    streetEls: [{ type: "way", id: 40, tags: { highway: "residential", name: "Romanova" }, geometry: [{ lat: 48.1705, lon: 17.169 }, { lat: 48.1705, lon: 17.171 }] }],
   });
 
-  assert.deepEqual(places.map((p) => p.id), ["osm-n12", "osm-w10"]);
-  const [jazero, park] = places;
-  assert.equal(park.name, "Ihrisko v parku Sad Janka Kráľa");
+  assert.deepEqual(places.map((p) => p.id), ["osm-n12", "osm-n14", "osm-n15", "osm-n16", "osm-n17", "osm-w10"]);
+  const [jazero, ulica, cast, okraj, stvrt, park] = places;
+  assert.equal(stvrt.name, "Ihrisko, Dlhé diely");
+  assert.equal(stvrt.nameSource, "place");
+  assert.equal(ulica.name, "Ihrisko, Romanova");
+  assert.equal(ulica.nameSource, "street");
+  assert.equal(cast.name, "Ihrisko, Petržalka");
+  assert.equal(okraj.name, "Ihrisko, Sad Janka Kráľa");
+  assert.equal(park.name, "Ihrisko, Sad Janka Kráľa");
+  assert.equal(park.nameSource, "park");
   assert.equal(park.area, "Petržalka");
   assert.deepEqual(park.amenities, ["pieskovisko", "šmykľavka", "lavičky", "osvetlenie"]);
   assert.equal(park.ageMin, null);
@@ -91,6 +155,7 @@ test("buildPlaces: vybavenie v ploche, oblasť, park, duplicitný bod, súkromn�
   assert.equal(park.verified, false);
 
   assert.equal(jazero.name, "Ihrisko Pri jazere");
+  assert.equal(jazero.nameSource, "osm");
   assert.equal(jazero.ageMin, 3);
   assert.equal(jazero.ageMax, 12);
   assert.deepEqual(jazero.price, { kind: "unknown" });

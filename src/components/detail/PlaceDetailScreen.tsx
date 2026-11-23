@@ -385,7 +385,7 @@ export function PlaceDetailScreen({ place, detail }: { place: Place; detail: Pla
                     © prispievatelia OpenStreetMap
                   </a>{" "}
                   (licencia ODbL). Údaje dopĺňajú dobrovoľníci, preto môžu byť neúplné; chýbajúci údaj neznamená, že na
-                  ihrisku niečo chýba. Názov bez vlastného mena je odvodený od parku alebo ulice.
+                  ihrisku niečo chýba. Ak ihrisko v OpenStreetMap nemá vlastný názov, pomenovali sme ho podľa parku, najbližšej ulice, štvrte alebo mestskej časti.
                 </p>
               ) : place.source === "city" ? (
                 <p className="text-[14px] leading-relaxed text-ink-muted">
