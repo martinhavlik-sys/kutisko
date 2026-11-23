@@ -167,21 +167,113 @@ export function pickArea(lat, lon, adminPolygons) {
   return null;
 }
 
-/** Názov pre ihrisko bez mena: podľa parku, ulice alebo všeobecný. */
-export function displayName(tags, parkName) {
+/** Vzdialenosť bodu od úseku v metroch (lokálna rovinná aproximácia, na stovky metrov stačí). */
+export function metersToSegment(p, a, b) {
+  const k = 111_320;
+  const cos = Math.cos((p.lat * Math.PI) / 180);
+  const ax = (a.lon - p.lon) * k * cos, ay = (a.lat - p.lat) * k;
+  const bx = (b.lon - p.lon) * k * cos, by = (b.lat - p.lat) * k;
+  const dx = bx - ax, dy = by - ay;
+  const len2 = dx * dx + dy * dy;
+  const t = len2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / len2)) : 0;
+  return Math.hypot(ax + t * dx, ay + t * dy);
+}
+
+/** Najmenšia vzdialenosť bodu od obrysu/čiary (úseky zo `segmentsOf`). */
+export function metersToSegments(p, segments) {
+  let best = Infinity;
+  for (const [a, b] of segments) best = Math.min(best, metersToSegment(p, a, b));
+  return best;
+}
+
+/** Ulica do tejto vzdialenosti sa ešte použije v názve ihriska. */
+export const STREET_MAX_M = 150;
+/** Ihrisko tesne pri okraji parku (napr. zakreslené bodom na hranici) patrí k parku. */
+export const PARK_EDGE_M = 30;
+
+/** Pomenované ulice z Overpass (`out geom`) pripravené na rýchle hľadanie najbližšej. */
+export function makeStreetIndex(streetEls) {
+  const pad = STREET_MAX_M / 111_320 * 1.6; // rezerva v stupňoch (aj pre dĺžku na 48° s. š.)
+  return streetEls
+    .filter((el) => el.tags?.name && el.geometry)
+    .map((el) => {
+      const segments = segmentsOf(el);
+      if (!segments.length) return null;
+      const bb = bboxOf([...segments, [segments.at(-1)[1], segments.at(-1)[1]]]);
+      return { name: el.tags["name:sk"] || el.tags.name, segments, bb: { s: bb.s - pad, n: bb.n + pad, w: bb.w - pad, e: bb.e + pad } };
+    })
+    .filter(Boolean);
+}
+
+/** Názvy ulíc do STREET_MAX_M od bodu, od najbližšej (každý názov raz). */
+export function nearestStreets(lat, lon, streetIndex, maxM = STREET_MAX_M) {
+  const best = new Map();
+  for (const s of streetIndex) {
+    if (lat < s.bb.s || lat > s.bb.n || lon < s.bb.w || lon > s.bb.e) continue;
+    const d = metersToSegments({ lat, lon }, s.segments);
+    if (d <= maxM && d < (best.get(s.name) ?? Infinity)) best.set(s.name, d);
+  }
+  return [...best.entries()].sort((a, b) => a[1] - b[1]).map(([name]) => name);
+}
+
+/** „Park Andreja Hlinku“ → „Ihrisko v parku Andreja Hlinku“; iné názvy („Sad Janka Kráľa“, „Kaštieľsky park“) → „Ihrisko, …“. */
+function parkLabel(parkName) {
+  const m = parkName.match(/^park\s+(.+)$/i);
+  return m ? `Ihrisko v parku ${m[1]}` : `Ihrisko, ${parkName}`;
+}
+
+/**
+ * Názov ihriska a odkiaľ pochádza.
+ * Poradie: vlastný názov v OSM → park → ulica v adrese ihriska → najbližšia ulica (do 150 m) → mestská časť/obec.
+ * @param tags OSM tagy ihriska
+ * @param ctx { parkName?, streets?: string[] (od najbližšej), area? }
+ * @returns { name, nameSource: "osm" | "park" | "street" | "area" | "none" }
+ */
+export function displayName(tags, ctx = {}) {
   const own = tags["name:sk"] || tags.name;
   if (own) {
-    return /ihrisk|playground|park|hrisk/i.test(own) ? own : `Ihrisko ${own}`;
+    return { name: /ihrisk|playground|park|hrisk/i.test(own) ? own : `Ihrisko ${own}`, nameSource: "osm" };
   }
-  if (parkName) return `Ihrisko v parku ${parkName.replace(/^park\s+/i, "")}`;
-  if (tags["addr:street"]) return `Ihrisko, ${tags["addr:street"]}`;
-  return "Detské ihrisko";
+  if (ctx.parkName) return { name: parkLabel(ctx.parkName), nameSource: "park" };
+  const street = tags["addr:street"] || ctx.streets?.[0];
+  if (street) return { name: `Ihrisko, ${street}`, nameSource: "street" };
+  if (ctx.area) return { name: `Ihrisko, ${ctx.area}`, nameSource: "area" };
+  return { name: "Detské ihrisko", nameSource: "none" };
+}
+
+/**
+ * Rovnaké odvodené názvy rozlíši druhou ulicou („Ihrisko, Romanova / Jungmannova“),
+ * pri parku najbližšou ulicou v zátvorke. Vlastné názvy z OSM sa nemenia; nečíslujeme
+ * (číslo by vyzeralo ako adresa). Čo sa rozlíšiť nedá, ostane — odlíši ho mapa a oblasť.
+ * @param entries [{ place, streets: string[] }]
+ */
+export function disambiguate(entries) {
+  const groups = new Map();
+  for (const e of entries) {
+    if (e.place.nameSource === "osm") continue;
+    const key = e.place.name;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(e);
+  }
+  for (const group of groups.values()) {
+    if (group.length < 2) continue;
+    for (const e of group) {
+      const p = e.place;
+      if (p.nameSource === "street") {
+        const base = p.name.slice("Ihrisko, ".length);
+        const other = e.streets.find((s) => s !== base);
+        if (other) p.name = `${p.name} / ${other}`;
+      } else if (p.nameSource === "park" && e.streets[0]) {
+        p.name = `${p.name} (${e.streets[0]})`;
+      }
+    }
+  }
 }
 
 /**
  * Prevod jedného ihriska na záznam aplikácie.
  * @param el prvok leisure=playground
- * @param ctx { area, parkName, equipment: Set<string>, amenities: Set<string>, timestamp }
+ * @param ctx { area, parkName, streets: string[], equipment: Set<string>, amenities: Set<string> }
  */
 export function toPlace(el, ctx) {
   const t = el.tags ?? {};
@@ -204,7 +296,7 @@ export function toPlace(el, ctx) {
 
   return {
     id: placeIdFor(el),
-    name: displayName(t, ctx.parkName),
+    ...displayName(t, ctx),
     named: Boolean(t["name:sk"] || t.name),
     category: "ihrisko",
     area: ctx.area ?? "Bratislava a okolie",
@@ -239,10 +331,13 @@ function round(n, d) {
  * @param featureEls body vybavenia (playground=*, amenity=bench…) — node alebo s `center`
  * @param parkEls parky (leisure=park) s geometriou
  * @param adminEls administratívne hranice s geometriou
+ * @param streetEls pomenované ulice (highway=* s name) s geometriou — na názvy ihrísk bez mena
  */
-export function buildPlaces({ playgroundEls, featureEls, parkEls, adminEls }) {
+export function buildPlaces({ playgroundEls, featureEls, parkEls, adminEls, streetEls = [] }) {
   const adminPolys = adminEls.map(makePolygon).filter(Boolean);
   const parkPolys = parkEls.filter((p) => p.tags?.name).map(makePolygon).filter(Boolean);
+  const parkSegs = new Map(parkPolys.map((p) => [p, segmentsOf(p.el)]));
+  const streetIndex = makeStreetIndex(streetEls);
 
   const candidates = playgroundEls.filter((el) => isPublic(el.tags ?? {}));
   const polys = new Map();
@@ -274,20 +369,32 @@ export function buildPlaces({ playgroundEls, featureEls, parkEls, adminEls }) {
     if (owner) target.get(owner).add(label);
   }
 
-  const places = [];
+  const entries = [];
+  const edgePad = PARK_EDGE_M / 111_320 * 1.6;
   for (const el of candidates) {
     const c = centerOf(el);
     if (!c) continue;
-    const park = parkPolys.filter((p) => p.contains(c.lat, c.lon)).sort((a, b) => a.area - b.area)[0];
-    places.push(
-      toPlace(el, {
-        area: pickArea(c.lat, c.lon, adminPolys),
-        parkName: park?.el.tags.name ?? null,
-        equipment: equipment.get(el),
-        amenities: amenities.get(el),
-      }),
-    );
+    const park =
+      parkPolys.filter((p) => p.contains(c.lat, c.lon)).sort((a, b) => a.area - b.area)[0] ??
+      parkPolys
+        .filter(
+          (p) =>
+            c.lat >= p.bb.s - edgePad && c.lat <= p.bb.n + edgePad && c.lon >= p.bb.w - edgePad && c.lon <= p.bb.e + edgePad &&
+            metersToSegments(c, parkSegs.get(p)) <= PARK_EDGE_M,
+        )
+        .sort((a, b) => a.area - b.area)[0];
+    const named = Boolean(el.tags?.["name:sk"] || el.tags?.name);
+    const streets = named ? [] : nearestStreets(c.lat, c.lon, streetIndex);
+    const place = toPlace(el, {
+      area: pickArea(c.lat, c.lon, adminPolys),
+      parkName: park?.el.tags.name ?? null,
+      streets,
+      equipment: equipment.get(el),
+      amenities: amenities.get(el),
+    });
+    entries.push({ place, streets });
   }
+  const places = entries.map((e) => e.place);
 
   // Duplicity: ihrisko zakreslené bodom aj plochou — bod ležiaci v ploche iného ihriska (alebo do 15 m od nej) sa vynechá.
   const polyList = [...polys.values()];
@@ -298,5 +405,7 @@ export function buildPlaces({ playgroundEls, featureEls, parkEls, adminEls }) {
     );
   });
 
+  const kept = new Set(deduped);
+  disambiguate(entries.filter((e) => kept.has(e.place)));
   return deduped.sort((a, b) => a.id.localeCompare(b.id));
 }

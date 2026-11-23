@@ -107,6 +107,8 @@ export interface Place {
   surface?: string | null;
   /** Ihrisko má vlastný názov v OSM (inak je názov odvodený z parku/ulice). */
   named?: boolean;
+  /** Odkiaľ je názov: vlastný z OSM, podľa parku, ulice alebo mestskej časti/obce. */
+  nameSource?: "osm" | "park" | "street" | "area" | "none";
 }
 
 interface CuratedEntry {

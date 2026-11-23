@@ -30,6 +30,8 @@ const QUERIES = {
   features: `[out:json][timeout:240];${SK}(nwr["playground"](${bb})(area.sk);node["amenity"~"^(bench|drinking_water|toilets|shelter)$"](${bb})(area.sk););out center;`,
   parks: `[out:json][timeout:240];${SK}nwr["leisure"="park"]["name"](${bb})(area.sk);out geom;`,
   admin: `[out:json][timeout:240];rel["boundary"="administrative"]["admin_level"~"^(8|9|10)$"](${bb});out geom;`,
+  // Pomenované ulice a pešie zóny — na čitateľné názvy ihrísk bez vlastného mena.
+  streets: `[out:json][timeout:240];${SK}way["highway"~"^(primary|secondary|tertiary|unclassified|residential|living_street|pedestrian|service)$"]["name"](${bb})(area.sk);out tags geom;`,
 };
 
 async function overpass(name, query) {
@@ -69,6 +71,7 @@ const places = buildPlaces({
   featureEls: results.features.elements,
   parkEls: results.parks.elements,
   adminEls: results.admin.elements,
+  streetEls: results.streets.elements,
 });
 
 // Prehľad kvality dát do logu (a do súboru).
@@ -79,6 +82,8 @@ const stats = {
   total: places.length,
   rawPlaygrounds: results.playgrounds.elements.length,
   named: count((p) => p.named),
+  nameSources: Object.fromEntries(["osm", "park", "street", "area", "none"].map((k) => [k, count((p) => p.nameSource === k)])),
+  duplicateNames: Object.values(places.reduce((m, p) => ((m[p.name] = (m[p.name] ?? 0) + 1), m), {})).filter((n) => n > 1).reduce((a, n) => a + n, 0),
   withEquipment: count((p) => p.amenities.length > 0),
   withAge: count((p) => p.ageMin !== null || p.ageMax !== null),
   withOpeningHours: count((p) => p.openingHours),
